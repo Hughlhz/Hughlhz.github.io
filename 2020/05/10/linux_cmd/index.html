@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="linux常用命令123456789101112131415161718192021222324252627282930313233343536373839404142434445461. 文件目录1.1 特殊符号: 1.1.1 . 当前目录1.1.2 .. 上级目录1.1.3 ~ 用户的home目录1.2 cd - 切换目录1.3 ls - 查看目录&#x2F;文件属性1.4 mv&#x2F;c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux下常用指令">
+<meta property="og:url" content="http://yoursite.com/2020/05/10/linux_cmd/index.html">
+<meta property="og:site_name" content="Hughes&#39;Blog">
+<meta property="og:description" content="linux常用命令123456789101112131415161718192021222324252627282930313233343536373839404142434445461. 文件目录1.1 特殊符号: 1.1.1 . 当前目录1.1.2 .. 上级目录1.1.3 ~ 用户的home目录1.2 cd - 切换目录1.3 ls - 查看目录&#x2F;文件属性1.4 mv&#x2F;c">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-05-10T14:00:20.000Z">
+<meta property="article:modified_time" content="2020-07-26T01:04:49.180Z">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/05/10/linux_cmd/"/>
+
+
+
+
+
+  <title>linux下常用指令 | Hughes'Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hughes'Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/10/linux_cmd/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hughes'Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">linux下常用指令</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-05-10T22:00:20+08:00">
+                2020-05-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/learning/" itemprop="url" rel="index">
+                    <span itemprop="name">learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="linux常用命令"><a href="#linux常用命令" class="headerlink" title="linux常用命令"></a>linux常用命令</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">1. 文件目录</span><br><span class="line">1.1 特殊符号: </span><br><span class="line">1.1.1 . 当前目录</span><br><span class="line">1.1.2 .. 上级目录</span><br><span class="line">1.1.3 ~ 用户的home目录</span><br><span class="line">1.2 cd - 切换目录</span><br><span class="line">1.3 ls - 查看目录&#x2F;文件属性</span><br><span class="line">1.4 mv&#x2F;cp&#x2F;rm 剪切&#x2F;拷贝&#x2F;删除文件</span><br><span class="line">1.5 rmdir 删除空目录</span><br><span class="line">1.6 touch 创建新文件</span><br><span class="line">1.7 查看文件内容 more(按页查看)&#x2F;less(部分查看)&#x2F;cat(查看全部)&#x2F;head(查看前x行)&#x2F;tail(查看后x行)</span><br><span class="line">1.8 hexdump 以十六进制查看文件</span><br><span class="line">    hexdump -C 文件名</span><br><span class="line">    hexdump -C 文件名 | less</span><br><span class="line">1.9 ln 创建文件链接</span><br><span class="line">1.10 file - 查看文件类型</span><br><span class="line">1.11 grep - 查找文件内容</span><br><span class="line">1.12 find&#x2F;whereis&#x2F;whois</span><br><span class="line">&lt;!-- more --&gt;</span><br><span class="line">2. 用户&#x2F;权限</span><br><span class="line">2.1 useradd(命令)&#x2F;adduser(脚本) 添加目录</span><br><span class="line">2.1 passwd 修改用户登陆密码</span><br><span class="line">2.3 userdel 删除用户</span><br><span class="line">2.4 usermod 修改用户信息(用户名&#x2F;主目录&#x2F;用户组&#x2F;登陆密码)</span><br><span class="line">2.4 chmod 修改文件权限</span><br><span class="line">2.5 chown 修改文件拥有者</span><br><span class="line">2.6 groupadd&#x2F;groupdel 添加用户组&#x2F;删除用户组</span><br><span class="line"> </span><br><span class="line">3. 进程&#x2F;任务</span><br><span class="line">3.1 ps&#x2F;top 查看当前进程信息</span><br><span class="line">3.2 kill 结束进程</span><br><span class="line"> </span><br><span class="line">4. 磁盘</span><br><span class="line">4.1 df&#x2F;du 查看磁盘使用信息</span><br><span class="line"> </span><br><span class="line">5. 其它</span><br><span class="line">    clear - 清屏</span><br><span class="line">    source - 强行让一个脚本去立即影响当前的环境(不重启而更新配置)</span><br><span class="line">    apt - 软件包管理</span><br><span class="line">    更新源 sudo apt update</span><br><span class="line">    更新软件 sudo apt upgrade</span><br><span class="line">    安装软件 : sudo apt install 软件名</span><br><span class="line">    卸载软件 : sudo apt remove &#x2F; sudo apt autoremove</span><br><span class="line">     </span><br><span class="line">     </span><br><span class="line">6. 常见配置文件</span><br></pre></td></tr></table></figure>
+
+<h3 id="GDB常用"><a href="#GDB常用" class="headerlink" title="GDB常用"></a>GDB常用</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">1 命令行参数系列</span><br><span class="line">1.1 set args</span><br><span class="line">1.2 show args</span><br><span class="line"> </span><br><span class="line">2 运行系列</span><br><span class="line">2.1 r - 运行</span><br><span class="line">2.2 n - 单步步过(源码)</span><br><span class="line">2.3 s - 单步步入</span><br><span class="line">2.4 u - 运行到循环退出</span><br><span class="line">2.5 c - 继续运行</span><br><span class="line">2.6 si&#x2F;ni - 汇编级单步步入&#x2F;步过</span><br><span class="line">2.7 jump - 设置eip到指定位置</span><br><span class="line">2.8 finish 执行到当前函数返回</span><br><span class="line">2.9 回车键 重复执行上一指令</span><br><span class="line"> </span><br><span class="line">3 断点系列</span><br><span class="line">3.1 b 行号&#x2F;函数名 - 设置断点</span><br><span class="line">3.2 info b - 查看断点</span><br><span class="line">3.3 d 断点号 - 删除断点</span><br><span class="line">3.4 dis 断点号 - 禁用断点</span><br><span class="line">3.5 enable 断点号 - 启用断点</span><br><span class="line"> </span><br><span class="line">4 信息查看系列</span><br><span class="line">4.1 print 变量名 - 查看变量的值</span><br><span class="line">4.2 set 变量名&#x3D;VAL - 修改变量的值</span><br><span class="line">4.3 set disassembly-flavor intel 以intel方式查看反汇编</span><br><span class="line">4.4 list [函数名] - 查看源码</span><br><span class="line">4.5 backtrace 查看函数的调用的栈帧和层级关系,简写bt</span><br><span class="line">4.6 frame：切换函数的栈帧,简写f</span><br><span class="line">4.7 x命令</span><br><span class="line">    格式 x&#x2F;&lt;n&#x2F;f&#x2F;u&gt; &lt;addr&gt;</span><br><span class="line">    n是一个正整数，表示显示内存的长度，也就是说从当前地址向后显示几个地址的内容。</span><br><span class="line">    f 表示显示的格式，参见上面。如果地址所指的是字符串，那么格式可以是s，如果 地址是指令地址，那么格式可以是i。</span><br><span class="line">    u 表示从当前地址往后请求的字节数，如果不指定的话，GDB默认是4个bytes。u参数可以用下面的字符来代替，b表示单字节，h表示双字节，w表示四字 节，g表示八字节。当我们指定了字节长度后，GDB会从指内存定的内存地址开始，读写指定字节，并把其当作一个值取出来。</span><br><span class="line">    n&#x2F;f&#x2F;u三个参数可以一起使用。例如：</span><br><span class="line">    </span><br><span class="line">    命令：x&#x2F;3uh 0x54320 表示，从内存地址0x54320读取内容，h表示以双字节为一个单位，3表示三个单位，u表示按十六进制显示。</span><br><span class="line">    输出格式：</span><br><span class="line">	一般来说，GDB会根据变量的类型输出变量的值。但你也可以自定义GDB的输出的格式。例如，你想输出一个整数的十六进制，或是二进制来查看这个整型变量的中的位的情况。要做到这样，你可以使用GDB的数据显示格式：</span><br><span class="line"></span><br><span class="line">	x 按十六进制格式显示变量。</span><br><span class="line">	d 按十进制格式显示变量。</span><br><span class="line">	u 按十六进制格式显示无符号整型。</span><br><span class="line">	o 按八进制格式显示变量。</span><br><span class="line">	t 按二进制格式显示变量。</span><br><span class="line">	a 按十六进制格式显示变量。</span><br><span class="line">	c 按字符格式显示变量。</span><br><span class="line">	f 按浮点数格式显示变量。</span><br></pre></td></tr></table></figure>
+
+<h3 id="ELF文件结构"><a href="#ELF文件结构" class="headerlink" title="ELF文件结构"></a>ELF文件结构</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">PE的组成</span><br><span class="line"> </span><br><span class="line">1. 头部</span><br><span class="line">   1.1 DOS头</span><br><span class="line">   1.2 NT头</span><br><span class="line">   1.2.1 文件头</span><br><span class="line">   1.2.2 扩展头</span><br><span class="line">   1.3 区段头</span><br><span class="line">2. 区段数据</span><br><span class="line">   2.1 代码段: .text</span><br><span class="line">   2.2 数据段: .data</span><br><span class="line">   2.3 只读数据段: .rdata</span><br><span class="line">   2.3.1 导入表的数据</span><br><span class="line">   2.3.2 导出表的数据</span><br><span class="line">   2.4 重定位数据段: .reloc </span><br><span class="line"> </span><br><span class="line">ELF文件格式</span><br><span class="line">ELF的组成部分</span><br><span class="line"> </span><br><span class="line">1. ELF头</span><br><span class="line">   1.1 id数组</span><br><span class="line">   1.1.1 前4位是魔数 0x74&quot;elf&quot;</span><br><span class="line">   1.1.2 ELF文件种类(32位&#x2F;64位)</span><br><span class="line">   1.1.3 ELF文件数据的字节序(小端&#x2F;大端)</span><br><span class="line">   1.1.4 版本 : 1. 文件版本,2. 系统ABI版本</span><br><span class="line">   1.2 文件类型 : 可重定位文件&#x2F;可执行文件&#x2F;动态库文件</span><br><span class="line">2. 程序头</span><br><span class="line">   2.1 段类型 : 决定了段的作用,以及段是否被加载到内存中. 一个ELF文件中,至少存在一个LOAD类型的段. ELF一般都有解释器段,这个段用于保存解释器的文件路径. 有可能也会存在动态链接段(用于链接外部模块)</span><br><span class="line">   2.2 段数据的文件偏移&#x2F;文件大小&#x2F;内存地址&#x2F;内存中的大小</span><br><span class="line">   2.3 加载到内存中后的分页属性</span><br><span class="line">   2.4 段的对齐粒度</span><br><span class="line">3. 区段头</span><br><span class="line">   3.1 区段名</span><br><span class="line">   3.2 区段类型</span><br><span class="line">   3.3 Link和info</span><br><span class="line">   3.4 区段数据的文件偏移和大小,元素大小.</span><br><span class="line">4. 区段数据</span><br><span class="line">   4.1 符号表</span><br><span class="line">   4.1.1 记录本模块的符号(导出)</span><br><span class="line">     记录在.symtab符号表中</span><br><span class="line">     记录一个符号的名字(例如函数名),记录了符号</span><br><span class="line">     的绑定类型(LOCAL,GLOBAL),还记录了符号的类型(函数,区段),记录符号的值(根据符号的不同,有不同的值,例如函数是符号类型,值就是函数的地址)</span><br><span class="line">   4.1.2 记录了导入的符号</span><br><span class="line">     记录在.dynsym符号表</span><br><span class="line">   4.2 重定位表</span><br><span class="line">   4.2.1 重定位类型, 决定了修复重定位的方法</span><br><span class="line">   可执行文件类型的ELF和共享库的ELF文件的重定位是不一样的.</span><br><span class="line">   4.2.2 重定位的偏移(根据重定位类型决定)</span><br><span class="line"> </span><br><span class="line">elf的加载</span><br><span class="line">do_execve();  </span><br><span class="line"> </span><br><span class="line">1. 其它</span><br><span class="line">   5.1 PLT和GOT表</span><br><span class="line">   call printf &#x3D;&#x3D;&gt; jmp [GOT表项地址] &#x3D;第二次以后&#x3D;&gt; printf真正的地址</span><br><span class="line">   ​             push XX</span><br><span class="line">   ​             jmp  xxx &#x3D;&#x3D;&gt; 加载printf所在的so文件,修复printf函数地址</span><br><span class="line">   ​            </span><br><span class="line"> </span><br><span class="line">2 构造函数数组,析构函数数组</span><br><span class="line">2.1 全局对象的初始化和析构.</span><br><span class="line">3 ptrace - 调试相关</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/10/pe_program/" rel="next" title="PE结构解析">
+                <i class="fa fa-chevron-left"></i> PE结构解析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/05/10/jsp/" rel="prev" title="JSP学习笔记">
+                JSP学习笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/hughlhz" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:hughes_lhz@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://sup3rgate.xyz/" title="Supergate" target="_blank">Supergate</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://47.95.203.90/" title="Weihongtao" target="_blank">Weihongtao</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://hujiekang.top/" title="Hujiekang" target="_blank">Hujiekang</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://106.54.80.67/" title="Centrix" target="_blank">Centrix</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://47.100.137.92/" title="CjDuan" target="_blank">CjDuan</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://blog.pushrbp.com" title="Cool" target="_blank">Cool</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">1.</span> <span class="nav-text">linux常用命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GDB%E5%B8%B8%E7%94%A8"><span class="nav-number">2.</span> <span class="nav-text">GDB常用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ELF%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84"><span class="nav-number">3.</span> <span class="nav-text">ELF文件结构</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-snowflake-o"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder"></span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

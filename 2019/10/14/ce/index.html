@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="reverse,concept,tools," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="CheatEngine很早就接触过了CE修改器，当时是玩一些幼稚小游戏，然后用ce修改器修改金币和经验。不过也仅仅是接触，从来没有深入过，这次CNSS招新有道贪食蛇的题目(wtcl,还没写出来)，可以用CE调试,我就准备学下CE调试,然后刚刚好它有几个教程,这篇blog就来写下写CE教程题目的经历.总共分为两部分,一个是Cheat Engine Tutorial,另一个是Cheat Engine">
+<meta property="og:type" content="article">
+<meta property="og:title" content="初学CheatEngine的使用(内含CE Tutorial Games--1）">
+<meta property="og:url" content="http://yoursite.com/2019/10/14/ce/index.html">
+<meta property="og:site_name" content="Hughes&#39;Blog">
+<meta property="og:description" content="CheatEngine很早就接触过了CE修改器，当时是玩一些幼稚小游戏，然后用ce修改器修改金币和经验。不过也仅仅是接触，从来没有深入过，这次CNSS招新有道贪食蛇的题目(wtcl,还没写出来)，可以用CE调试,我就准备学下CE调试,然后刚刚好它有几个教程,这篇blog就来写下写CE教程题目的经历.总共分为两部分,一个是Cheat Engine Tutorial,另一个是Cheat Engine">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/2019/10/14/ce/1p.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/14/ce/2p.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/14/ce/3p.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/14/ce/4p.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/14/ce/5p.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/14/ce/1.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/14/ce/2.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/14/ce/3.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/14/ce/4.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/14/ce/15.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/14/ce/5.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/14/ce/6.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/14/ce/7.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/14/ce/8.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/14/ce/9.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/14/ce/10.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/14/ce/11.png">
+<meta property="article:published_time" content="2019-10-14T07:00:20.000Z">
+<meta property="article:modified_time" content="2019-10-19T06:19:58.244Z">
+<meta property="article:tag" content="reverse">
+<meta property="article:tag" content="concept">
+<meta property="article:tag" content="tools">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2019/10/14/ce/1p.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/10/14/ce/"/>
+
+
+
+
+
+  <title>初学CheatEngine的使用(内含CE Tutorial Games--1） | Hughes'Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hughes'Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/14/ce/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hughes'Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">初学CheatEngine的使用(内含CE Tutorial Games--1）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-10-14T15:00:20+08:00">
+                2019-10-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/learning/" itemprop="url" rel="index">
+                    <span itemprop="name">learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="CheatEngine"><a href="#CheatEngine" class="headerlink" title="CheatEngine"></a>CheatEngine</h2><p>很早就接触过了CE修改器，当时是玩一些幼稚小游戏，然后用ce修改器修改金币和经验。不过也仅仅是接触，从来没有深入过，这次CNSS招新有道贪食蛇的题目(wtcl,还没写出来)，可以用CE调试,我就准备学下CE调试,然后刚刚好它有几个教程,这篇blog就来写下写CE教程题目的经历.<br>总共分为两部分,一个是Cheat Engine Tutorial,另一个是Cheat Engine Tutorial Games.</p>
+<h2 id="Cheat-Engine-Tutorial"><a href="#Cheat-Engine-Tutorial" class="headerlink" title="Cheat Engine Tutorial"></a>Cheat Engine Tutorial</h2><p>这部分非常基础,然后基本上就是CE的基本用法.<br>第一关到第八关有手就行,然后第九关有一个点我没接触过,这里记录下来.<br>第九关是个小游戏,敌我双方各两个人,但是敌人伤害高血还厚,我们打不过,而过关的条件就是把敌人乃一组特.(如图)<br><img src="/2019/10/14/ce/1p.png" alt="第九关"><br>首先肯定是搜索血量,很容易搜到四个人的血量的地址.然后F6,查看是什么改写这个地址.查看之后发现改写的时候调用的是同一个函数(如图).</p>
+<a id="more"></a>
+<p><img src="/2019/10/14/ce/2p.png" alt="第九关"><br>那直接修改掉那个fsubr的函数肯定是不行的了,现在肯定得把自己人和敌人区分开来,这个时候就要利用ce分析数据结构的功能.<br>ctrl+d 打开结构分析的界面,然后注意到之前搜到的地址偏移了0x04,<img src="/2019/10/14/ce/3p.png" alt="第九关"><br>所以这边最好要填基址.<img src="/2019/10/14/ce/4p.png" alt="第九关"><br>观察后很容易发现0004处就是血量,浮点类型,这个时候我们要找个数据来区分敌人和队友,看到0010处队友标识为1,敌人标识为2.我们就可以开始注入代码了.<br>选中刚刚修改数据的那一行代码,ctrl+a进入自动汇编,然后ctrl+i生成注入模板,增加判断就可以.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mov [ebx+04],eax</span><br><span class="line">fldz</span><br></pre></td></tr></table></figure>
+<p>修改为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cmp [ebx+10],1</span><br><span class="line">je hh</span><br><span class="line">mov [ebx+04],eax</span><br><span class="line">hh:</span><br><span class="line">fldz</span><br></pre></td></tr></table></figure>
+<p>这样重新运行就可以了.<img src="/2019/10/14/ce/5p.png" alt="第九关"></p>
+<h2 id="Cheat-Engine-Tutorial-Games"><a href="#Cheat-Engine-Tutorial-Games" class="headerlink" title="Cheat Engine Tutorial Games"></a>Cheat Engine Tutorial Games</h2><h3 id="G1"><a href="#G1" class="headerlink" title="G1"></a>G1</h3><p>这个游戏总共三关,第一关就是用一个炮台去打靶子,但是当打出第五发子弹靶子就会回满血,通关条件就是把靶子打下.<img src="/2019/10/14/ce/1.png" alt="第九关"><br>首先肯定根据剩余子弹数去搜,然后发现搜不到.但是它既然能显示出来,那肯定是经过了运算.总共五发子弹,猜测它可能是储存了发射的子弹的数量,然后根据发射的子弹去搜,果然能搜索到.<img src="/2019/10/14/ce/2.png" alt="第九关"><br>猜测靶子回血是根据已发射的子弹数量,于是锁定子弹数.过关.<img src="/2019/10/14/ce/3.png" alt="第九关"></p>
+<p>现在采用第二个方法,找到靶子的血量并修改.<br>由于靶子初始血量不清楚,所以得采用未知的初始值方式去搜索,然后再根据血量的变化搜索,很快可以确定一个地址就是靶子血量<img src="/2019/10/14/ce/4.png" alt="第九关"><br>把血量修改为1后,一发子弹就可以把靶子秒了.</p>
+<h3 id="G2"><a href="#G2" class="headerlink" title="G2"></a>G2</h3><p>第二关的描述如下:<br><img src="/2019/10/14/ce/15.png" alt="第九关"><br>首先想到的就是根据自己血量去搜索,搜索到后锁定.<br><img src="/2019/10/14/ce/5.png" alt="第九关"><br>但是没那么简单,当干掉 一个炮台后,另一个炮台如果血量很低,会迅速回血,而且启动一击必杀追踪炮.<br>这个时候得换个方法了,先把两个炮台的血量找到<br><img src="/2019/10/14/ce/6.png" alt="第九关"></p>
+<p>同Cheat Engine Tutorial的第九关,F6找到是什么修改了这些地址<br><img src="/2019/10/14/ce/7.png" alt="第九关"><br>然后发现也是采用同一个函数进行修改血量,和之前一样,分析数据结构<br><img src="/2019/10/14/ce/8.png" alt="第九关"><br>同样在区分敌我后,注入代码<br><img src="/2019/10/14/ce/9.png" alt="第九关"><br>这关就算过了.<br><img src="/2019/10/14/ce/10.png" alt="第九关"><br>这一关还涉及到2D游戏的一些知识,晚点来写关于2D游戏的blog.</p>
+<h3 id="G3"><a href="#G3" class="headerlink" title="G3"></a>G3</h3><p>第三关一打开,有点熟悉的感觉哦..<br>猜测变绿的台阶的数量会被存储,然后果然能够搜索到:<br><img src="/2019/10/14/ce/11.png" alt="第九关"><br>数了数共有12个台阶,那直接修改数据为12不就好了吗,做完修改后,门是开了,但是3个带刺的小怪物会飞到门旁边堵住门,重新来一次自己先站在门那里,然后过关,但是这样过关感觉太赖了.<br>我们得换一种B格高一点的方法。<br>详见下篇Blog O。…</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/reverse/" rel="tag"># reverse</a>
+          
+            <a href="/tags/concept/" rel="tag"># concept</a>
+          
+            <a href="/tags/tools/" rel="tag"># tools</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/14/diff_call/" rel="next" title="三种call的简要区别">
+                <i class="fa fa-chevron-left"></i> 三种call的简要区别
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/10/16/ce_tg2/" rel="prev" title="CE Tutorial Games--2">
+                CE Tutorial Games--2 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/hughlhz" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:hughes_lhz@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://sup3rgate.xyz/" title="Supergate" target="_blank">Supergate</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://47.95.203.90/" title="Weihongtao" target="_blank">Weihongtao</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://hujiekang.top/" title="Hujiekang" target="_blank">Hujiekang</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://106.54.80.67/" title="Centrix" target="_blank">Centrix</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://47.100.137.92/" title="CjDuan" target="_blank">CjDuan</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://blog.pushrbp.com" title="Cool" target="_blank">Cool</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#CheatEngine"><span class="nav-number">1.</span> <span class="nav-text">CheatEngine</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cheat-Engine-Tutorial"><span class="nav-number">2.</span> <span class="nav-text">Cheat Engine Tutorial</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cheat-Engine-Tutorial-Games"><span class="nav-number">3.</span> <span class="nav-text">Cheat Engine Tutorial Games</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#G1"><span class="nav-number">3.1.</span> <span class="nav-text">G1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#G2"><span class="nav-number">3.2.</span> <span class="nav-text">G2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#G3"><span class="nav-number">3.3.</span> <span class="nav-text">G3</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-snowflake-o"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder"></span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

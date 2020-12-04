@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="concept,algorithm,encryption," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="CRC算法原理CRC 算法的基本原理是将数据看作一个大数，与一个预定义的除数使用特殊的除法相除，所得的余数即为数据的 CRC 校验值。 生成多项式算法的数学原理与多项式相关，用到的除法也基于多项式除法，预定义的除数也叫“生成多项式”，这里的多项式都是只有一个未知数并且各项系数只能是 0 或 1 的多项式我们以CRC-4&#x2F;ITU为例，其生成多项式是{x^4+x+1}，也即:1x^4+0x^3+0x^">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CRC">
+<meta property="og:url" content="http://yoursite.com/2019/09/21/crc/index.html">
+<meta property="og:site_name" content="Hughes&#39;Blog">
+<meta property="og:description" content="CRC算法原理CRC 算法的基本原理是将数据看作一个大数，与一个预定义的除数使用特殊的除法相除，所得的余数即为数据的 CRC 校验值。 生成多项式算法的数学原理与多项式相关，用到的除法也基于多项式除法，预定义的除数也叫“生成多项式”，这里的多项式都是只有一个未知数并且各项系数只能是 0 或 1 的多项式我们以CRC-4&#x2F;ITU为例，其生成多项式是{x^4+x+1}，也即:1x^4+0x^3+0x^">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/2019/09/21/crc/division.png">
+<meta property="og:image" content="http://yoursite.com/2019/09/21/crc/division_simple.png">
+<meta property="og:image" content="http://yoursite.com/2019/09/21/crc/sample.png">
+<meta property="article:published_time" content="2019-09-21T06:30:18.000Z">
+<meta property="article:modified_time" content="2019-09-21T07:09:02.757Z">
+<meta property="article:tag" content="concept">
+<meta property="article:tag" content="algorithm">
+<meta property="article:tag" content="encryption">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2019/09/21/crc/division.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/09/21/crc/"/>
+
+
+
+
+
+  <title>CRC | Hughes'Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hughes'Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/21/crc/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hughes'Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">CRC</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-09-21T14:30:18+08:00">
+                2019-09-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/learning/" itemprop="url" rel="index">
+                    <span itemprop="name">learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="CRC算法原理"><a href="#CRC算法原理" class="headerlink" title="CRC算法原理"></a>CRC算法原理</h3><p>CRC 算法的基本原理是将数据看作一个大数，与一个预定义的除数使用特殊的除法相除，所得的余数即为数据的 CRC 校验值。</p>
+<h3 id="生成多项式"><a href="#生成多项式" class="headerlink" title="生成多项式"></a>生成多项式</h3><p>算法的数学原理与多项式相关，用到的除法也基于多项式除法，预定义的除数也叫“生成多项式”，这里的多项式都是只有一个未知数并且各项系数只能是 0 或 1 的多项式<br>我们以<code>CRC-4/ITU</code>为例，其生成多项式是{x^4+x+1}，也即:<br>1x^4+0x^3+0x^2+1x^1+1x^0<br>如果我们令 x=2，则多项式中每一项的系数可以看作一个二进制数的对应位，即 (10011)2(10011)2，是一个 5 位的二进制数，那么用它来做除数，最后可以得到 4 位的余数，也就是 CRC-4/ITU 中的 4。由此可见，生成多项式的首位必然是 1，在一般表示生成多项式的时候我们都省略最高位，再写成十六进制就是 0x03。</p>
+<h3 id="模二多项式除法"><a href="#模二多项式除法" class="headerlink" title="模二多项式除法"></a>模二多项式除法</h3><a id="more"></a>
+<p>我们先看多项式乘法：<br>(x^4+x^1+x^0)×(x^4+x^3+x^0)=x^8+x^7+x^4+x^5+x^4+x^1+x^4+x^3+x^0<br>这里我们没有合并同类项，如果按照常规的方式合并同类项，即<br>x^8+x^7+x^5+3x^4+x^3+x^1+x^0<br>那就是普通的多项式乘法；对于 CRC 算法，加减法采用模二运算，也就是最后的系数除以 2 取余数，不产生进位，所以最后的结果是：<br>x^8+x^7+x^5+x^4+x^3+x^1+x^0^<br>这里的加减法采用模二运算后，实际上也就变成了我们平时说的异或（XOR/⊕⊕）运算，以上面x^4的系数为例：<br>1+1+1=3≡1(mod2)1+1+1=3≡1(mod2)<br>1⊕1⊕1=11⊕1⊕1=1<br>下面我们以字母 b 为例，来尝试计算其校验值：<br>1）b 的 ASCII 码 为 98，即 (1100010)2(1100010)2，并在其后追加 4 (生成多项式位数减1) 个 0，即 (11000100000)2(11000100000)2<br>2）做除法：<br><img src="/2019/09/21/crc/division.png" alt="division"><br>这里由于生成多项式的首位必然是 1，所以我们可以省略首位的 1，同时在计算的时候对每一步被除数首位的 1 直接忽略，那么简化后的除法如下:<br><img src="/2019/09/21/crc/division_simple.png" alt="division_simple"></p>
+<h3 id="位反转"><a href="#位反转" class="headerlink" title="位反转"></a>位反转</h3><p>通过上面的计算，我们得到了余数 (1011)2(1011)2，但是这和我们使用其他工具计算的 b 的 <code>CRC-4/ITU</code> 校验值不相符，<br>原因是 <code>CRC-4/ITU</code> 的定义中还有两项操作，它要求输入数据在进行计算之前按字节进行位反转，并且最后的结果也要进行位反转，也即输入位反转及输出位反转。<br>还是以上面的b为例，其二进制为 (1100010)2(1100010)2，我们把首位省略的0补齐，即 (01100010)2(01100010)2，反转后为 (01000110)2(01000110)2,即字母F,也就是说我们上面其实是在计算F的 <code>CRC-4/ITU</code> 校验值，如果把最后的结果再反转一遍，应该 得到 (1101)2(1101)2。<br>我们再用其他工具计算 F 的 CRC-4/ITU 校验值，结果正是 (1101)2(1101)2 <br>需要注意的是这里是按字节进行位反转，字节序本身是不变的。</p>
+<h3 id="初始值与输出异或值"><a href="#初始值与输出异或值" class="headerlink" title="初始值与输出异或值"></a>初始值与输出异或值</h3><p>除了上面的位反转的情况，实际应用中的 CRC 算法还有初始值和输出异或值，并且它们的最大位数为生成多项式位数减一，例如对于 <code>CRC-4</code>、<code>CRC-8</code> 分别为 4 、8，而上面的 <code>CRC-4/ITU</code> 我们可以看作这两个值都是 0。<br>在计算的时候，初始值要首先与数据的最高位对齐进行异或，然后在进行上述运算求得余数，如果算法要求输入位反转，则应在异或初始值之前反转。<br>最后的余数再与输出异或值进行异或，如果算法要求输出位反转，则也应该在异或运算之前反转。</p>
+<h3 id="完整示例"><a href="#完整示例" class="headerlink" title="完整示例"></a>完整示例</h3><p>下面我们以 <code>CRC-5/USB</code> 为例，做一次完整的计算。<br><code>CRC-5/USB</code> 的生成多项式是 x5+x2+1x5+x2+1，十六进制表示为 0x05，二进制 (00101)2(00101)2 （均省略首位1）, 初始值及输出异或值均为 0x1f，二进制 (11111)2(11111)2，并且算法要求输入及输出位反转。<br>假设要计算的数据是 2b (ASCII)，两个字符其分别对应二进制 (00110010)2(00110010)2、(01100010)2(01100010)2。<br>1）位反转，得到数据 (0100110001000110)2(0100110001000110)2<br>2）补位（5个0），得到数据 (010011000100011000000)2(010011000100011000000)2<br>3）异或初始值 (11111)2(11111)2，得到数据 (101101000100011000000)2(101101000100011000000)2，注意这里是高位对齐<br>4）模二除法运算：<br><img src="/2019/09/21/crc/sample.png" alt="sample"></p>
+<p>我们得到余数 (11010)2(11010)2，需要注意的是这里最后一行，如果我们划掉的是 1，那么我们还需要再做一次异或生成多项式的运算，总之运算结束的标志是所有原始数据位都被划掉了。<br>5）对余数进行位反转，得到 (01011)2(01011)2<br>6）与输出异或值 (11111)2(11111)2 进行异或，得到 (10100)2(10100)2<br>这与我们使用其他工具计算所得的结果相符。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/concept/" rel="tag"># concept</a>
+          
+            <a href="/tags/algorithm/" rel="tag"># algorithm</a>
+          
+            <a href="/tags/encryption/" rel="tag"># encryption</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/21/register/" rel="next" title="Register">
+                <i class="fa fa-chevron-left"></i> Register
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/10/06/re_stack/" rel="prev" title="反汇编——1">
+                反汇编——1 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/hughlhz" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:hughes_lhz@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://sup3rgate.xyz/" title="Supergate" target="_blank">Supergate</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://47.95.203.90/" title="Weihongtao" target="_blank">Weihongtao</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://hujiekang.top/" title="Hujiekang" target="_blank">Hujiekang</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://106.54.80.67/" title="Centrix" target="_blank">Centrix</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://47.100.137.92/" title="CjDuan" target="_blank">CjDuan</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://blog.pushrbp.com" title="Cool" target="_blank">Cool</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#CRC%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">CRC算法原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E5%A4%9A%E9%A1%B9%E5%BC%8F"><span class="nav-number">2.</span> <span class="nav-text">生成多项式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E4%BA%8C%E5%A4%9A%E9%A1%B9%E5%BC%8F%E9%99%A4%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">模二多项式除法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%8D%E5%8F%8D%E8%BD%AC"><span class="nav-number">4.</span> <span class="nav-text">位反转</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%80%BC%E4%B8%8E%E8%BE%93%E5%87%BA%E5%BC%82%E6%88%96%E5%80%BC"><span class="nav-number">5.</span> <span class="nav-text">初始值与输出异或值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%8C%E6%95%B4%E7%A4%BA%E4%BE%8B"><span class="nav-number">6.</span> <span class="nav-text">完整示例</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-snowflake-o"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder"></span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

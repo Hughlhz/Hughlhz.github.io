@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="reverse,concept," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="字符串在C语言中，字符串是由字符组成，单字符不是字符串，至少有两个字符组成，且结尾字符是’&#x2F;0’。 例如：”ABCD” 内存中实际储存结构是 41H 42H 43H 44H 00H 字符串的寻址，依靠首字节进行寄存器相对寻址方式： 例如：访问”ABCD”中的第二字节，byte ptr [ebx+1] 正是因为字符串的首字节索引的寻址方式，因此字符串往往要与指针配合。在C语言中常见的， 例如：cha">
+<meta property="og:type" content="article">
+<meta property="og:title" content="（转载）数据逆向分析(2)">
+<meta property="og:url" content="http://yoursite.com/2019/10/19/reverse_data2/index.html">
+<meta property="og:site_name" content="Hughes&#39;Blog">
+<meta property="og:description" content="字符串在C语言中，字符串是由字符组成，单字符不是字符串，至少有两个字符组成，且结尾字符是’&#x2F;0’。 例如：”ABCD” 内存中实际储存结构是 41H 42H 43H 44H 00H 字符串的寻址，依靠首字节进行寄存器相对寻址方式： 例如：访问”ABCD”中的第二字节，byte ptr [ebx+1] 正是因为字符串的首字节索引的寻址方式，因此字符串往往要与指针配合。在C语言中常见的， 例如：cha">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-10-19T07:00:20.000Z">
+<meta property="article:modified_time" content="2019-10-19T07:05:45.782Z">
+<meta property="article:tag" content="reverse">
+<meta property="article:tag" content="concept">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/10/19/reverse_data2/"/>
+
+
+
+
+
+  <title>（转载）数据逆向分析(2) | Hughes'Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hughes'Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/19/reverse_data2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hughes'Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">（转载）数据逆向分析(2)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-10-19T15:00:20+08:00">
+                2019-10-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/learning/" itemprop="url" rel="index">
+                    <span itemprop="name">learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h3><p>在C语言中，字符串是由字符组成，单字符不是字符串，至少有两个字符组成，且结尾字符是’/0’。</p>
+<p>例如：”ABCD” 内存中实际储存结构是 41H 42H 43H 44H 00H</p>
+<p>字符串的寻址，依靠首字节进行寄存器相对寻址方式：</p>
+<p>例如：访问”ABCD”中的第二字节，byte ptr [ebx+1]</p>
+<p>正是因为字符串的首字节索引的寻址方式，因此字符串往往要与指针配合。在C语言中常见的，</p>
+<p>例如：char *str=“ABCD”；//mov [xxxx],offset string “ABCD”</p>
+<p>另一种常见的方式，是将字符串放在数组里，需要首字节地址时，在数组名前加”&amp;”伪装成指针。当然，存在数组里的字符串，自然可以按照数组的访问方式，比如 直接寻址。</p>
+<h3 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h3><p>数组其实和普通变量没什么区别，每一个成员都是分别通过直接寻址方式访问。</p>
+<p>但只有一种情况例外，并且十分常见，即当索引号为变量时，使用相对寻址方式。</p>
+<p>例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">char a[4]&#x3D;&#123;&#39;A&#39;,&#39;A&#39;,&#39;A&#39;,&#39;&#x2F;0&#39;&#125;;</span><br><span class="line">for(int i&#x3D;0;i&lt;3;i++)</span><br><span class="line">a[i]+&#x3D;1;</span><br></pre></td></tr></table></figure>
+<p>对应反汇编：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">char a[4]&#x3D;&#123;&#39;A&#39;,&#39;A&#39;,&#39;A&#39;,&#39;&#x2F;0&#39;&#125;;</span><br><span class="line">0041139E  mov         byte ptr [a],41h</span><br><span class="line">004113A2  mov         byte ptr [ebp-7],41h</span><br><span class="line">004113A6  mov         byte ptr [ebp-6],41h</span><br><span class="line">004113AA  mov         byte ptr [ebp-5],0</span><br><span class="line"></span><br><span class="line">for(int i&#x3D;0;i&lt;3;i++)</span><br><span class="line">004113AE  mov         dword ptr [i],0</span><br><span class="line">004113B5  jmp         wmain+40h (4113C0h)</span><br><span class="line">004113B7  mov         eax,dword ptr [i]</span><br><span class="line">004113BA  add         eax,1</span><br><span class="line">004113BD  mov         dword ptr [i],eax</span><br><span class="line">004113C0  cmp         dword ptr [i],3</span><br><span class="line">004113C4  jge         wmain+5Ah (4113DAh)</span><br><span class="line"></span><br><span class="line">a[i]+&#x3D;1;</span><br><span class="line">004113C6  mov         eax,dword ptr [i]</span><br><span class="line">004113C9  movsx       ecx,byte ptr a[eax]</span><br><span class="line">004113CE  add         ecx,1</span><br><span class="line">004113D1  mov         edx,dword ptr [i]</span><br><span class="line">004113D4  mov         byte ptr [a+edx],cl ;反汇编器上常写为mov byte ptr a[edx],cl</span><br><span class="line">004113D8  jmp         wmain+37h (4113B7h)</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="数组的尴尬"><a href="#数组的尴尬" class="headerlink" title="数组的尴尬"></a>数组的尴尬</h3><p>除了源码调试，由于数组不标记边界，提通过数据初始化不能判断数组的始末位置<br>比如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">int i&#x3D;0;</span><br><span class="line">int a[3]&#x3D;&#123;1,2,3&#125;;</span><br><span class="line"></span><br><span class="line">OD反汇编结果：</span><br><span class="line"></span><br><span class="line">00412FFE   MOV DWORD PTR SS:[EBP-8],   0</span><br><span class="line">00413005   MOV DWORD PTR SS:[EBP-1C], 1</span><br><span class="line">0041300C   MOV DWORD PTR SS:[EBP-18], 2</span><br><span class="line">00413013   MOV DWORD PTR SS:[EBP-14], 3</span><br></pre></td></tr></table></figure>
+
+<p>显然，只看初始化我们很容易错误还原为 int a[4]={0,1,2,3};</p>
+<p>因此数组的边界判断，需要后续代码流程的辅助，因为数组通常都是同一类操作的集合。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/reverse/" rel="tag"># reverse</a>
+          
+            <a href="/tags/concept/" rel="tag"># concept</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/19/reverse_data1/" rel="next" title="（转载）数据逆向分析(1)">
+                <i class="fa fa-chevron-left"></i> （转载）数据逆向分析(1)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/10/19/reverse_data3/" rel="prev" title="（转载）数据逆向分析(3)">
+                （转载）数据逆向分析(3) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/hughlhz" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:hughes_lhz@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://sup3rgate.xyz/" title="Supergate" target="_blank">Supergate</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://47.95.203.90/" title="Weihongtao" target="_blank">Weihongtao</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://hujiekang.top/" title="Hujiekang" target="_blank">Hujiekang</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://106.54.80.67/" title="Centrix" target="_blank">Centrix</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://47.100.137.92/" title="CjDuan" target="_blank">CjDuan</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://blog.pushrbp.com" title="Cool" target="_blank">Cool</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="nav-number">1.</span> <span class="nav-text">字符串</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E7%BB%84"><span class="nav-number">2.</span> <span class="nav-text">数组</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E7%BB%84%E7%9A%84%E5%B0%B4%E5%B0%AC"><span class="nav-number">3.</span> <span class="nav-text">数组的尴尬</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-snowflake-o"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder"></span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

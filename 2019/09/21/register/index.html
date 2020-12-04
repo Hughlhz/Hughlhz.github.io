@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="concept,assembly," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="各类寄存器名字通用寄存器（都可以用作数据寄存器）AH&amp;AL＝AX(accumulator)：累加寄存器 BH&amp;BL＝BX(base)：基址寄存器 CH&amp;CL＝CX(count)：计数寄存器 DH&amp;DL＝DX(data)：数据寄存器 SP（Stack Pointer）：堆栈指针寄存器 BP（Base Pointer）：基址指针寄存器 SI（Source Index）：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Register">
+<meta property="og:url" content="http://yoursite.com/2019/09/21/register/index.html">
+<meta property="og:site_name" content="Hughes&#39;Blog">
+<meta property="og:description" content="各类寄存器名字通用寄存器（都可以用作数据寄存器）AH&amp;AL＝AX(accumulator)：累加寄存器 BH&amp;BL＝BX(base)：基址寄存器 CH&amp;CL＝CX(count)：计数寄存器 DH&amp;DL＝DX(data)：数据寄存器 SP（Stack Pointer）：堆栈指针寄存器 BP（Base Pointer）：基址指针寄存器 SI（Source Index）：">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-09-21T06:10:18.000Z">
+<meta property="article:modified_time" content="2019-09-21T06:24:52.084Z">
+<meta property="article:tag" content="concept">
+<meta property="article:tag" content="assembly">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/09/21/register/"/>
+
+
+
+
+
+  <title>Register | Hughes'Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hughes'Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/21/register/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hughes'Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Register</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-09-21T14:10:18+08:00">
+                2019-09-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/learning/" itemprop="url" rel="index">
+                    <span itemprop="name">learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="各类寄存器名字"><a href="#各类寄存器名字" class="headerlink" title="各类寄存器名字"></a>各类寄存器名字</h3><h4 id="通用寄存器（都可以用作数据寄存器）"><a href="#通用寄存器（都可以用作数据寄存器）" class="headerlink" title="通用寄存器（都可以用作数据寄存器）"></a>通用寄存器（都可以用作数据寄存器）</h4><p>AH&amp;AL＝AX(accumulator)：累加寄存器 <br>BH&amp;BL＝BX(base)：基址寄存器 <br>CH&amp;CL＝CX(count)：计数寄存器 <br>DH&amp;DL＝DX(data)：数据寄存器 <br>SP（Stack Pointer）：堆栈指针寄存器 <br>BP（Base Pointer）：基址指针寄存器 <br>SI（Source Index）：源变址寄存器 <br>DI（Destination Index）：目的变址寄存器 </p>
+<h4 id="段寄存器"><a href="#段寄存器" class="headerlink" title="段寄存器"></a>段寄存器</h4><a id="more"></a>
+<p>CS（Code Segment）代码段寄存器 <br>DS（Data Segment）：数据段寄存器 <br>SS（Stack Segment）：堆栈段寄存器 <br>ES（Extra Segment）：附加段寄存器 </p>
+<h4 id="变址寄存器"><a href="#变址寄存器" class="headerlink" title="变址寄存器"></a>变址寄存器</h4><p>SI（Source Index）：源变址寄存器 <br>DI（Destination Index）：目的变址寄存器 </p>
+<h4 id="指针寄存器"><a href="#指针寄存器" class="headerlink" title="指针寄存器"></a>指针寄存器</h4><p>SP（Stack Pointer）：堆栈指针寄存器 <br>BP（Base Pointer）：基址指针寄存器 </p>
+<h4 id="指令指针寄存器"><a href="#指令指针寄存器" class="headerlink" title="指令指针寄存器"></a>指令指针寄存器</h4><p>IP（Instruction Pointer）：指令指针寄存器，而PC的全称是program counter，在汇编中常用IP来表示PC</p>
+<h4 id="其他？？"><a href="#其他？？" class="headerlink" title="其他？？"></a>其他？？</h4><p>PSW 程序状态字寄存器<br>PSW用来存放两类信息：一类是体现当前指令执行结果的各种状态信息，如有无进位（CY位），有无溢出（OV位），结果正负（SF位），结果是否为零（ZF位），奇偶标志位（P位）等；另一类是存放控制信息，如允许中断(IF位)，跟踪标志（TF位）等。    有些机器中将PSW称为标志寄存器FR（Flag Register）<br>OF overflow flag： 溢出标志 操作数超出机器能表示的范围表示溢出,溢出时为1. <br>SF sign Flag： 符号标志 记录运算结果的符号,结果负时为1. <br>ZF zero flag： 零标志 运算结果等于0时为1,否则为0. <br>CF carry flag； 进位标志 最高有效位产生进位时为1,否则为0. <br>AF auxiliary carry flag： 辅助进位标志 运算时,第3位向第4位产生进位时为1,否则为0. <br>PF parity flag： 奇偶标志 运算结果操作数位为1的个数为偶数个时为1,否则为0. <br>DF direcion flag： 方向标志 用于串处理.DF=1时,每次操作后使SI和DI减小.DF=0时则增大. <br>IF interrupt flag： 中断标志 IF=1时,允许CPU响应可屏蔽中断,否则关闭中断. <br>TF trap flag： 陷阱标志 用于调试单步操作.</p>
+<p>IR Instruction Register： 指令寄存器，是临时放置从内存里面取得的程序指令的寄存器，用于存放当前从主存储器读出的正在执行的一条指令。<br>MDR定义：全称memory data register主存数据寄存器。<br>MAR定义：全称memory address register主存地址寄存器。</p>
+<h5 id="MDR-和MAR作用："><a href="#MDR-和MAR作用：" class="headerlink" title="MDR 和MAR作用："></a>MDR 和MAR作用：</h5><p>计算机中的主存数据寄存器(MDR)，与主存地址寄存器(MAR)帮助完成CPU和主存储器之间的通信，MAR用来保存数据被传输到的位置的地址或者数据来源位置的地址。MDR保存要被写入地址单元或者从地址单元读出的数据。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/concept/" rel="tag"># concept</a>
+          
+            <a href="/tags/assembly/" rel="tag"># assembly</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/21/hexo/" rel="next" title="Hexo&MD Syntax">
+                <i class="fa fa-chevron-left"></i> Hexo&MD Syntax
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/09/21/crc/" rel="prev" title="CRC">
+                CRC <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/hughlhz" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:hughes_lhz@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://sup3rgate.xyz/" title="Supergate" target="_blank">Supergate</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://47.95.203.90/" title="Weihongtao" target="_blank">Weihongtao</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://hujiekang.top/" title="Hujiekang" target="_blank">Hujiekang</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://106.54.80.67/" title="Centrix" target="_blank">Centrix</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://47.100.137.92/" title="CjDuan" target="_blank">CjDuan</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://blog.pushrbp.com" title="Cool" target="_blank">Cool</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%84%E7%B1%BB%E5%AF%84%E5%AD%98%E5%99%A8%E5%90%8D%E5%AD%97"><span class="nav-number">1.</span> <span class="nav-text">各类寄存器名字</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%9A%E7%94%A8%E5%AF%84%E5%AD%98%E5%99%A8%EF%BC%88%E9%83%BD%E5%8F%AF%E4%BB%A5%E7%94%A8%E4%BD%9C%E6%95%B0%E6%8D%AE%E5%AF%84%E5%AD%98%E5%99%A8%EF%BC%89"><span class="nav-number">1.1.</span> <span class="nav-text">通用寄存器（都可以用作数据寄存器）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AE%B5%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-number">1.2.</span> <span class="nav-text">段寄存器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%98%E5%9D%80%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-number">1.3.</span> <span class="nav-text">变址寄存器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8C%87%E9%92%88%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-number">1.4.</span> <span class="nav-text">指针寄存器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8C%87%E4%BB%A4%E6%8C%87%E9%92%88%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-number">1.5.</span> <span class="nav-text">指令指针寄存器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%EF%BC%9F%EF%BC%9F"><span class="nav-number">1.6.</span> <span class="nav-text">其他？？</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#MDR-%E5%92%8CMAR%E4%BD%9C%E7%94%A8%EF%BC%9A"><span class="nav-number">1.6.1.</span> <span class="nav-text">MDR 和MAR作用：</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-snowflake-o"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder"></span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
