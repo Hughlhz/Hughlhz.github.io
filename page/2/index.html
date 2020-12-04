@@ -250,182 +250,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/12/cnss_recruit/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hughes'Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/11/12/cnss_recruit/" itemprop="url">cnss_recruit</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-11-12T16:00:20+08:00">
-                2019-11-12
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/learning/" itemprop="url" rel="index">
-                    <span itemprop="name">learning</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="easy-flat"><a href="#easy-flat" class="headerlink" title="easy_flat"></a>easy_flat</h3><p>本题涉及代码混淆，具体是控制流平坦化<br>直接拖入IDA，F5：</p>
-<p><img src="/2019/11/12/cnss_recruit/easy_flat_1.png"></p>
-<p>然后查看流程框图：</p>
-<p><img src="/2019/11/12/cnss_recruit/easy_flat_2.png"></p>
-<p>经过晴宇哥的指点以后，我去搜了一些关于控制流平坦化的资料：</p>
-<p><img src="/2019/11/12/cnss_recruit/easy_flat_3.png"></p>
-<p>实际上，只是控制流程的方式变了，这道题相对简单，我们还是能够看出流程来。<br>继续分析伪代码，先看到一个长得像scanf的函数，把里面参数重命名为input，然后继续往下看，发现其中存在一个字符串比较的过程，点击查看被比较的另一个字符串后，发现是这样的字符串，长得很像flag,应该就是flag被加密后的形式.</p>
-<p><img src="/2019/11/12/cnss_recruit/easy_flat_4.png"></p>
-<p>现在就是要去寻找加密的方式,查看input被引用的地方,发现也就是这:</p>
-<p><img src="/2019/11/12/cnss_recruit/easy_flat_5.png"></p>
-<p><img src="/2019/11/12/cnss_recruit/easy_flat_6.png"></p>
-<h3 id="cnss-re-snake"><a href="#cnss-re-snake" class="headerlink" title="cnss-re-snake"></a>cnss-re-snake</h3><p>刚看到这道题目的时候有点懵，因为从来没有用过CheatEngine进行逆向调试，题目提示可以使用CE进行调试，于是我就先学了一波CE的教程，具体过程前文已经写了。<br>但是，学完使用CE后，仍然不会逆，于是跑去请教炮王，炮王不愧是炮王，虽然没帮我拿到Flag，但是给我演示了静态调试和动态调试的过程，受益匪浅。<br>下面是逆的过程。<br>首先把文件拖到ida里进行静态调试。找到主函数。</p>
-<p><img src="/2019/11/12/cnss_recruit/ida_snake_main.png"></p>
-<p>这一步不需要看伪代码也能看出,就是六个函数的调用。<br>我们这时候打开游戏来看，首先看到有个菜单，根据C语言的经验，应该至少有一个switch语句和死循环。然后我们开始游戏一看，游戏就是个贪食蛇的游戏，提示是这样：</p>
-<p>我们先用CE去搜得分，确实搜到了，但是正如提示的那样，直接修改是没有用的。<br>接着我们发现游戏失败时有对话框弹出，我们可以先尝试下搜索字符串。搜索到后查看调用：</p>
-<p><img src="/2019/11/12/cnss_recruit/ida_snake_frame.png"></p>
-<p>发现这个字符串在 <code>sub_4031EB</code> 函数里被调用,我们搜索进入这个函数,发现里面全是一些失败的提示消息:</p>
-<p><img src="/2019/11/12/cnss_recruit/ida_snake_fail.png"></p>
-<p>这里将这个函数名改成fail,以便于我们的理解。<br>fail函数被<code>sub_4027BE</code>函数调用,而这个函数有两个分支,其中一个是fail,那另一个应该就是succeed了吧.找到进去一看,应该就是了,但是整个函数很复杂,可能就是计算出flag的过程.我们查看下那个可疑的 <code>sub_4027BE</code>函数.查看之后,发现一个很熟悉的printf函数:</p>
-<p><img src="/2019/11/12/cnss_recruit/ida_snake_printf.png"></p>
-<p>这个函数告诉我们,得分对应的参数就是显示出来的分数,我们将它命名为score.<br>往上一看,发现这个score的值是dword_40eDC0赋予的,这个也许就是存储得分的真正位置.<br>那就继续看dword_40eDC0这个什么时候被访问,往下看我们发现这样一段代码:</p>
-<p><img src="/2019/11/12/cnss_recruit/ida_snake_key.png"></p>
-<p>这里面调用的函数正是我们之前怀疑的succeed函数,他们原来是在这里py交易的!<br>仔细看这段代码,发现出题人是将真正的得分的低八位和0xE9H相与,判断相与后的值是否大于265.<br>抓住这一点我们就可以拿到Flag了,<br>这时候进行动态调试,这里用的是CE.<br>我们要先找到得分对应的真正位置,将其改成265^0xE9的值就好了.<br>还是先搜索得分,然后找出访问了这个得分的这段代码,发现长这样:</p>
-<p><img src="/2019/11/12/cnss_recruit/ce_snake2.png"></p>
-<p>因为此时我们就在整个函数里面了,所以那个变量应该就在附近,我们看到483这个数字很可疑,因为1对应, —————————-我们找到这个变量的地址,将其修改成483,</p>
-<p><img src="/2019/11/12/cnss_recruit/ce_snake1.png"></p>
-<p>再去游戏里面,就发现通关拿到flag了,flag是: cnss{CE_caN_ju5T_Act_w1lfulLy!!}</p>
-<p><img src="/2019/11/12/cnss_recruit/flag_snake.png"></p>
-<h4 id="本题总结："><a href="#本题总结：" class="headerlink" title="本题总结："></a>本题总结：</h4><p>1、之前没有好好利用IDA去了解整个程序的主体就直接去动态调试，导致整个过程思路不明确，效率极低。<br>2、使用IDA进行调试时，可以用快捷键N修改变量名，函数名，这样有利于整个代码的阅读和理解。</p>
-<h3 id="Confusion"><a href="#Confusion" class="headerlink" title="Confusion"></a>Confusion</h3><p>直接拖入IDA，F5</p>
-<p><img src="/2019/11/12/cnss_recruit/ida_confusion1.png"></p>
-<p>看到这个像scanf一样的函数，心里就有个底了。<br><code>sub_426980</code> 这个应该就是读入的函数.<br>进入下个函数查看,简单分析后,发现应该是判断输入的flag的长度,如果长度是32个字符,才能够进入下个函数.<br>再下面的函数,是用来判断输入的flag的前五位是否是”cnss{“,如果不是的话,程序也会直接跳出.<br>再接下来看到一个比较复杂的函数,里面有很多次循环,应该是一个加密的函数.函数很复杂,直接逆出来的话,难度相当大.这时候要采用动态调试的方法,在函数执行的时候把flag找出来.<br>直接在函数返回之前下好断点,在寄存器里就找到了flag</p>
-<p><img src="/2019/11/12/cnss_recruit/ida_confusion2.png"></p>
-<p><img src="/2019/11/12/cnss_recruit/ida_confusion3.png"></p>
-<h4 id="本题总结"><a href="#本题总结" class="headerlink" title="本题总结"></a>本题总结</h4><p>1.IDA是真的好用<br>2.加密函数很复杂的时候,动态调试很顶</p>
-<h2 id="Surprise"><a href="#Surprise" class="headerlink" title="Surprise"></a>Surprise</h2>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/27/breakpoint/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1773,6 +1597,153 @@
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/14/ce/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hughes'Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/10/14/ce/" itemprop="url">初学CheatEngine的使用(内含CE Tutorial Games--1）</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-10-14T15:00:20+08:00">
+                2019-10-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/learning/" itemprop="url" rel="index">
+                    <span itemprop="name">learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="CheatEngine"><a href="#CheatEngine" class="headerlink" title="CheatEngine"></a>CheatEngine</h2><p>很早就接触过了CE修改器，当时是玩一些幼稚小游戏，然后用ce修改器修改金币和经验。不过也仅仅是接触，从来没有深入过，这次CNSS招新有道贪食蛇的题目(wtcl,还没写出来)，可以用CE调试,我就准备学下CE调试,然后刚刚好它有几个教程,这篇blog就来写下写CE教程题目的经历.<br>总共分为两部分,一个是Cheat Engine Tutorial,另一个是Cheat Engine Tutorial Games.</p>
+<h2 id="Cheat-Engine-Tutorial"><a href="#Cheat-Engine-Tutorial" class="headerlink" title="Cheat Engine Tutorial"></a>Cheat Engine Tutorial</h2><p>这部分非常基础,然后基本上就是CE的基本用法.<br>第一关到第八关有手就行,然后第九关有一个点我没接触过,这里记录下来.<br>第九关是个小游戏,敌我双方各两个人,但是敌人伤害高血还厚,我们打不过,而过关的条件就是把敌人乃一组特.(如图)<br><img src="/2019/10/14/ce/1p.png" alt="第九关"><br>首先肯定是搜索血量,很容易搜到四个人的血量的地址.然后F6,查看是什么改写这个地址.查看之后发现改写的时候调用的是同一个函数(如图).</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/10/14/ce/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
   </section>
 
   
@@ -1823,7 +1794,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-count">35</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>

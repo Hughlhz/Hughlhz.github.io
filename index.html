@@ -632,7 +632,7 @@
       
         
           
-            <h3 id="先留着之后补上"><a href="#先留着之后补上" class="headerlink" title="先留着之后补上"></a>先留着之后补上</h3>
+            
           
         
       
@@ -772,8 +772,7 @@
 
       
         
-          
-            <p>首先上图（非常细致）：</p>
+          <p>首先上图（非常细致）：</p>
 <p><img src="/2020/05/10/pe_program/pe_struct1.png"></p>
 <h3 id="相对重要的概念"><a href="#相对重要的概念" class="headerlink" title="相对重要的概念"></a>相对重要的概念</h3><table>
 <thead>
@@ -814,998 +813,13 @@
 <p><img src="/2020/05/10/pe_program/pe_struct2.png" alt="对应拉伸前、拉伸后（磁盘上、内存中）"></p>
 <p>32bit和64bit的PE文件格式大同小异，64bit的只不过修改了PE格式的少数几个域，大部分情况下，操作PE的代码可以同时适用32bit和64bit</p>
 <p>EXE和DLL都是PE格式文件 只不过其中的标识位不一样</p>
-<p>内存对齐：</p>
-<p>x86对齐：</p>
-<p>硬盘对齐  每200h个字节进行对齐</p>
-<p>内存对齐  每1000h个字节进行对齐</p>
-<p><img src="/2020/05/10/pe_program/memory_alignment.png"></p>
-<h3 id="PE文件组成"><a href="#PE文件组成" class="headerlink" title="PE文件组成"></a>PE文件组成</h3><p><img src="/2020/05/10/pe_program/pe_struct3.gif"></p>
-<p>主要是4部分：DOS、PE文件头、节表、节数据（文末有详细的对应表，比C更直观）</p>
-<h4 id="DOS"><a href="#DOS" class="headerlink" title="DOS"></a>DOS</h4><p>DOS内一共两部分，一个是DOS头，另一个是DOS Stub。</p>
-<h5 id="DOS头：-历史遗留"><a href="#DOS头：-历史遗留" class="headerlink" title="DOS头：(历史遗留)"></a>DOS头：(历史遗留)</h5><p>dos头一共64字节</p>
-<p>重要的数据：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">WORD e_magic     <span class="comment">//“MZ标记”用于判断是否为可执行文件</span></span><br><span class="line">DWORD e_lfanew   <span class="comment">//PE头相对于文件的偏移，用来定位PE文件</span></span><br></pre></td></tr></table></figure>
-
-<p>完整的结构：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//注释掉的不需要重点分析</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> _<span class="title">IMAGE_DOS_HEADER</span>&#123;</span></span><br><span class="line">    <span class="number">0X00</span> WORD e_magic;      <span class="comment">//※Magic DOS signature MZ(4Dh 5Ah):MZ标记:用于标记是否是可执行文件</span></span><br><span class="line">    <span class="comment">//0X02 WORD e_cblp;     //Bytes on last page of file</span></span><br><span class="line">    <span class="comment">//0X04 WORD e_cp;       //Pages in file</span></span><br><span class="line">    <span class="comment">//0X06 WORD e_crlc;     //Relocations</span></span><br><span class="line">    <span class="comment">//0X08 WORD e_cparhdr;  //Size of header in paragraphs</span></span><br><span class="line">    <span class="comment">//0X0A WORD e_minalloc; //Minimun extra paragraphs needs</span></span><br><span class="line">    <span class="comment">//0X0C WORD e_maxalloc; //Maximun extra paragraphs needs</span></span><br><span class="line">    <span class="comment">//0X0E WORD e_ss;       //intial(relative)SS value</span></span><br><span class="line">    <span class="comment">//0X10 WORD e_sp;       //intial SP value</span></span><br><span class="line">    <span class="comment">//0X12 WORD e_csum;     //Checksum</span></span><br><span class="line">    <span class="comment">//0X14 WORD e_ip;       //intial IP value</span></span><br><span class="line">    <span class="comment">//0X16 WORD e_cs;       //intial(relative)CS value</span></span><br><span class="line">    <span class="comment">//0X18 WORD e_lfarlc;   //File Address of relocation table</span></span><br><span class="line">    <span class="comment">//0X1A WORD e_ovno;     //Overlay number</span></span><br><span class="line">    <span class="comment">//0x1C WORD e_res[4];   //Reserved words</span></span><br><span class="line">    <span class="comment">//0x24 WORD e_oemid;    //OEM identifier(for e_oeminfo)</span></span><br><span class="line">    <span class="comment">//0x26 WORD e_oeminfo;  //OEM information;e_oemid specific</span></span><br><span class="line">    <span class="comment">//0x28 WORD e_res2[10]; //Reserved words</span></span><br><span class="line">    <span class="number">0x3C</span> DWORD e_lfanew;    <span class="comment">//※Offset to start of PE header:定位PE文件，PE头相对于文件的偏移量</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<h5 id="DOS-Stub："><a href="#DOS-Stub：" class="headerlink" title="DOS Stub："></a>DOS Stub：</h5><p>大小不恒定，但是可以通过PE头的位置计算出来；而且病毒程序可以在这里注入代码</p>
-<h4 id="PE文件头"><a href="#PE文件头" class="headerlink" title="PE文件头"></a>PE文件头</h4><p>PE头一共可分3部分：标志部分，标准PE头、可选PE头</p>
-<h5 id="标志部分："><a href="#标志部分：" class="headerlink" title="标志部分："></a>标志部分：</h5><p>四个字节，内容是PE00</p>
-<h5 id="标准PE头："><a href="#标准PE头：" class="headerlink" title="标准PE头："></a>标准PE头：</h5><p>大小是20个字节</p>
-<p>重要的数据：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">WORD Machine;                  <span class="comment">//※程序执行的CPU平台:0X0:任何平台，0X14C:intel i386及后续处理器</span></span><br><span class="line">WORD NumberOfSections;         <span class="comment">//※PE文件中区块数量，如果要增加或者合并节，就需要来修改该值</span></span><br><span class="line">WORD SizeOfOptionalHeader    <span class="comment">//※可选头的大小，32位PE文件默认E0H</span></span><br><span class="line"><span class="number">64</span>位PE文件默认为F0H  大小可以自定义</span><br></pre></td></tr></table></figure>
-
-
-
-<p>完整的结构：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//标准PE头:最基础的文件信息，共20字节</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> _<span class="title">IMAGE_FILE_HEADER</span>&#123;</span></span><br><span class="line">    <span class="number">0x00</span> WORD Machine;                  <span class="comment">//※程序执行的CPU平台:0X0:任何平台，0X14C:intel i386及后续处理器</span></span><br><span class="line">    <span class="number">0x02</span> WORD NumberOfSections;         <span class="comment">//※PE文件中区块数量</span></span><br><span class="line">    <span class="number">0x04</span> DWORD TimeDateStamp;           <span class="comment">//时间戳：连接器产生此文件的时间距1969/12/31-16:00P:00的总秒数</span></span><br><span class="line">    <span class="comment">//0x08 DWORD PointerToSymbolTable;  //COFF符号表格的偏移位置。此字段只对COFF除错信息有用</span></span><br><span class="line">    <span class="comment">//0x0c DWORD NumberOfSymbols;       //COFF符号表格中的符号个数。该值和上一个值在release版本的程序里为0</span></span><br><span class="line">    <span class="comment">//0x10 WORD SizeOfOptionalHeader;   //IMAGE_OPTIONAL_HEADER结构的大小(字节数):32位默认E0H,64位默认F0H(可修改)</span></span><br><span class="line">    <span class="number">0x12</span> WORD Characteristics;          <span class="comment">//※描述文件属性,eg:</span></span><br><span class="line">                                        <span class="comment">//单属性(只有1bit为1)：#define IMAGE_FILE_DLL 0x2000  //File is a DLL.</span></span><br><span class="line">                                        <span class="comment">//组合属性(多个bit为1，单属性或运算):0X010F 可执行文件</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-
-
-<h5 id="可选PE头："><a href="#可选PE头：" class="headerlink" title="可选PE头："></a>可选PE头：</h5><p>32bitPE文件的大小是224字节，这个结构题大小可以扩展，在标准PE头中修改可选PE头的大小</p>
-<p>重要的数据：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">WORD Magic；     <span class="comment">//说明文件类型   10B为32位下的PE文件   20B为64位下的PE文件</span></span><br><span class="line">DWORD AddressOfEntryPoint   <span class="comment">//程序的入口地址</span></span><br><span class="line">DWORD BaseOfCode    <span class="comment">//代码开始的基地址</span></span><br><span class="line">DWORD BaseOfData    <span class="comment">//数据开始的基地址</span></span><br><span class="line">DWORD ImageBase     <span class="comment">//内存镜像的基地址</span></span><br><span class="line">DWORD CheckSum;            <span class="comment">//PE文件CRC校验和，判断文件是否被修改;一般只对极其重要的文件才会判断,比如系统关键DLL之类;如果对相关文件进行了修改，一定要改这个</span></span><br><span class="line">DWORD SectionAlignment   内存对齐</span><br><span class="line">DWORD FileAlignment  文件对齐</span><br><span class="line">DWORD SizeOfImage    内存中整个PE文件映射的尺寸,必须是内存对齐的整数倍;</span><br><span class="line">DWORD SizeOfHeaders  所有头+节表按照文件对齐后的大小,否则加载会出错;</span><br></pre></td></tr></table></figure>
-
-<p>完整的结构：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//可选PE头</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> _<span class="title">IMAGE_OPTIONAL_HEADER</span>&#123;</span></span><br><span class="line">    <span class="number">0x00</span> WORD Magic;                    <span class="comment">//※幻数(魔数)，0x0107:ROM image,0x010B:32位PE，0X020B:64位PE </span></span><br><span class="line">    <span class="comment">//0x02 BYTE MajorLinkerVersion;     //连接器主版本号</span></span><br><span class="line">    <span class="comment">//0x03 BYTE MinorLinkerVersion;     //连接器副版本号</span></span><br><span class="line">    <span class="number">0x04</span> DWORD SizeOfCode;              <span class="comment">//所有代码段的总和大小,注意：必须是FileAlignment的整数倍,存在但没用</span></span><br><span class="line">    <span class="number">0x08</span> DWORD SizeOfInitializedData;   <span class="comment">//已经初始化数据的大小,注意：必须是FileAlignment的整数倍,存在但没用</span></span><br><span class="line">    <span class="number">0x0c</span> DWORD SizeOfUninitializedData; <span class="comment">//未经初始化数据的大小,注意：必须是FileAlignment的整数倍,存在但没用</span></span><br><span class="line">    <span class="number">0x10</span> DWORD AddressOfEntryPoint;     <span class="comment">//※程序入口地址OEP，这是一个RVA(Relative Virtual Address),通常会落在.textsection,此字段对于DLLs/EXEs都适用。</span></span><br><span class="line">    <span class="number">0x14</span> DWORD BaseOfCode;              <span class="comment">//代码段起始地址(代码基址),(代码的开始和程序无必然联系)</span></span><br><span class="line">    <span class="number">0x18</span> DWORD BaseOfData;              <span class="comment">//数据段起始地址(数据基址)</span></span><br><span class="line">    <span class="number">0x1c</span> DWORD ImageBase;               <span class="comment">//※内存镜像基址(默认装入起始地址),默认为4000H</span></span><br><span class="line">    <span class="number">0x20</span> DWORD SectionAlignment;        <span class="comment">//※内存对齐:一旦映像到内存中，每一个section保证从一个「此值之倍数」的虚拟地址开始</span></span><br><span class="line">    <span class="number">0x24</span> DWORD FileAlignment;           <span class="comment">//※文件对齐：最初是200H，现在是1000H</span></span><br><span class="line">    <span class="comment">//0x28 WORD MajorOperatingSystemVersion;    //所需操作系统主版本号</span></span><br><span class="line">    <span class="comment">//0x2a WORD MinorOperatingSystemVersion;    //所需操作系统副版本号</span></span><br><span class="line">    <span class="comment">//0x2c WORD MajorImageVersion;              //自定义主版本号,使用连接器的参数设置,eg:LINK /VERSION:2.0 myobj.obj</span></span><br><span class="line">    <span class="comment">//0x2e WORD MinorImageVersion;              //自定义副版本号,使用连接器的参数设置</span></span><br><span class="line">    <span class="comment">//0x30 WORD MajorSubsystemVersion;          //所需子系统主版本号,典型数值4.0(Windows 4.0/即Windows 95)</span></span><br><span class="line">    <span class="comment">//0x32 WORD MinorSubsystemVersion;          //所需子系统副版本号</span></span><br><span class="line">    <span class="comment">//0x34 DWORD Win32VersionValue;             //总是0</span></span><br><span class="line">    <span class="number">0x38</span> DWORD SizeOfImage;         <span class="comment">//※PE文件在内存中映像总大小,sizeof(ImageBuffer),SectionAlignment的倍数</span></span><br><span class="line">    <span class="number">0x3c</span> DWORD SizeOfHeaders;       <span class="comment">//※DOS头(64B)+PE标记(4B)+标准PE头(20B)+可选PE头+节表的总大小，按照文件对齐(FileAlignment的倍数)</span></span><br><span class="line">    <span class="number">0x40</span> DWORD CheckSum;            <span class="comment">//PE文件CRC校验和，判断文件是否被修改</span></span><br><span class="line">    <span class="comment">//0x44 WORD Subsystem;          //用户界面使用的子系统类型</span></span><br><span class="line">    <span class="comment">//0x46 WORD DllCharacteristics;   //总是0</span></span><br><span class="line">    <span class="number">0x48</span> DWORD SizeOfStackReserve;  <span class="comment">//默认线程初始化栈的保留大小</span></span><br><span class="line">    <span class="number">0x4c</span> DWORD SizeOfStackCommit;   <span class="comment">//初始化时实际提交的线程栈大小</span></span><br><span class="line">    <span class="number">0x50</span> DWORD SizeOfHeapReserve;   <span class="comment">//默认保留给初始化的process heap的虚拟内存大小</span></span><br><span class="line">    <span class="number">0x54</span> DWORD SizeOfHeapCommit;    <span class="comment">//初始化时实际提交的process heap大小</span></span><br><span class="line">    <span class="comment">//0x58 DWORD LoaderFlags;       //总是0</span></span><br><span class="line">    <span class="number">0x5c</span> DWORD NumberOfRvaAndSizes; <span class="comment">//目录项数目：总为0X00000010H(16)</span></span><br><span class="line">    <span class="number">0x60</span> _IMAGE_DATA_DIRECTORY DataDirectory[IMAGE_NUMBEROF_DIRECTORY_ENTRIES];<span class="comment">//#define IMAGE_NUMBEROF_DIRECTORY_ENTRIES 16</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="节表"><a href="#节表" class="headerlink" title="节表"></a>节表</h4><p>节表占40个字节，节表是用来确定节数据的属性的，数据都存在节中</p>
-<p>重要的数据成员：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Misc.(DWORD) VirtualSize;   <span class="comment">//节的尺寸</span></span><br><span class="line">DWORD   VirtualAddress;　 <span class="comment">//虚拟地址,RVA(偏移)</span></span><br><span class="line">DWORD   SizeOfRawData;  <span class="comment">//文件中的大小</span></span><br><span class="line">DWORD   PointerToRawData;   <span class="comment">//文件中的偏移</span></span><br><span class="line">DWORD   Characteristics;　<span class="comment">//节的属性</span></span><br></pre></td></tr></table></figure>
-
-<table>
-<thead>
-<tr>
-<th>位置</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>1</td>
-<td>已经废除</td>
-</tr>
-<tr>
-<td>2</td>
-<td></td>
-</tr>
-<tr>
-<td>3</td>
-<td></td>
-</tr>
-<tr>
-<td>4</td>
-<td></td>
-</tr>
-<tr>
-<td>5</td>
-<td></td>
-</tr>
-<tr>
-<td><strong>6</strong></td>
-<td><strong>此节包含可执行代码。代码段才用“.text”</strong></td>
-</tr>
-<tr>
-<td><strong>7</strong></td>
-<td><strong>此节包含已初始化的数据。“.data”</strong></td>
-</tr>
-<tr>
-<td>8</td>
-<td>此节包含未初始化的数据。“.bss”</td>
-</tr>
-<tr>
-<td>9</td>
-<td>已经废除</td>
-</tr>
-<tr>
-<td>10</td>
-<td></td>
-</tr>
-<tr>
-<td>11</td>
-<td></td>
-</tr>
-<tr>
-<td>12</td>
-<td></td>
-</tr>
-<tr>
-<td>13</td>
-<td></td>
-</tr>
-<tr>
-<td>14</td>
-<td></td>
-</tr>
-<tr>
-<td>15</td>
-<td></td>
-</tr>
-<tr>
-<td>16</td>
-<td>此节包含通过全局指针（GP）来引用的数据。</td>
-</tr>
-<tr>
-<td>17</td>
-<td>已经废除</td>
-</tr>
-<tr>
-<td>18</td>
-<td></td>
-</tr>
-<tr>
-<td>19</td>
-<td></td>
-</tr>
-<tr>
-<td>20</td>
-<td></td>
-</tr>
-<tr>
-<td>21</td>
-<td></td>
-</tr>
-<tr>
-<td>22</td>
-<td></td>
-</tr>
-<tr>
-<td>23</td>
-<td></td>
-</tr>
-<tr>
-<td>24</td>
-<td></td>
-</tr>
-<tr>
-<td>25</td>
-<td>此节包含扩展的重定位信息。</td>
-</tr>
-<tr>
-<td>26</td>
-<td>此节可以在需要时被丢弃。</td>
-</tr>
-<tr>
-<td>27</td>
-<td>此节不能被缓存。</td>
-</tr>
-<tr>
-<td>28</td>
-<td>此节不能被交换到页面文件中。</td>
-</tr>
-<tr>
-<td>29</td>
-<td>此节可以在内存中共享。</td>
-</tr>
-<tr>
-<td><strong>30</strong></td>
-<td><strong>此节可以作为代码执行。</strong></td>
-</tr>
-<tr>
-<td><strong>31</strong></td>
-<td><strong>此节可读。（几乎都设置此节）</strong></td>
-</tr>
-<tr>
-<td><strong>32</strong></td>
-<td><strong>此节可写。</strong></td>
-</tr>
-</tbody></table>
-<p>完整的节表结构：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">IMAGE_SECTION_HEADER</span> &#123;</span></span><br><span class="line">    BYTE    Name[IMAGE_SIZEOF_SHORT_NAME];　　<span class="comment">/*节区的名字*/</span></span><br><span class="line">    <span class="class"><span class="keyword">union</span> &#123;</span></span><br><span class="line">            DWORD   PhysicalAddress;</span><br><span class="line">            DWORD   VirtualSize;　　　　　　　　<span class="comment">/*节区的尺寸*/</span></span><br><span class="line">    &#125; Misc;</span><br><span class="line">    DWORD   VirtualAddress;　　　　　　　　　　<span class="comment">/*虚拟地址 节区的RVA地址(偏移)*/</span></span><br><span class="line">    DWORD   SizeOfRawData;　　　　　　　　　　 <span class="comment">/*在文件中对齐的尺寸*/</span></span><br><span class="line">    DWORD   PointerToRawData;　　　　　　　　 <span class="comment">/*在文件中的偏移*/</span></span><br><span class="line">    DWORD   PointerToRelocations;　　　　　　<span class="comment">/*在OBJ文件中使用*/</span></span><br><span class="line">    DWORD   PointerToLinenumbers;　　　　　　<span class="comment">/*行号表位置,调试使用*/</span></span><br><span class="line">    WORD    NumberOfRelocations;　　　　　　<span class="comment">/*在OBJ文件中使用*/</span></span><br><span class="line">    WORD    NumberOfLinenumbers;　　　　　　<span class="comment">/*行号表的数量*/</span></span><br><span class="line">    DWORD   Characteristics;　　　　　　　　<span class="comment">/*节的属性*/</span></span><br><span class="line">&#125; IMAGE_SECTION_HEADER, *PIMAGE_SECTION_HEADER;</span><br></pre></td></tr></table></figure>
-
-<h4 id="节数据（转载）"><a href="#节数据（转载）" class="headerlink" title="节数据（转载）"></a>节数据（转载）</h4><p>下表描述了保留的节以及它们的属性，后面是对出现在可执行文件中的节的详细描述。这些节是微软的编译产品所定义的不是系统定义的，实际可以不拘泥于此。</p>
-<table>
-<thead>
-<tr>
-<th>节名</th>
-<th>内容</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>.bss</td>
-<td>未初始化的数据</td>
-</tr>
-<tr>
-<td><strong>.data</strong></td>
-<td><strong>代码节</strong></td>
-</tr>
-<tr>
-<td><strong>.edata</strong></td>
-<td><strong>导出表</strong></td>
-</tr>
-<tr>
-<td><strong>.idata</strong></td>
-<td><strong>导入表</strong></td>
-</tr>
-<tr>
-<td>.idlsym</td>
-<td>包含已注册的SEH，它们用以支持IDL属性</td>
-</tr>
-<tr>
-<td>.pdata</td>
-<td>异常信息</td>
-</tr>
-<tr>
-<td><strong>.rdata</strong></td>
-<td><strong>只读的已初始化数据（用于常量）</strong></td>
-</tr>
-<tr>
-<td><strong>.reloc</strong></td>
-<td><strong>重定位信息</strong></td>
-</tr>
-<tr>
-<td><strong>.rsrc</strong></td>
-<td><strong>资源目录</strong></td>
-</tr>
-<tr>
-<td>.sbss</td>
-<td>与GP相关的未初始化数据</td>
-</tr>
-<tr>
-<td>.sdata</td>
-<td>与GP相关的已初始化数据</td>
-</tr>
-<tr>
-<td>.srdata</td>
-<td>与GP相关的只读数据</td>
-</tr>
-<tr>
-<td><strong>.text</strong></td>
-<td><strong>默认代码节</strong></td>
-</tr>
-</tbody></table>
-<h5 id="edata节："><a href="#edata节：" class="headerlink" title=".edata节："></a>.edata节：</h5><p>文件A的函数K被文件B调用时，函数K就称为导出函数。导出函数通常出现在DLL中，也可以是exe文件。</p>
-<p>下表描述了导出节的一般结构。</p>
-<table>
-<thead>
-<tr>
-<th>表名</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>导出目录表</td>
-<td>它给出了其它各种导出表的位置和大小。</td>
-</tr>
-<tr>
-<td>导出地址表</td>
-<td>一个由导出函数的RVA组成的数组。它们是导出的函数和数据在代码节和数据节内的实际地址。其它镜像文件可以通过使用这个表的索引（序数）来调用函数。</td>
-</tr>
-<tr>
-<td>导出名称指针表</td>
-<td>一个由指向导出函数名称的指针组成的数组，按<strong>升序</strong>排列。大小写敏感。</td>
-</tr>
-<tr>
-<td>导出序数表</td>
-<td>一个由对应于导出名称指针表中各个成员的序数组成的数组。它们的对应是通过位置来体现的，因此导出名称指针表与导出序数表成员数目必须相同。</td>
-</tr>
-<tr>
-<td>导出名称表</td>
-<td>一系列以NULL结尾的ASCII码字符串。导出名称指针表中的成员都指向这个区域。它们都是公用名称，函数导入与导出就是通过它们。</td>
-</tr>
-</tbody></table>
-<p>当其它镜像文件通过名称导入函数时，Win32加载器通过导出名称指针表来搜索匹配的字符串。如果找到，它就查找导出序数表中相应的成员（也就是说，将找到的导出名称指针表的索引作为导出序数表的索引来使用）来获取与导入函数相关联的序数。获取的这个序数是导出地址表的索引，这个索引对应的元素给出了所需函数的实际位置。每个导出函数都可以通过序数进行访问。</p>
-<p>当其它镜像文件通过序数导入函数时，就不再需要通过导出名称指针表来搜索匹配的字符串。因此直接使用序数效率会更高。但是导出名称容易记忆，它不需要用户记住各个符号在表中的索引。</p>
-<h6 id="导出目录表"><a href="#导出目录表" class="headerlink" title="导出目录表"></a>导出目录表</h6><p>导出目录表是导出函数信息的开始部分，它描述了导出函数信息中其余部分的内容。</p>
-<table>
-<thead>
-<tr>
-<th>偏移</th>
-<th>大小</th>
-<th>英文名</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>0</td>
-<td>4</td>
-<td>Export Flags</td>
-<td>保留，必须为0。</td>
-</tr>
-<tr>
-<td>4</td>
-<td>4</td>
-<td>Time/Date StampMajor Version</td>
-<td>导出函数被创建的日期和时间。这个值与NT头的第一部分TimeDateStamp相同。</td>
-</tr>
-<tr>
-<td>8</td>
-<td>2</td>
-<td>Major Version</td>
-<td>主版本号。</td>
-</tr>
-<tr>
-<td>10</td>
-<td>2</td>
-<td>Minor Version</td>
-<td>次版本号。</td>
-</tr>
-<tr>
-<td>12</td>
-<td>4</td>
-<td>Name RVA</td>
-<td>包含这个DLL全名的ASCII码字符串RVA。以一个NULL字节结尾。</td>
-</tr>
-<tr>
-<td>16</td>
-<td>4</td>
-<td>Ordinal Base</td>
-<td>导出函数的起始序数值。它通常被设置为1。</td>
-</tr>
-<tr>
-<td>20</td>
-<td>4</td>
-<td>NumberOfFunctions</td>
-<td>导出函数中<strong>所有</strong>元素的数目。</td>
-</tr>
-<tr>
-<td>24</td>
-<td>4</td>
-<td>NumberOfNames</td>
-<td>导出名称指针表中元素的数目。它同时也是导出序数表中元素的数目。</td>
-</tr>
-<tr>
-<td>28</td>
-<td>4</td>
-<td>AddressOfFunctions</td>
-<td>导出地址表RVA。</td>
-</tr>
-<tr>
-<td>32</td>
-<td>4</td>
-<td>AddressOfNames</td>
-<td>导出名称指针表RVA。</td>
-</tr>
-<tr>
-<td>36</td>
-<td>4</td>
-<td>AddressOfNameOrdinals</td>
-<td>导出序数表RVA。</td>
-</tr>
-</tbody></table>
-<h6 id="导出地址表（Export-Address-Table，EAT）"><a href="#导出地址表（Export-Address-Table，EAT）" class="headerlink" title="导出地址表（Export Address Table，EAT）"></a>导出地址表（Export Address Table，EAT）</h6><p>导出地址表的格式为下表所述的两种格式之一。如果指定的地址<strong>不是</strong>位于导出节（其地址和长度由NT头给出）中，那么这个域就是一个Export RVA；否则这个域是一个Forwarder RVA，它给出了一个位于其它DLL中的符号的名称。</p>
-<table>
-<thead>
-<tr>
-<th>偏移</th>
-<th>大小</th>
-<th>域</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>0</td>
-<td>4</td>
-<td>Export RVA</td>
-<td>当加载进内存时，导出函数RVA。</td>
-</tr>
-<tr>
-<td>0</td>
-<td>4</td>
-<td>Forwarder RVA</td>
-<td>这是指向导出节中一个以NULL结尾的ASCII码字符串的指针。这个字符串必须位于Export Table（导出表）数据目录项给出的范围之内。这个字符串给出了导出函数所在DLL的名称以及导出函数的名称（例如“MYDLL.expfunc”），或者DLL的名称以及导出函数的序数值（例如“MYDLL.#27”）。</td>
-</tr>
-</tbody></table>
-<p>Forwarder RVA导出了其它镜像中定义的函数，使它看起来好像是当前镜像导出的一样。因此对于当前镜像来说，这个符号同时既是导入函数又是导出函数。</p>
-<p>例如对于Windows XP系统中的Kernel32.dll文件来说，它导出的“HeapAlloc”被转发到“NTDLL.RtlAllocateHeap”。这样就允许应用程序使用Windows XP系统中的Ntdll.dll模块而不需要实际包含任何相关的导入信息。应用程序的导入表只与Kernel32.dll有关。</p>
-<p>导出地址表的的值有时为0，此时表明这里没有导出函数。这是为了能与以前版本兼容，省去修改的麻烦。</p>
-<h6 id="导出名称指针表"><a href="#导出名称指针表" class="headerlink" title="导出名称指针表"></a>导出名称指针表</h6><p>导出名称指针表是由导出名称表中的字符串的地址（RVA）组成的数组。二进制进行排序的，以便于搜索。</p>
-<p><strong>只有当导出名称指针表中包含指向某个导出名称的指针时，这个导出名称才算被定义。</strong>换句话说，导出名称指针表的值有可能为0，这是为了能与前面版本兼容。</p>
-<h6 id="导出序数表"><a href="#导出序数表" class="headerlink" title="导出序数表"></a>导出序数表</h6><p>导出序数表是由导出地址表的索引组成的一个数组，每个序数长16位。必须从序数值中<strong>减去</strong>Ordinal Base域的值得到的才是导出地址表真正的索引。注意，导出地址表真正的索引真正的索引是从0开始的。由此可见，微软弄出Ordinal Base是找麻烦的。导出序数表的值和导出地址表的索引的值都是无符号数。</p>
-<p>导出名称指针表和导出名称序数表是两个并列的数组，将它们分开是为了使它们可以分别按照各自的边界（前者是4个字节，后者是2个字节）对齐。在进行操作时，由导出名称指针这一列给出导出函数的名称，而由导出序数这一列给出这个导出函数对应的序数。导出名称指针表的成员和导出序数表的成员通过同一个索引相关联。</p>
-<h6 id="导出名称表（Export-Name-Table，ENT）"><a href="#导出名称表（Export-Name-Table，ENT）" class="headerlink" title="导出名称表（Export Name Table，ENT）"></a>导出名称表（Export Name Table，ENT）</h6><p>导出名称表的结构就是长度可变的一系列以NULL结尾的ASCII码字符串。 导出名称表包含的是导出名称指针表实际指向的字符串。这个表的RVA是由导出名称指针表的第1个值来确定的。这个表中的字符串都是函数名称，其它文件可以通过它们调用函。</p>
-<h6 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h6><p>①用序数调用<br>当可执行文件用序数调用函数时，该序数就是导出函数地址表的真实索引。如果索引是错误的就有可能出现不可预知的错误。最著名的例子就是Windows XP在升级Server 2补丁之后，有很多程序都不能运行就是这个原因。微软用序数这种方法被大多数危险程序（病毒、木马）所引用，同样的微软自己也用这种方法来使用一些隐含的函数。最后受害者还是广大的用户，因为使用序数方法的绝大部分程序是有着不可告人的目的的。</p>
-<p>②用函数名调用<br>当可执行文件用函数名调用时，加载器会通过AddressOfNames以2进制的方法找到第一个相同的函数名。假如找到的是第X个函数名，则在AddressOfNameOrdinals中取出第X个值，该值再<strong>减去</strong>Ordinal Base则为函数地址的真实索引。</p>
-<h5 id="idata节"><a href="#idata节" class="headerlink" title="idata节"></a>idata节</h5><p>首先，您得了解什么是导入函数。一个导入函数是被某模块调用的但又不在调用者模块中的函数，因而命名为“import（导入）”。导入函数实际位于一个或者更多的DLL里。调用者模块里只保留一些函数信息，包括函数名及其驻留的DLL名。现在，我们怎样才能找到PE文件中保存的信息呢? 转到 data directory 寻求答案吧。</p>
-<p>文件中导入信息的典型布局如下：</p>
-<p><img src="/2020/05/10/pe_program/section1.bmp" alt="section1"></p>
-<p>典型的导入节布局</p>
-<h6 id="导入目录表"><a href="#导入目录表" class="headerlink" title="导入目录表"></a>导入目录表</h6><p>导入目录表是由导入目录项组成的数组，每个导入目录项对应着一个导入的DLL。最后一个导入目录项是空的（全部域的值都为NULL），用来指明目录表的结尾。</p>
-<p>每个导入目录项的格式如下：</p>
-<table>
-<thead>
-<tr>
-<th>偏移</th>
-<th>大小</th>
-<th>域</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>0</td>
-<td>4</td>
-<td>Import Lookup Table RVA</td>
-<td>导入查找表的RVA。这个表包含了每一个导入函数的名称或序数。</td>
-</tr>
-<tr>
-<td>4</td>
-<td>4</td>
-<td>Time/Date Stamp</td>
-<td>当镜像与相应的DLL绑定之后，这个域被设置为这个DLL的日期/时间戳。</td>
-</tr>
-<tr>
-<td>8</td>
-<td>4</td>
-<td>Forwarder Chain</td>
-<td>第一个转发项的索引。</td>
-</tr>
-<tr>
-<td>12</td>
-<td>4</td>
-<td>Name RVA</td>
-<td>包含DLL名称的ASCII码字符串RVA。</td>
-</tr>
-<tr>
-<td>16</td>
-<td>4</td>
-<td>Import Address RVA</td>
-<td>导入地址表的RVA。这个表的内容与导入查找表的内容完全一样。</td>
-</tr>
-</tbody></table>
-<h6 id="导入查找表"><a href="#导入查找表" class="headerlink" title="导入查找表"></a>导入查找表</h6><p>导入查找表是由长度为32位(PE32)或64位(PE32+)的数字组成的数组。其中的每一个元素都是位域，其格式如下表所示。在这种格式中，位31(PE32)或位63(PE32+)是最高位。这些项描述了从给定的DLL导入的所有函数。最后一个项被设置为0(NULL)，用来指明表的结尾。</p>
-<table>
-<thead>
-<tr>
-<th>偏移</th>
-<th>大小</th>
-<th>位域</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>31/63</td>
-<td>1</td>
-<td>Ordinal/Name Flag</td>
-<td>如果这个位为1，说明是通过序数导入的。否则是通过名称导入的。测试这个位的掩码为0x80000000(PE32)或)0x8000000000000000(PE32+)。</td>
-</tr>
-<tr>
-<td>15-0</td>
-<td>16</td>
-<td>Ordinal Number</td>
-<td>序数值(16位长)。只有当Ordinal/Name Flag域为1(即通过序数导入)时才使用这个域。位30-15(PE32)或62-15(PE32+)必须为0。</td>
-</tr>
-<tr>
-<td>30-0</td>
-<td>31</td>
-<td>Hint/Name Table RVA</td>
-<td>提示/名称表项的RVA(31位长)。只有当Ordinal/Name Flag域为0(即通过名称导入)时才使用这个域。对于PE32+来说，位62-31必须为0。</td>
-</tr>
-</tbody></table>
-<h6 id="提示-名称表"><a href="#提示-名称表" class="headerlink" title="提示/名称表"></a>提示/名称表</h6><p>提示/名称表中的每一个元素结构如下：</p>
-<table>
-<thead>
-<tr>
-<th>偏移</th>
-<th>大小</th>
-<th>域</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>0</td>
-<td>2</td>
-<td>Hint</td>
-<td>指出名称指针表的索引。当搜索匹配字符串时首选使用这个值。如果匹配失败，再在DLL的导出名称指针表中进行2进制搜索。</td>
-</tr>
-<tr>
-<td>2</td>
-<td>可变</td>
-<td>Name</td>
-<td>包含导入函数名称的ASCII码字符串。这个字符串必须与DLL导出的函数名称匹配。同时这个字符串区分大小写并且以NULL结尾。</td>
-</tr>
-<tr>
-<td>*</td>
-<td>0或1</td>
-<td>Pad</td>
-<td>为了让提示/名称表的下一个元素出现在偶数地址，这里可能需要填充0个或1个NULL字节。</td>
-</tr>
-</tbody></table>
-<h6 id="导入地址表"><a href="#导入地址表" class="headerlink" title="导入地址表"></a>导入地址表</h6><p>导入地址表的结构和内容与导入查找表完全一样，直到文件被绑定。在绑定过程中，用导入函数的32位(PE32)或64位(PE32+)地址覆盖导入地址表中的相应项。这些地址是导入函数的实际内存地址，尽管技术上仍把它们称为“虚拟地址”。加载器通常会处理绑定。</p>
-<h5 id="reloc节"><a href="#reloc节" class="headerlink" title=".reloc节"></a>.reloc节</h5><p>基址重定位表包含了镜像中所有需要重定位的内容。NT头中的数据目录中的Base Relocation Table（基址重定位表）域给出了基址重定位表所占的字节数。基址重定位表被划分成许多块，每一块表示一个4K页面范围内的基址重定位信息，它必须从32位边界开始。</p>
-<h6 id="基址重定位块"><a href="#基址重定位块" class="headerlink" title="基址重定位块"></a>基址重定位块</h6><p>每个基址重定位块的开头都是如下结构：</p>
-<table>
-<thead>
-<tr>
-<th>偏移</th>
-<th>大小</th>
-<th>域</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>0</td>
-<td>4</td>
-<td>Page RVA</td>
-<td>将镜像基址与这个域(页面RVA)的和加到每个偏移地址处最终形成一个VA，这个VA就是要进行基址重定位的地方。</td>
-</tr>
-<tr>
-<td>4</td>
-<td>4</td>
-<td>Block Size</td>
-<td>基址重定位块所占的总字节数，其中包括Page RVA域和Block Size域以及跟在它们后面的Type/Offset域。</td>
-</tr>
-</tbody></table>
-<p>Block Size域后面跟着数目不定的Type/Offset位域。它们中的每一个都是一个WORD（2字节），其结构如下：</p>
-<table>
-<thead>
-<tr>
-<th>偏移</th>
-<th>大小</th>
-<th>域</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>0</td>
-<td>4位</td>
-<td>Type</td>
-<td>它占这个WORD的最高4位，这个值指出需要应用的基址重定位类型。参考5.4.2节“<a target="_blank" rel="noopener" href="http://blog.csdn.net/qiming_zhang/article/details/7309909#5.4.2">基址重定位类型</a>”。</td>
-</tr>
-<tr>
-<td>0</td>
-<td>12位</td>
-<td>Offset</td>
-<td>它占这个WORD的其余12位，这个值是从基址重定位块的Page RVA域指定的地址处开始的偏移。这个偏移指出需要进行基址重定位的位置。</td>
-</tr>
-</tbody></table>
-<p>为了进行基址重定位，需要计算镜像的首选基地址与实际被加载到的基地址之差。如果镜像本身就被加载到了其首选基地址，那么这个差为零，因此也就不需要进行基址重定位了。</p>
-<h6 id="基址重定位类型"><a href="#基址重定位类型" class="headerlink" title="基址重定位类型"></a>基址重定位类型</h6><table>
-<thead>
-<tr>
-<th>值</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>0</td>
-<td>基址重定位被忽略。这种类型可以用来对其它块进行填充。</td>
-</tr>
-<tr>
-<td>1</td>
-<td>基址重定位时将差值的高16位加到指定偏移处的一个16位域上。这个16位域是一个32位字的高半部分。</td>
-</tr>
-<tr>
-<td>2</td>
-<td>基址重定位时将差值的低16位加到指定偏移处的一个16位域上。这个16位域是一个32位字的低半部分。</td>
-</tr>
-<tr>
-<td>3</td>
-<td>基址重定位时将所有的32位差值加到指定偏移处的一个32位域上。</td>
-</tr>
-<tr>
-<td>4</td>
-<td>进行基址重定位时将差值的高16位加到指定偏移处的一个16位域上。这个16位域是一个32位字的高半部分，而这个32位字的低半部分被存储在紧跟在这个Type/Offset位域后面的一个16位字中。也就是说，这一个基址重定位项占了两个Type/Offset位域的位置。</td>
-</tr>
-<tr>
-<td>5</td>
-<td>对MIPS平台的跳转指令进行基址重定位。</td>
-</tr>
-<tr>
-<td>6</td>
-<td>保留，必须为0</td>
-</tr>
-<tr>
-<td>7</td>
-<td>保留，必须为0</td>
-</tr>
-<tr>
-<td>9</td>
-<td>对MIPS16平台的跳转指令进行基址重定位。</td>
-</tr>
-<tr>
-<td>10</td>
-<td>进行基址重定位时将差值加到指定偏移处的一。</td>
-</tr>
-</tbody></table>
-<h3 id="一些注意信息"><a href="#一些注意信息" class="headerlink" title="一些注意信息"></a>一些注意信息</h3><p><strong>1.PE头是怎么计算的？</strong></p>
-<p>SizeOfHeaders所指的头是从文件的第1个字节开始算起的，而不是从PE标记开始算起的。快速的计算方法是从文件的偏移0x3C（第59字节）处获得一个4字节的PE文件签名的偏移地址，这个偏移地址就是本文所定义的DOS头的大小。NT头在32位系统是244字节，在64位系统是260字节。节头的大小由NT头的第1部分的NumberOfSections（节的数量）*40字节（每个节头是40字节）得出。如此，DOS头、NT头、节头3个头的大小加起来并向上舍入为FileAlignment（文件对齐）的正整数倍的最小值就是SizeOfHeaders（头大小）值。</p>
-<p><strong>2.节数量的问题</strong></p>
-<p>Windows读取NumberOfSections的值然后检查节表里的每个结构，如果找到一个全0结构就结束搜索，否则一直处理完NumberOfSections指定数目的结构。没有规定节头必须以全0结构结束。所以加载器使用了双重标准——全0、达到NumberOfSections数量就不再搜索了。</p>
-<p><strong>3.未初始化问题</strong></p>
-<p>①未初始化数据在文件中是不占空间的，但在内存里还是会占空间的，它们依然依据指定的大小存在内存里。所以说未初始化数据只在文件大小上有优势，在内存里与已初始化数据是一样的。<br>②未初始化数据的方法有2种：1是通过节头的VirtualSize&gt;SizeOfRawData。未初始化数据的大小就是VirtualSize-SizeOfRawData的值。2是节特征的标志置为“<strong>此节包含未初始化的数据</strong>”，这时SizeOfUninitializedData才会非0。现在 都使用第1种，把它们集成到.data里面可以加快速度。</p>
-<p><strong>4.已初始化问题</strong></p>
-<p>数据目录里面所对应的块中除了<strong>属性证书表、调试信息和几个废除的目录项</strong>外，全都属于SizeOfInitializedData（已初始化数据大小）范围。当然，已初始化数据不只这些，还可以是常见的代码段等等。</p>
-<p><strong>5.节对齐的问题</strong></p>
-<p>如果NT头的SectionAlignment域的值小于相应<strong>操作系统</strong>（有些资料说是根据CPU来的，这不一定。因为CPU本身就允许改分页大小，只是大部分时候操作系统是用CPU默认值的。x86平台默认页面大小是4K。IA-64平台默认页面大小是8K。MIPS平台默认页面大小是4K。Itanium平台默认页面大小是8K。）平台的页面大小，那么镜像文件有一些附加的限制。对于这种文件，当镜像被加载到内存中时，节中数据在文件中的位置必须与它在内存中的位置相等，因此节中数据的物理偏移与RVA相同。</p>
-<p><strong>6.镜像大小</strong></p>
-<p>SizeOfImage所代表的<strong>内存镜像大小没有包含属性证书表和调试信息</strong>，这是因为加载器并不将属性证书和调试信息映射进内存。同时加载器规定，属性证书和调试信息必须被放在镜像文件的最后，并且属性证书表在调试信息节之前。</p>
-<p><strong>7.数据的组织</strong></p>
-<p>CPU的段主要分为4个：代码段、数据段、堆栈段、附加段。而操作系统给程序员留下只有代码段和数据段，堆栈段和附加段就由系统自行处理了，我们不用管。PE文件的数据组织方式是以BaseOfCode、BaseOfData为基准，以节为主体，以数据目录为辅助。<br>①BaseOfCode、BaseOfData是与后面相应的代码节、数据节的VirtualAddress一致。（这里的数据节是狭义的数据节，是特指代码段、数据目录所指定的数据除外的那一部分，也就是我们编程时定义的常量、变量、未初始化数据等）<br>②所有的代码、数据都必须在节里面，否则就算是代码基址、数据基址、数据目录都有指定，而节头里没有指定，加载器也会报错，不能运行<br>③导入函数、导出函数、资源、重定位表等是为了辅助程序主体的，这些都由系统负责处理</p>
-<h3 id="对应表"><a href="#对应表" class="headerlink" title="对应表"></a>对应表</h3><h4 id="NT头（244或260个字节）"><a href="#NT头（244或260个字节）" class="headerlink" title="NT头（244或260个字节）"></a>NT头（244或260个字节）</h4><p>紧跟着PE文件签名之后，是NT头。NT头分成3个部分，第一个部分就是PE标准头，后两个部分统称PE可选头。</p>
-<p>因为第2部分在32与64位系统里有区别，第3部分虽然也是头，但实际很不像“头”。</p>
-<p>第1部分（20个字节）</p>
-<table>
-<thead>
-<tr>
-<th>偏移</th>
-<th>大小</th>
-<th>英文名</th>
-<th>中文名</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>0</td>
-<td>2</td>
-<td>Machine</td>
-<td>机器数</td>
-<td>标识CPU的数字。参考3.2.1节“<a target="_blank" rel="noopener" href="http://blog.csdn.net/qiming_zhang/article/details/7309909#3.2.1">机器类型</a>”。</td>
-</tr>
-<tr>
-<td>2</td>
-<td>2</td>
-<td>NumberOfSections</td>
-<td>节数</td>
-<td>节的数目。Windows加载器限制节的最大数目为96。</td>
-</tr>
-<tr>
-<td>4</td>
-<td>4</td>
-<td>TimeDateStamp</td>
-<td>时间/日期标记</td>
-<td>UTC时间1970年1月1日00:00起的总秒数的低32位，它指出文件何时被创建。</td>
-</tr>
-<tr>
-<td>8</td>
-<td>8</td>
-<td>已经废除</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>16</td>
-<td>2</td>
-<td>SizeOfOptionalHeader</td>
-<td>可选头大小</td>
-<td>第2部分+第3部分的总大小。这个大小在32位和64位文件中是不同的。对于32位文件来说，它是224；对于64位文件来说，它是240。</td>
-</tr>
-<tr>
-<td>18</td>
-<td>2</td>
-<td>FillCharacteristics</td>
-<td>文件特征值</td>
-<td>指示文件属性的标志。参考3.2.2节“<a target="_blank" rel="noopener" href="http://blog.csdn.net/qiming_zhang/article/details/7309909#3.2.2">特征</a>”。</td>
-</tr>
-</tbody></table>
-<p>第2部分（96或112个字节）</p>
-<table>
-<thead>
-<tr>
-<th>偏移</th>
-<th>大小</th>
-<th>英文名</th>
-<th>中文名</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>0</td>
-<td>2</td>
-<td>Magic</td>
-<td>魔数</td>
-<td>这个无符号整数指出了镜像文件的状态。 0x10B表明这是一个32位镜像文件。 0x107表明这是一个ROM镜像。 0x20B表明这是一个64位镜像文件。</td>
-</tr>
-<tr>
-<td>2</td>
-<td>1</td>
-<td>MajorLinkerVersion</td>
-<td>链接器的主版本号</td>
-<td>链接器的主版本号。</td>
-</tr>
-<tr>
-<td>3</td>
-<td>1</td>
-<td>MinorLinkerVersion</td>
-<td>链接器的次版本号</td>
-<td>链接器的次版本号。</td>
-</tr>
-<tr>
-<td>4</td>
-<td>4</td>
-<td>SizeOfCode</td>
-<td>代码节大小</td>
-<td>一般放在“.text”节里。如果有多个代码节的话，它是所有代码节的和。必须是FileAlignment的整数倍，是在文件里的大小。</td>
-</tr>
-<tr>
-<td>8</td>
-<td>4</td>
-<td>SizeOfInitializedData</td>
-<td>已初始化数大小</td>
-<td>一般放在“.data”节里。如果有多个这样的节话，它是所有这些节的和。必须是FileAlignment的整数倍，是在文件里的大小。</td>
-</tr>
-<tr>
-<td>12</td>
-<td>4</td>
-<td>SizeOfUninitializedData</td>
-<td>未初始化数大小</td>
-<td>一般放在“.bss”节里。如果有多个这样的节话，它是所有这些节的和。必须是FileAlignment的整数倍，是在文件里的大小。</td>
-</tr>
-<tr>
-<td>16</td>
-<td>4</td>
-<td>AddressOfEntryPoint</td>
-<td>入口点</td>
-<td>当可执行文件被加载进内存时其入口点RVA。对于一般程序镜像来说，它就是启动地址。为0则从ImageBase开始执行。对于dll文件是可选的。</td>
-</tr>
-<tr>
-<td>20</td>
-<td>4</td>
-<td>BaseOfCode</td>
-<td>代码基址</td>
-<td>当镜像被加载进内存时代码节的开头RVA。必须是SectionAlignment的整数倍。</td>
-</tr>
-<tr>
-<td>24</td>
-<td>4</td>
-<td>BaseOfData</td>
-<td>数据基址</td>
-<td>当镜像被加载进内存时数据节的开头RVA。（在64位文件中此处被并入紧随其后的ImageBase中。）必须是SectionAlignment的整数倍。</td>
-</tr>
-<tr>
-<td>28/24</td>
-<td>4/8</td>
-<td>ImageBase</td>
-<td><strong>镜像基址</strong></td>
-<td>当加载进内存时镜像的第1个字节的首选地址。它必须是64K的倍数。DLL默认是10000000H。Windows CE 的EXE默认是00010000H。Windows 系列的EXE默认是00400000H。</td>
-</tr>
-<tr>
-<td>32</td>
-<td>4</td>
-<td>SectionAlignment</td>
-<td>内存对齐</td>
-<td>当加载进内存时节的对齐值（以字节计）。它必须≥FileAlignment。默认是相应系统的页面大小。</td>
-</tr>
-<tr>
-<td>36</td>
-<td>4</td>
-<td>FileAlignment</td>
-<td>文件对齐</td>
-<td>用来对齐镜像文件的节中的原始数据的对齐因子（以字节计）。它应该是界于512和64K之间的2的幂（包括这两个边界值）。默认是512。如果<strong>SectionAlignment</strong>小于相应系统的页面大小，那么FileAlignment必须与SectionAlignment相等。</td>
-</tr>
-<tr>
-<td>40</td>
-<td>2</td>
-<td>MajorOperatingSystemVersion</td>
-<td>主系统的主版本号</td>
-<td>操作系统的版本号可以从“我的电脑”→“帮助”里面看到，Windows XP是5.1。5是主版本号，1是次版本号</td>
-</tr>
-<tr>
-<td>42</td>
-<td>2</td>
-<td>MinorOperatingSystemVersion</td>
-<td>主系统的次版本号</td>
-<td></td>
-</tr>
-<tr>
-<td>44</td>
-<td>2</td>
-<td>MajorImageVersion</td>
-<td>镜像的主版本号</td>
-<td></td>
-</tr>
-<tr>
-<td>46</td>
-<td>2</td>
-<td>MinorImageVersion</td>
-<td>镜像的次版本号</td>
-<td></td>
-</tr>
-<tr>
-<td>48</td>
-<td>2</td>
-<td>MajorSubsystemVersion</td>
-<td>子系统的主版本号</td>
-<td></td>
-</tr>
-<tr>
-<td>50</td>
-<td>2</td>
-<td>MinorSubsystemVersion</td>
-<td>子系统的次版本号</td>
-<td></td>
-</tr>
-<tr>
-<td>52</td>
-<td>2</td>
-<td>Win32VersionValue</td>
-<td>保留，必须为0</td>
-<td></td>
-</tr>
-<tr>
-<td>56</td>
-<td>4</td>
-<td>SizeOfImage</td>
-<td>镜像大小</td>
-<td>当镜像被加载进内存时的大小，包括所有的文件头。向上舍入为SectionAlignment的倍数。</td>
-</tr>
-<tr>
-<td>60</td>
-<td>4</td>
-<td>SizeOfHeaders</td>
-<td>头大小</td>
-<td>所有头的总大小，向上舍入为FileAlignment的倍数。可以以此值作为PE文件第一节的文件偏移量。</td>
-</tr>
-<tr>
-<td>64</td>
-<td>4</td>
-<td>CheckSum</td>
-<td>校验和</td>
-<td>镜像文件的校验和。计算校验和的算法被合并到了Imagehlp.DLL 中。以下程序在加载时被校验以确定其是否合法：所有的驱动程序、任何在引导时被加载的DLL以及加载进关键Windows进程中的DLL。</td>
-</tr>
-<tr>
-<td>68</td>
-<td>2</td>
-<td>Subsystem</td>
-<td>子系统类型</td>
-<td>运行此镜像所需的子系统。参考后面的“<a target="_blank" rel="noopener" href="http://blog.csdn.net/qiming_zhang/article/details/7309909#3.2.3">Windows子系统</a>”部分。</td>
-</tr>
-<tr>
-<td>70</td>
-<td>2</td>
-<td>DllCharacteristics</td>
-<td>DLL标识</td>
-<td>参考后面的“<a target="_blank" rel="noopener" href="http://blog.csdn.net/qiming_zhang/article/details/7309909#3.2.4">DLL特征</a>”部分。</td>
-</tr>
-<tr>
-<td>72</td>
-<td>4/8</td>
-<td>SizeOfStackReserve</td>
-<td>堆栈保留大小</td>
-<td>最大<strong>栈</strong>大小。<strong>CPU的堆栈</strong>。默认是1MB。</td>
-</tr>
-<tr>
-<td>76/80</td>
-<td>4/8</td>
-<td>SizeOfStackCommit</td>
-<td>堆栈提交大小</td>
-<td>初始提交的堆栈大小。默认是4KB。</td>
-</tr>
-<tr>
-<td>80/88</td>
-<td>4/8</td>
-<td>SizeOfHeapReserve</td>
-<td>堆保留大小</td>
-<td>最大<strong>堆</strong>大小。<strong>编译器分配的</strong>。默认是1MB。</td>
-</tr>
-<tr>
-<td>84/96</td>
-<td>4/8</td>
-<td>SizeOfHeapCommit</td>
-<td>堆栈交大小</td>
-<td>初始提交的局部堆空间大小。默认是4KB。</td>
-</tr>
-<tr>
-<td>88/104</td>
-<td>4</td>
-<td>LoaderFlags</td>
-<td>保留，必须为0</td>
-<td></td>
-</tr>
-<tr>
-<td>92/108</td>
-<td>4</td>
-<td>NumberOfRvaAndSizes</td>
-<td>目录项数目</td>
-<td>数据目录项的个数。由于以前发行的Windows NT的原因，它只能为16。</td>
-</tr>
-</tbody></table>
-<p>第3部分数据目录（128个字节）</p>
-<table>
-<thead>
-<tr>
-<th>偏移 (PE32/PE32+)</th>
-<th>大小</th>
-<th>英文名</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>96/112</td>
-<td>8</td>
-<td>Export Table</td>
-<td><strong>导出表</strong>的地址和大小。参考5.1节“<a target="_blank" rel="noopener" href="http://blog.csdn.net/qiming_zhang/article/details/7309909#5.1">.edata</a>”</td>
-</tr>
-<tr>
-<td>104/120</td>
-<td>8</td>
-<td>Import Table</td>
-<td><strong>导入目录表</strong>的地址和大小。参考5.2.1节“<a target="_blank" rel="noopener" href="http://blog.csdn.net/qiming_zhang/article/details/7309909#5.2">.idata</a>”</td>
-</tr>
-<tr>
-<td>112/128</td>
-<td>8</td>
-<td>Resource Table</td>
-<td><strong>资源表</strong>的地址和大小。参考5.6节“<a target="_blank" rel="noopener" href="http://blog.csdn.net/qiming_zhang/article/details/7309909#5.6">.rsrc</a>”</td>
-</tr>
-<tr>
-<td>120/136</td>
-<td>8</td>
-<td>Exception Table</td>
-<td><strong>异常表</strong>的地址和大小。参考5.3节“<a target="_blank" rel="noopener" href="http://blog.csdn.net/qiming_zhang/article/details/7309909#5.3">.pdata</a>”</td>
-</tr>
-<tr>
-<td>128/144</td>
-<td>8</td>
-<td>Certificate Table</td>
-<td><strong>属性证书表</strong>的地址和大小。参考6节“<a target="_blank" rel="noopener" href="http://blog.csdn.net/qiming_zhang/article/details/7309909#6">属性证书表</a>”</td>
-</tr>
-<tr>
-<td>136/152</td>
-<td>8</td>
-<td>Base Relocation Table</td>
-<td><strong>基址重定位表</strong>的地址和大小。参考5.4节“<a target="_blank" rel="noopener" href="http://blog.csdn.net/qiming_zhang/article/details/7309909#5.4">.reloc</a>”</td>
-</tr>
-<tr>
-<td>144/160</td>
-<td>8</td>
-<td>Debug</td>
-<td>调试数据起始地址和大小。</td>
-</tr>
-<tr>
-<td>152/168</td>
-<td>8</td>
-<td>Architecture</td>
-<td>保留，必须为0</td>
-</tr>
-<tr>
-<td>160/176</td>
-<td>8</td>
-<td>Global Ptr</td>
-<td>将被存储在全局指针寄存器中的一个值的RVA。<strong>这个结构的Size域必须为0</strong></td>
-</tr>
-<tr>
-<td>168/184</td>
-<td>8</td>
-<td>TLS Table</td>
-<td><strong>线程局部存储（TLS）表</strong>的地址和大小。</td>
-</tr>
-<tr>
-<td>176/192</td>
-<td>8</td>
-<td>Load Config Table</td>
-<td><strong>加载配置表</strong>的地址和大小。参考5.5节“<a target="_blank" rel="noopener" href="http://blog.csdn.net/qiming_zhang/article/details/7309909#5.5">加载配置结构</a>”</td>
-</tr>
-<tr>
-<td>184/200</td>
-<td>8</td>
-<td>Bound Import</td>
-<td><strong>绑定导入查找表</strong>的地址和大小。参考5.2.2节“<a target="_blank" rel="noopener" href="http://blog.csdn.net/qiming_zhang/article/details/7309909#5.2.4">导入查找表</a>”</td>
-</tr>
-<tr>
-<td>192/208</td>
-<td>8</td>
-<td>IAT</td>
-<td><strong>导入地址表</strong>的地址和大小。参考5.2.4节“<a target="_blank" rel="noopener" href="http://blog.csdn.net/qiming_zhang/article/details/7309909#5.2.4">导入地址表</a>”</td>
-</tr>
-<tr>
-<td>200/216</td>
-<td>8</td>
-<td>Delay Import Descriptor</td>
-<td><strong>延迟导入描述符</strong>的地址和大小。</td>
-</tr>
-<tr>
-<td>208/224</td>
-<td>8</td>
-<td>CLR Runtime Header</td>
-<td>CLR运行时头部的地址和大小。(已废除)</td>
-</tr>
-<tr>
-<td>216/232</td>
-<td>8</td>
-<td>保留，必须为0</td>
-<td></td>
-</tr>
-</tbody></table>
-<p>引用来源：</p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/cs2626242/article/details/79391599">https://blog.csdn.net/cs2626242/article/details/79391599</a></p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/jznsmail/article/details/293358">https://blog.csdn.net/jznsmail/article/details/293358</a></p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_28526211/article/details/88836043">https://blog.csdn.net/qq_28526211/article/details/88836043</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/iBinary/p/7653418.html">https://www.cnblogs.com/iBinary/p/7653418.html</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/Virus-Faker/p/12245792.html">https://www.cnblogs.com/Virus-Faker/p/12245792.html</a></p>
-
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/05/10/pe_program/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1964,147 +978,6 @@
             </a>
           </div>
           <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/08/md5_base64/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hughes'Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/12/08/md5_base64/" itemprop="url">md5_base64</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-12-08T16:00:20+08:00">
-                2019-12-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/learning/" itemprop="url" rel="index">
-                    <span itemprop="name">learning</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            
-          
         
       
     </div>
@@ -2755,6 +1628,182 @@
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/12/cnss_recruit/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hughes'Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/11/12/cnss_recruit/" itemprop="url">cnss_recruit</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-11-12T16:00:20+08:00">
+                2019-11-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/learning/" itemprop="url" rel="index">
+                    <span itemprop="name">learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="easy-flat"><a href="#easy-flat" class="headerlink" title="easy_flat"></a>easy_flat</h3><p>本题涉及代码混淆，具体是控制流平坦化<br>直接拖入IDA，F5：</p>
+<p><img src="/2019/11/12/cnss_recruit/easy_flat_1.png"></p>
+<p>然后查看流程框图：</p>
+<p><img src="/2019/11/12/cnss_recruit/easy_flat_2.png"></p>
+<p>经过晴宇哥的指点以后，我去搜了一些关于控制流平坦化的资料：</p>
+<p><img src="/2019/11/12/cnss_recruit/easy_flat_3.png"></p>
+<p>实际上，只是控制流程的方式变了，这道题相对简单，我们还是能够看出流程来。<br>继续分析伪代码，先看到一个长得像scanf的函数，把里面参数重命名为input，然后继续往下看，发现其中存在一个字符串比较的过程，点击查看被比较的另一个字符串后，发现是这样的字符串，长得很像flag,应该就是flag被加密后的形式.</p>
+<p><img src="/2019/11/12/cnss_recruit/easy_flat_4.png"></p>
+<p>现在就是要去寻找加密的方式,查看input被引用的地方,发现也就是这:</p>
+<p><img src="/2019/11/12/cnss_recruit/easy_flat_5.png"></p>
+<p><img src="/2019/11/12/cnss_recruit/easy_flat_6.png"></p>
+<h3 id="cnss-re-snake"><a href="#cnss-re-snake" class="headerlink" title="cnss-re-snake"></a>cnss-re-snake</h3><p>刚看到这道题目的时候有点懵，因为从来没有用过CheatEngine进行逆向调试，题目提示可以使用CE进行调试，于是我就先学了一波CE的教程，具体过程前文已经写了。<br>但是，学完使用CE后，仍然不会逆，于是跑去请教炮王，炮王不愧是炮王，虽然没帮我拿到Flag，但是给我演示了静态调试和动态调试的过程，受益匪浅。<br>下面是逆的过程。<br>首先把文件拖到ida里进行静态调试。找到主函数。</p>
+<p><img src="/2019/11/12/cnss_recruit/ida_snake_main.png"></p>
+<p>这一步不需要看伪代码也能看出,就是六个函数的调用。<br>我们这时候打开游戏来看，首先看到有个菜单，根据C语言的经验，应该至少有一个switch语句和死循环。然后我们开始游戏一看，游戏就是个贪食蛇的游戏，提示是这样：</p>
+<p>我们先用CE去搜得分，确实搜到了，但是正如提示的那样，直接修改是没有用的。<br>接着我们发现游戏失败时有对话框弹出，我们可以先尝试下搜索字符串。搜索到后查看调用：</p>
+<p><img src="/2019/11/12/cnss_recruit/ida_snake_frame.png"></p>
+<p>发现这个字符串在 <code>sub_4031EB</code> 函数里被调用,我们搜索进入这个函数,发现里面全是一些失败的提示消息:</p>
+<p><img src="/2019/11/12/cnss_recruit/ida_snake_fail.png"></p>
+<p>这里将这个函数名改成fail,以便于我们的理解。<br>fail函数被<code>sub_4027BE</code>函数调用,而这个函数有两个分支,其中一个是fail,那另一个应该就是succeed了吧.找到进去一看,应该就是了,但是整个函数很复杂,可能就是计算出flag的过程.我们查看下那个可疑的 <code>sub_4027BE</code>函数.查看之后,发现一个很熟悉的printf函数:</p>
+<p><img src="/2019/11/12/cnss_recruit/ida_snake_printf.png"></p>
+<p>这个函数告诉我们,得分对应的参数就是显示出来的分数,我们将它命名为score.<br>往上一看,发现这个score的值是dword_40eDC0赋予的,这个也许就是存储得分的真正位置.<br>那就继续看dword_40eDC0这个什么时候被访问,往下看我们发现这样一段代码:</p>
+<p><img src="/2019/11/12/cnss_recruit/ida_snake_key.png"></p>
+<p>这里面调用的函数正是我们之前怀疑的succeed函数,他们原来是在这里py交易的!<br>仔细看这段代码,发现出题人是将真正的得分的低八位和0xE9H相与,判断相与后的值是否大于265.<br>抓住这一点我们就可以拿到Flag了,<br>这时候进行动态调试,这里用的是CE.<br>我们要先找到得分对应的真正位置,将其改成265^0xE9的值就好了.<br>还是先搜索得分,然后找出访问了这个得分的这段代码,发现长这样:</p>
+<p><img src="/2019/11/12/cnss_recruit/ce_snake2.png"></p>
+<p>因为此时我们就在整个函数里面了,所以那个变量应该就在附近,我们看到483这个数字很可疑,因为1对应, —————————-我们找到这个变量的地址,将其修改成483,</p>
+<p><img src="/2019/11/12/cnss_recruit/ce_snake1.png"></p>
+<p>再去游戏里面,就发现通关拿到flag了,flag是: cnss{CE_caN_ju5T_Act_w1lfulLy!!}</p>
+<p><img src="/2019/11/12/cnss_recruit/flag_snake.png"></p>
+<h4 id="本题总结："><a href="#本题总结：" class="headerlink" title="本题总结："></a>本题总结：</h4><p>1、之前没有好好利用IDA去了解整个程序的主体就直接去动态调试，导致整个过程思路不明确，效率极低。<br>2、使用IDA进行调试时，可以用快捷键N修改变量名，函数名，这样有利于整个代码的阅读和理解。</p>
+<h3 id="Confusion"><a href="#Confusion" class="headerlink" title="Confusion"></a>Confusion</h3><p>直接拖入IDA，F5</p>
+<p><img src="/2019/11/12/cnss_recruit/ida_confusion1.png"></p>
+<p>看到这个像scanf一样的函数，心里就有个底了。<br><code>sub_426980</code> 这个应该就是读入的函数.<br>进入下个函数查看,简单分析后,发现应该是判断输入的flag的长度,如果长度是32个字符,才能够进入下个函数.<br>再下面的函数,是用来判断输入的flag的前五位是否是”cnss{“,如果不是的话,程序也会直接跳出.<br>再接下来看到一个比较复杂的函数,里面有很多次循环,应该是一个加密的函数.函数很复杂,直接逆出来的话,难度相当大.这时候要采用动态调试的方法,在函数执行的时候把flag找出来.<br>直接在函数返回之前下好断点,在寄存器里就找到了flag</p>
+<p><img src="/2019/11/12/cnss_recruit/ida_confusion2.png"></p>
+<p><img src="/2019/11/12/cnss_recruit/ida_confusion3.png"></p>
+<h4 id="本题总结"><a href="#本题总结" class="headerlink" title="本题总结"></a>本题总结</h4><p>1.IDA是真的好用<br>2.加密函数很复杂的时候,动态调试很顶</p>
+<h2 id="Surprise"><a href="#Surprise" class="headerlink" title="Surprise"></a>Surprise</h2>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
   </section>
 
   
@@ -2805,7 +1854,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-count">35</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
