@@ -539,6 +539,338 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/12/pe_load/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hughes'Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/05/12/pe_load/" itemprop="url">PE加载过程</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-05-12T11:00:20+08:00">
+                2020-05-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/learning/" itemprop="url" rel="index">
+                    <span itemprop="name">learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>PE文件结构详见上一篇博客：</p>
+<h3 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h3><p>总共可以分为八个步骤：</p>
+<p>1.将PE文件用ReadFile读取数据</p>
+<p>2.根据PE结构获取镜像大小，在自己的程序中申请可读可写可执行的内存</p>
+<p>3.将申请的空间全部填为0</p>
+<p>4.将用ReadFile读取的数据映射到内存中</p>
+<p>5.修复重定位</p>
+<p>6.根据PE结构的导入表，加载所需要的dll，并获取导入函数的地址并写入导入表中。</p>
+<p>7.修改PE文件的加载基址</p>
+<p>8.跳转到PE的入口点处执行</p>
+<h3 id="数据目录"><a href="#数据目录" class="headerlink" title="数据目录"></a>数据目录</h3><h5 id="用途："><a href="#用途：" class="headerlink" title="用途："></a>用途：</h5><p>用来找到编译器加到PE文件中的信息，这些信息包含了如：</p>
+<ul>
+<li>PE程序的图标信息</li>
+<li>用了哪些系统提供的函数（导入的函数）</li>
+<li>为其他程序提供了哪些函数（导出的函数）</li>
+</ul>
+<h5 id="定位："><a href="#定位：" class="headerlink" title="定位："></a>定位：</h5><p>可选PE头的最后一个成员，就是数据目录，一共16个：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">IMAGE_DATA_DIRECTORY</span> &#123;</span></span><br><span class="line">	DWORD   VirtualAddress;</span><br><span class="line">	DWORD   Size;</span><br><span class="line">&#125; IMAGE_DATA_DIRECTORY, * PIMAGE_DATA_DIRECTORY;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> IMAGE_NUMBEROF_DIRECTORY_ENTRIES    16</span></span><br></pre></td></tr></table></figure>
+
+<p>分别是：导出表、导入表、资源表、异常信息表、安全证书表、重定位表、调试信息表、版权所以表、全局指针表、TLS表、加载配置表、绑定导入表、IAT表、延迟导入表、COM信息表 最后一个保留未使用。</p>
+<h5 id="和程序执行有关的："><a href="#和程序执行有关的：" class="headerlink" title="和程序执行有关的："></a>和程序执行有关的：</h5><p>和程序运行时息息相关的表有：</p>
+<p>导出表</p>
+<p>导入表</p>
+<p>重定位表</p>
+<p>IAT表</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/05/12/pe_load/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/12/pe_edit_segment/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hughes'Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/05/12/pe_edit_segment/" itemprop="url">PE节修改</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-05-12T11:00:20+08:00">
+                2020-05-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/learning/" itemprop="url" rel="index">
+                    <span itemprop="name">learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h3 id="新增节"><a href="#新增节" class="headerlink" title="新增节"></a>新增节</h3><p>1、判断是否有足够的空间，可以添加一个节表.</p>
+<p>判断条件：</p>
+<p>SizeOfHeader - (DOS + 垃圾数据 + PE标记 + 标准PE头 + 可选PE头 + 已存在节表)&gt;= 2个节表的大小</p>
+<p>2、需要修改的数据</p>
+<ol>
+<li><p>添加一个新的节(可以copy一份)</p>
+</li>
+<li><p>在新增节后面 填充一个节大小的000</p>
+</li>
+<li><p>修改PE头中节的数量</p>
+</li>
+<li><p>修改sizeOfImage的大小</p>
+</li>
+<li><p>再原有数据的最后，新增一个节的数据(内存对齐的整数倍).</p>
+</li>
+</ol>
+<p>6）修正新增节表的属性</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/05/12/pe_edit_segment/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/10/chaitin_pwn/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -634,6 +966,163 @@
           
             
           
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/12/code_reuse_in_C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hughes'Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/05/12/code_reuse_in_C/" itemprop="url">代码复用</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-05-12T15:00:20+08:00">
+                2020-05-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/learning/" itemprop="url" rel="index">
+                    <span itemprop="name">learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h3 id="代码复用"><a href="#代码复用" class="headerlink" title="代码复用"></a>代码复用</h3><p>在C中，代码复用主要有三种实现方式：</p>
+<ul>
+<li>静态链接库</li>
+<li>动态链接库</li>
+<li>使用.def 导出</li>
+</ul>
+<h3 id="静态链接库"><a href="#静态链接库" class="headerlink" title="静态链接库"></a>静态链接库</h3><h4 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h4><ul>
+<li>利用静态函数库编译成的文件比较大，因为整个 函数库的所有数据都会被整合进目标代码中；我们常用的printf、memcpy、strcpy等就来自这种静态库</li>
+<li>一旦静态库发生了变化，程序如果要用则就要重新编译</li>
+</ul>
+<h4 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h4><h5 id="创建静态链接库"><a href="#创建静态链接库" class="headerlink" title="创建静态链接库"></a>创建静态链接库</h5><h6 id="1、在VC6中创建项目：Win32-Static-Library"><a href="#1、在VC6中创建项目：Win32-Static-Library" class="headerlink" title="1、在VC6中创建项目：Win32 Static Library"></a>1、在VC6中创建项目：Win32 Static Library</h6><h6 id="2、在项目中创建两个文件：xxx-h-和-xxx-cpp"><a href="#2、在项目中创建两个文件：xxx-h-和-xxx-cpp" class="headerlink" title="2、在项目中创建两个文件：xxx.h 和 xxx.cpp"></a>2、在项目中创建两个文件：xxx.h 和 xxx.cpp</h6><p>xxx.h文件：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">if</span> !defined(AFX_TEST_H__DB32E837_3E66_4BE7_B873_C079BC621AF0__INCLUDED_)	</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> AFX_TEST_H__DB32E837_3E66_4BE7_B873_C079BC621AF0__INCLUDED_	</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> _MSC_VER &gt; 1000	</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> once	</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span> <span class="comment">// _MSC_VER &gt; 1000	</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Plus</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Sub</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Mul</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Div</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span>	</span></span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/05/12/code_reuse_in_C/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1298,512 +1787,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/14/maze/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hughes'Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/11/14/maze/" itemprop="url">迷宫问题</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-11-14T19:00:20+08:00">
-                2019-11-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/learning/" itemprop="url" rel="index">
-                    <span itemprop="name">learning</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="迷宫问题的特点："><a href="#迷宫问题的特点：" class="headerlink" title="迷宫问题的特点："></a>迷宫问题的特点：</h3><p>1.在内存中布置一张“地图”<br>2.将用户输入限制在少数几个字符范围内<br>3.一般只有一个迷宫入口和一个迷宫出口</p>
-<p>布置的地图可以由可显字符组成，也可以单纯用不可显的十六进制值进行表示，可以将地图直接组成一条非常长的字符串，或是一行一行分开布置。如果是一行一行分开布置的话，因为迷宫一般都会比较大，所以用于按行布置迷宫的函数会明显重复多次。</p>
-<h4 id="xctf-逆向新手区最后一题—maze"><a href="#xctf-逆向新手区最后一题—maze" class="headerlink" title="xctf 逆向新手区最后一题—maze"></a>xctf 逆向新手区最后一题—maze</h4><p>除去查壳等操作，直接拖入IDA中进行分析：<br><img src="/2019/11/14/maze/1.png"><br>发现字符串比较,结论是flag必须是以nctf{开头。<br>接下来发现四个判断，每次判断后都进入相应的函数：<br><img src="/2019/11/14/maze/2.png"><br>而每个函数又都非常简单，无非是加加减减，还有判断是否大于零小于八<br><img src="/2019/11/14/maze/3.png"><br><img src="/2019/11/14/maze/4.png"><br><img src="/2019/11/14/maze/5.png"><br><img src="/2019/11/14/maze/6.png"><br>如果没有见过maze问题的话，确实会有一点懵，如果见过的话，去字符串里看看就会发现一些有用的东西：<br><img src="/2019/11/14/maze/7.png"><br>再根据大于零小于八的限制，就可以发现，这一串字符串实际上可以组成一个8*8的迷宫<br><img src="/2019/11/14/maze/8.png"><br>然后是通过’.’,’0’,’o’,’O’来确定上下左右的移动。<br>那么最后走出迷宫就可以得到flag：nctf{o0oo00O000oooo..OO}</p>
-<p>当涉及到的迷宫问题比较难解决的时候，或许可以通过深度搜索和广度搜索来解决迷宫问题，就比如CTF Wiki上的以到例题：<br>函数部分和上题差不多，但是迷宫很大：可能一个个去找会烦死。<br><img src="/2019/11/14/maze/9.png"></p>
-<p>参考资料：<br><a target="_blank" rel="noopener" href="https://ctf-wiki.github.io/ctf-wiki/reverse/maze/maze-zh/">https://ctf-wiki.github.io/ctf-wiki/reverse/maze/maze-zh/</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/14/xctf_pwn_new/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hughes'Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/11/14/xctf_pwn_new/" itemprop="url">XCTF_PWN新手区</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-11-14T16:00:20+08:00">
-                2019-11-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/learning/" itemprop="url" rel="index">
-                    <span itemprop="name">learning</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="搭建环境"><a href="#搭建环境" class="headerlink" title="搭建环境"></a>搭建环境</h3><p>由于是第一次接触PWN,所以先在网上找了些环境搭建的博客看看,然后发现这篇很好很全,推荐:<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/1476f38e3aa3">https://www.jianshu.com/p/1476f38e3aa3</a></p>
-<h4 id="这次题目主要用到的工具有"><a href="#这次题目主要用到的工具有" class="headerlink" title="这次题目主要用到的工具有:"></a>这次题目主要用到的工具有:</h4><p>pwntools:用python开发的一个ctf框架和漏洞利用开发库<br>ROPgadget:好像只用了一次,用来搜索”/bin/sh”字符串所在的位置<br>IDA:嗯,必备的,不说了<br>checksec:查看可执行文件属性的工具</p>
-<h4 id="checksec包含的保护机制"><a href="#checksec包含的保护机制" class="headerlink" title="checksec包含的保护机制"></a>checksec包含的保护机制</h4><p>1)CANNARY(栈保护)</p>
-<blockquote>
-<p>栈溢出保护是一种缓冲区溢出攻击缓解手段，当函数存在缓冲区溢出攻击漏洞时，攻击者可以覆盖栈上的返回地址来让shellcode能够得到执行。当启用栈保护后，函数开始执行的时候会先往栈里插入cookie信息，当函数真正返回的时候会验证cookie信息是否合法，如果不合法就停止程序运行。攻击者在覆盖返回地址的时候往往也会将cookie信息给覆盖掉，导致栈保护检查失败而阻止shellcode的执行。在Linux中我们将cookie信息称为canary。</p>
-</blockquote>
-<p>2)FORTIFY</p>
-<p>3)NX(DEP)</p>
-<blockquote>
-<p>NX即No-eXecute（不可执行）的意思，NX（DEP）的基本原理是将数据所在内存页标识为不可执行，当程序溢出成功转入shellcode时，程序会尝试在数据页面上执行指令，此时CPU就会抛出异常，而不是去执行恶意指令。</p>
-</blockquote>
-<p>4)PIE(ASLR)</p>
-<blockquote>
-<p>一般情况下NX（Windows平台上称其为DEP）和地址空间分布随机化（ASLR）会同时工作。</p>
-</blockquote>
-<blockquote>
-<p>内存地址随机化机制（address space layout randomization)，有以下三种情况</p>
-</blockquote>
-<blockquote>
-<p>0 - 表示关闭进程地址空间随机化。</p>
-</blockquote>
-<blockquote>
-<p>1 - 表示将mmap的基址，stack和vdso页面随机化。</p>
-</blockquote>
-<blockquote>
-<p>2 - 表示在1的基础上增加栈（heap）的随机化。</p>
-</blockquote>
-<blockquote>
-<p>可以防范基于Ret2libc方式的针对DEP的攻击。ASLR和DEP配合使用，能有效阻止攻击者在堆栈上运行恶意代码。</p>
-</blockquote>
-<p>5)RELRO</p>
-<blockquote>
-<p>设置符号重定向表格为只读或在程序启动时就解析并绑定所有动态符号，从而减少对GOT（Global Offset Table）攻击。RELRO为” Partial RELRO”，说明我们对GOT表具有写权限。</p>
-</blockquote>
-<p>checksec这一部分<a target="_blank" rel="noopener" href="http://http//yunnigu.dropsec.xyz/2016/10/08/checksec%E5%8F%8A%E5%85%B6%E5%8C%85%E5%90%AB%E7%9A%84%E4%BF%9D%E6%8A%A4%E6%9C%BA%E5%88%B6/">来自这</a></p>
-<h3 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h3><p>写了pwn新手区的八道题,由于时间仓促,来不及写writeup,于是就总结一下遇到的几种情况.</p>
-<h4 id="格式化字符串漏洞"><a href="#格式化字符串漏洞" class="headerlink" title="格式化字符串漏洞"></a>格式化字符串漏洞</h4><p>讲这个之前,必须先了解栈和栈帧.<br>这里的漏洞是指printf的格式化漏洞.以前学的C语言讲,printf(“%d %d”,a,b)格式化输出要和变量对应,输出几个就要有几个对应的变量,但是实际上,没有对应的变量时,printf也能执行,它会自动从栈中读取.<br>而格式化输出的参数里,有一个”%n<br>“,它的作用是将它前面的字符个数写入当前栈顶指针所指向的地址对应的存储空间,还一个就是”%?$n”,就是将%前面的字符个数写入[ESP+?]所指向的内存空间.<br>那么,如果我们知道我们要修改的变量相对于栈顶指针的位置,那我们就可以对其进行修改了.<br>寻找偏移量的话,一般是利用输入函数的漏洞,输入包含”%p-%p-%p-%p-%p”的字符,来实现地址的打印,从而发现变量的相对位置.</p>
-<h4 id="写shellcode"><a href="#写shellcode" class="headerlink" title="写shellcode"></a>写shellcode</h4><p>详见第七题string<br>shellcode就是在程序漏洞处执行的特定代码.<br>写shellcode的时候要注意先设置目标机的参数</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">context(os&#x3D;&#39;linux&#39;,arch&#x3D;&#39;amd64&#39;)</span><br></pre></td></tr></table></figure>
-<p>然后获取shellcode的话就是获取执行system(“/bin/sh”)汇编代码所对应的机器码,通过python语句</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">asm(shellcraft.())</span><br></pre></td></tr></table></figure>
-<p>获得</p>
-<h4 id="gets的漏洞"><a href="#gets的漏洞" class="headerlink" title="gets的漏洞"></a>gets的漏洞</h4><p>gets()是一个极其不安全的函数,因为它没有限定读入的字符个数.第八题就利用到了这一点,直接将生成伪随机数的种子给覆盖,然后程序生成的随机数变成一串已知的数字序列,从而触发”cat flag”的条件,获得flag</p>
-<h4 id="整数溢出漏洞"><a href="#整数溢出漏洞" class="headerlink" title="整数溢出漏洞"></a>整数溢出漏洞</h4>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/12/cnss_recruit/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hughes'Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/11/12/cnss_recruit/" itemprop="url">cnss_recruit</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-11-12T16:00:20+08:00">
-                2019-11-12
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/learning/" itemprop="url" rel="index">
-                    <span itemprop="name">learning</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="easy-flat"><a href="#easy-flat" class="headerlink" title="easy_flat"></a>easy_flat</h3><p>本题涉及代码混淆，具体是控制流平坦化<br>直接拖入IDA，F5：</p>
-<p><img src="/2019/11/12/cnss_recruit/easy_flat_1.png"></p>
-<p>然后查看流程框图：</p>
-<p><img src="/2019/11/12/cnss_recruit/easy_flat_2.png"></p>
-<p>经过晴宇哥的指点以后，我去搜了一些关于控制流平坦化的资料：</p>
-<p><img src="/2019/11/12/cnss_recruit/easy_flat_3.png"></p>
-<p>实际上，只是控制流程的方式变了，这道题相对简单，我们还是能够看出流程来。<br>继续分析伪代码，先看到一个长得像scanf的函数，把里面参数重命名为input，然后继续往下看，发现其中存在一个字符串比较的过程，点击查看被比较的另一个字符串后，发现是这样的字符串，长得很像flag,应该就是flag被加密后的形式.</p>
-<p><img src="/2019/11/12/cnss_recruit/easy_flat_4.png"></p>
-<p>现在就是要去寻找加密的方式,查看input被引用的地方,发现也就是这:</p>
-<p><img src="/2019/11/12/cnss_recruit/easy_flat_5.png"></p>
-<p><img src="/2019/11/12/cnss_recruit/easy_flat_6.png"></p>
-<h3 id="cnss-re-snake"><a href="#cnss-re-snake" class="headerlink" title="cnss-re-snake"></a>cnss-re-snake</h3><p>刚看到这道题目的时候有点懵，因为从来没有用过CheatEngine进行逆向调试，题目提示可以使用CE进行调试，于是我就先学了一波CE的教程，具体过程前文已经写了。<br>但是，学完使用CE后，仍然不会逆，于是跑去请教炮王，炮王不愧是炮王，虽然没帮我拿到Flag，但是给我演示了静态调试和动态调试的过程，受益匪浅。<br>下面是逆的过程。<br>首先把文件拖到ida里进行静态调试。找到主函数。</p>
-<p><img src="/2019/11/12/cnss_recruit/ida_snake_main.png"></p>
-<p>这一步不需要看伪代码也能看出,就是六个函数的调用。<br>我们这时候打开游戏来看，首先看到有个菜单，根据C语言的经验，应该至少有一个switch语句和死循环。然后我们开始游戏一看，游戏就是个贪食蛇的游戏，提示是这样：</p>
-<p>我们先用CE去搜得分，确实搜到了，但是正如提示的那样，直接修改是没有用的。<br>接着我们发现游戏失败时有对话框弹出，我们可以先尝试下搜索字符串。搜索到后查看调用：</p>
-<p><img src="/2019/11/12/cnss_recruit/ida_snake_frame.png"></p>
-<p>发现这个字符串在 <code>sub_4031EB</code> 函数里被调用,我们搜索进入这个函数,发现里面全是一些失败的提示消息:</p>
-<p><img src="/2019/11/12/cnss_recruit/ida_snake_fail.png"></p>
-<p>这里将这个函数名改成fail,以便于我们的理解。<br>fail函数被<code>sub_4027BE</code>函数调用,而这个函数有两个分支,其中一个是fail,那另一个应该就是succeed了吧.找到进去一看,应该就是了,但是整个函数很复杂,可能就是计算出flag的过程.我们查看下那个可疑的 <code>sub_4027BE</code>函数.查看之后,发现一个很熟悉的printf函数:</p>
-<p><img src="/2019/11/12/cnss_recruit/ida_snake_printf.png"></p>
-<p>这个函数告诉我们,得分对应的参数就是显示出来的分数,我们将它命名为score.<br>往上一看,发现这个score的值是dword_40eDC0赋予的,这个也许就是存储得分的真正位置.<br>那就继续看dword_40eDC0这个什么时候被访问,往下看我们发现这样一段代码:</p>
-<p><img src="/2019/11/12/cnss_recruit/ida_snake_key.png"></p>
-<p>这里面调用的函数正是我们之前怀疑的succeed函数,他们原来是在这里py交易的!<br>仔细看这段代码,发现出题人是将真正的得分的低八位和0xE9H相与,判断相与后的值是否大于265.<br>抓住这一点我们就可以拿到Flag了,<br>这时候进行动态调试,这里用的是CE.<br>我们要先找到得分对应的真正位置,将其改成265^0xE9的值就好了.<br>还是先搜索得分,然后找出访问了这个得分的这段代码,发现长这样:</p>
-<p><img src="/2019/11/12/cnss_recruit/ce_snake2.png"></p>
-<p>因为此时我们就在整个函数里面了,所以那个变量应该就在附近,我们看到483这个数字很可疑,因为1对应, —————————-我们找到这个变量的地址,将其修改成483,</p>
-<p><img src="/2019/11/12/cnss_recruit/ce_snake1.png"></p>
-<p>再去游戏里面,就发现通关拿到flag了,flag是: cnss{CE_caN_ju5T_Act_w1lfulLy!!}</p>
-<p><img src="/2019/11/12/cnss_recruit/flag_snake.png"></p>
-<h4 id="本题总结："><a href="#本题总结：" class="headerlink" title="本题总结："></a>本题总结：</h4><p>1、之前没有好好利用IDA去了解整个程序的主体就直接去动态调试，导致整个过程思路不明确，效率极低。<br>2、使用IDA进行调试时，可以用快捷键N修改变量名，函数名，这样有利于整个代码的阅读和理解。</p>
-<h3 id="Confusion"><a href="#Confusion" class="headerlink" title="Confusion"></a>Confusion</h3><p>直接拖入IDA，F5</p>
-<p><img src="/2019/11/12/cnss_recruit/ida_confusion1.png"></p>
-<p>看到这个像scanf一样的函数，心里就有个底了。<br><code>sub_426980</code> 这个应该就是读入的函数.<br>进入下个函数查看,简单分析后,发现应该是判断输入的flag的长度,如果长度是32个字符,才能够进入下个函数.<br>再下面的函数,是用来判断输入的flag的前五位是否是”cnss{“,如果不是的话,程序也会直接跳出.<br>再接下来看到一个比较复杂的函数,里面有很多次循环,应该是一个加密的函数.函数很复杂,直接逆出来的话,难度相当大.这时候要采用动态调试的方法,在函数执行的时候把flag找出来.<br>直接在函数返回之前下好断点,在寄存器里就找到了flag</p>
-<p><img src="/2019/11/12/cnss_recruit/ida_confusion2.png"></p>
-<p><img src="/2019/11/12/cnss_recruit/ida_confusion3.png"></p>
-<h4 id="本题总结"><a href="#本题总结" class="headerlink" title="本题总结"></a>本题总结</h4><p>1.IDA是真的好用<br>2.加密函数很复杂的时候,动态调试很顶</p>
-<h2 id="Surprise"><a href="#Surprise" class="headerlink" title="Surprise"></a>Surprise</h2>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1854,7 +1837,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-count">38</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>

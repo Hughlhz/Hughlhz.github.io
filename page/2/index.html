@@ -250,6 +250,512 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/14/maze/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hughes'Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/11/14/maze/" itemprop="url">迷宫问题</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-11-14T19:00:20+08:00">
+                2019-11-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/learning/" itemprop="url" rel="index">
+                    <span itemprop="name">learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="迷宫问题的特点："><a href="#迷宫问题的特点：" class="headerlink" title="迷宫问题的特点："></a>迷宫问题的特点：</h3><p>1.在内存中布置一张“地图”<br>2.将用户输入限制在少数几个字符范围内<br>3.一般只有一个迷宫入口和一个迷宫出口</p>
+<p>布置的地图可以由可显字符组成，也可以单纯用不可显的十六进制值进行表示，可以将地图直接组成一条非常长的字符串，或是一行一行分开布置。如果是一行一行分开布置的话，因为迷宫一般都会比较大，所以用于按行布置迷宫的函数会明显重复多次。</p>
+<h4 id="xctf-逆向新手区最后一题—maze"><a href="#xctf-逆向新手区最后一题—maze" class="headerlink" title="xctf 逆向新手区最后一题—maze"></a>xctf 逆向新手区最后一题—maze</h4><p>除去查壳等操作，直接拖入IDA中进行分析：<br><img src="/2019/11/14/maze/1.png"><br>发现字符串比较,结论是flag必须是以nctf{开头。<br>接下来发现四个判断，每次判断后都进入相应的函数：<br><img src="/2019/11/14/maze/2.png"><br>而每个函数又都非常简单，无非是加加减减，还有判断是否大于零小于八<br><img src="/2019/11/14/maze/3.png"><br><img src="/2019/11/14/maze/4.png"><br><img src="/2019/11/14/maze/5.png"><br><img src="/2019/11/14/maze/6.png"><br>如果没有见过maze问题的话，确实会有一点懵，如果见过的话，去字符串里看看就会发现一些有用的东西：<br><img src="/2019/11/14/maze/7.png"><br>再根据大于零小于八的限制，就可以发现，这一串字符串实际上可以组成一个8*8的迷宫<br><img src="/2019/11/14/maze/8.png"><br>然后是通过’.’,’0’,’o’,’O’来确定上下左右的移动。<br>那么最后走出迷宫就可以得到flag：nctf{o0oo00O000oooo..OO}</p>
+<p>当涉及到的迷宫问题比较难解决的时候，或许可以通过深度搜索和广度搜索来解决迷宫问题，就比如CTF Wiki上的以到例题：<br>函数部分和上题差不多，但是迷宫很大：可能一个个去找会烦死。<br><img src="/2019/11/14/maze/9.png"></p>
+<p>参考资料：<br><a target="_blank" rel="noopener" href="https://ctf-wiki.github.io/ctf-wiki/reverse/maze/maze-zh/">https://ctf-wiki.github.io/ctf-wiki/reverse/maze/maze-zh/</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/14/xctf_pwn_new/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hughes'Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/11/14/xctf_pwn_new/" itemprop="url">XCTF_PWN新手区</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-11-14T16:00:20+08:00">
+                2019-11-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/learning/" itemprop="url" rel="index">
+                    <span itemprop="name">learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="搭建环境"><a href="#搭建环境" class="headerlink" title="搭建环境"></a>搭建环境</h3><p>由于是第一次接触PWN,所以先在网上找了些环境搭建的博客看看,然后发现这篇很好很全,推荐:<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/1476f38e3aa3">https://www.jianshu.com/p/1476f38e3aa3</a></p>
+<h4 id="这次题目主要用到的工具有"><a href="#这次题目主要用到的工具有" class="headerlink" title="这次题目主要用到的工具有:"></a>这次题目主要用到的工具有:</h4><p>pwntools:用python开发的一个ctf框架和漏洞利用开发库<br>ROPgadget:好像只用了一次,用来搜索”/bin/sh”字符串所在的位置<br>IDA:嗯,必备的,不说了<br>checksec:查看可执行文件属性的工具</p>
+<h4 id="checksec包含的保护机制"><a href="#checksec包含的保护机制" class="headerlink" title="checksec包含的保护机制"></a>checksec包含的保护机制</h4><p>1)CANNARY(栈保护)</p>
+<blockquote>
+<p>栈溢出保护是一种缓冲区溢出攻击缓解手段，当函数存在缓冲区溢出攻击漏洞时，攻击者可以覆盖栈上的返回地址来让shellcode能够得到执行。当启用栈保护后，函数开始执行的时候会先往栈里插入cookie信息，当函数真正返回的时候会验证cookie信息是否合法，如果不合法就停止程序运行。攻击者在覆盖返回地址的时候往往也会将cookie信息给覆盖掉，导致栈保护检查失败而阻止shellcode的执行。在Linux中我们将cookie信息称为canary。</p>
+</blockquote>
+<p>2)FORTIFY</p>
+<p>3)NX(DEP)</p>
+<blockquote>
+<p>NX即No-eXecute（不可执行）的意思，NX（DEP）的基本原理是将数据所在内存页标识为不可执行，当程序溢出成功转入shellcode时，程序会尝试在数据页面上执行指令，此时CPU就会抛出异常，而不是去执行恶意指令。</p>
+</blockquote>
+<p>4)PIE(ASLR)</p>
+<blockquote>
+<p>一般情况下NX（Windows平台上称其为DEP）和地址空间分布随机化（ASLR）会同时工作。</p>
+</blockquote>
+<blockquote>
+<p>内存地址随机化机制（address space layout randomization)，有以下三种情况</p>
+</blockquote>
+<blockquote>
+<p>0 - 表示关闭进程地址空间随机化。</p>
+</blockquote>
+<blockquote>
+<p>1 - 表示将mmap的基址，stack和vdso页面随机化。</p>
+</blockquote>
+<blockquote>
+<p>2 - 表示在1的基础上增加栈（heap）的随机化。</p>
+</blockquote>
+<blockquote>
+<p>可以防范基于Ret2libc方式的针对DEP的攻击。ASLR和DEP配合使用，能有效阻止攻击者在堆栈上运行恶意代码。</p>
+</blockquote>
+<p>5)RELRO</p>
+<blockquote>
+<p>设置符号重定向表格为只读或在程序启动时就解析并绑定所有动态符号，从而减少对GOT（Global Offset Table）攻击。RELRO为” Partial RELRO”，说明我们对GOT表具有写权限。</p>
+</blockquote>
+<p>checksec这一部分<a target="_blank" rel="noopener" href="http://http//yunnigu.dropsec.xyz/2016/10/08/checksec%E5%8F%8A%E5%85%B6%E5%8C%85%E5%90%AB%E7%9A%84%E4%BF%9D%E6%8A%A4%E6%9C%BA%E5%88%B6/">来自这</a></p>
+<h3 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h3><p>写了pwn新手区的八道题,由于时间仓促,来不及写writeup,于是就总结一下遇到的几种情况.</p>
+<h4 id="格式化字符串漏洞"><a href="#格式化字符串漏洞" class="headerlink" title="格式化字符串漏洞"></a>格式化字符串漏洞</h4><p>讲这个之前,必须先了解栈和栈帧.<br>这里的漏洞是指printf的格式化漏洞.以前学的C语言讲,printf(“%d %d”,a,b)格式化输出要和变量对应,输出几个就要有几个对应的变量,但是实际上,没有对应的变量时,printf也能执行,它会自动从栈中读取.<br>而格式化输出的参数里,有一个”%n<br>“,它的作用是将它前面的字符个数写入当前栈顶指针所指向的地址对应的存储空间,还一个就是”%?$n”,就是将%前面的字符个数写入[ESP+?]所指向的内存空间.<br>那么,如果我们知道我们要修改的变量相对于栈顶指针的位置,那我们就可以对其进行修改了.<br>寻找偏移量的话,一般是利用输入函数的漏洞,输入包含”%p-%p-%p-%p-%p”的字符,来实现地址的打印,从而发现变量的相对位置.</p>
+<h4 id="写shellcode"><a href="#写shellcode" class="headerlink" title="写shellcode"></a>写shellcode</h4><p>详见第七题string<br>shellcode就是在程序漏洞处执行的特定代码.<br>写shellcode的时候要注意先设置目标机的参数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">context(os&#x3D;&#39;linux&#39;,arch&#x3D;&#39;amd64&#39;)</span><br></pre></td></tr></table></figure>
+<p>然后获取shellcode的话就是获取执行system(“/bin/sh”)汇编代码所对应的机器码,通过python语句</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">asm(shellcraft.())</span><br></pre></td></tr></table></figure>
+<p>获得</p>
+<h4 id="gets的漏洞"><a href="#gets的漏洞" class="headerlink" title="gets的漏洞"></a>gets的漏洞</h4><p>gets()是一个极其不安全的函数,因为它没有限定读入的字符个数.第八题就利用到了这一点,直接将生成伪随机数的种子给覆盖,然后程序生成的随机数变成一串已知的数字序列,从而触发”cat flag”的条件,获得flag</p>
+<h4 id="整数溢出漏洞"><a href="#整数溢出漏洞" class="headerlink" title="整数溢出漏洞"></a>整数溢出漏洞</h4>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/12/cnss_recruit/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hughes'Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/11/12/cnss_recruit/" itemprop="url">cnss_recruit</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-11-12T16:00:20+08:00">
+                2019-11-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/learning/" itemprop="url" rel="index">
+                    <span itemprop="name">learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="easy-flat"><a href="#easy-flat" class="headerlink" title="easy_flat"></a>easy_flat</h3><p>本题涉及代码混淆，具体是控制流平坦化<br>直接拖入IDA，F5：</p>
+<p><img src="/2019/11/12/cnss_recruit/easy_flat_1.png"></p>
+<p>然后查看流程框图：</p>
+<p><img src="/2019/11/12/cnss_recruit/easy_flat_2.png"></p>
+<p>经过晴宇哥的指点以后，我去搜了一些关于控制流平坦化的资料：</p>
+<p><img src="/2019/11/12/cnss_recruit/easy_flat_3.png"></p>
+<p>实际上，只是控制流程的方式变了，这道题相对简单，我们还是能够看出流程来。<br>继续分析伪代码，先看到一个长得像scanf的函数，把里面参数重命名为input，然后继续往下看，发现其中存在一个字符串比较的过程，点击查看被比较的另一个字符串后，发现是这样的字符串，长得很像flag,应该就是flag被加密后的形式.</p>
+<p><img src="/2019/11/12/cnss_recruit/easy_flat_4.png"></p>
+<p>现在就是要去寻找加密的方式,查看input被引用的地方,发现也就是这:</p>
+<p><img src="/2019/11/12/cnss_recruit/easy_flat_5.png"></p>
+<p><img src="/2019/11/12/cnss_recruit/easy_flat_6.png"></p>
+<h3 id="cnss-re-snake"><a href="#cnss-re-snake" class="headerlink" title="cnss-re-snake"></a>cnss-re-snake</h3><p>刚看到这道题目的时候有点懵，因为从来没有用过CheatEngine进行逆向调试，题目提示可以使用CE进行调试，于是我就先学了一波CE的教程，具体过程前文已经写了。<br>但是，学完使用CE后，仍然不会逆，于是跑去请教炮王，炮王不愧是炮王，虽然没帮我拿到Flag，但是给我演示了静态调试和动态调试的过程，受益匪浅。<br>下面是逆的过程。<br>首先把文件拖到ida里进行静态调试。找到主函数。</p>
+<p><img src="/2019/11/12/cnss_recruit/ida_snake_main.png"></p>
+<p>这一步不需要看伪代码也能看出,就是六个函数的调用。<br>我们这时候打开游戏来看，首先看到有个菜单，根据C语言的经验，应该至少有一个switch语句和死循环。然后我们开始游戏一看，游戏就是个贪食蛇的游戏，提示是这样：</p>
+<p>我们先用CE去搜得分，确实搜到了，但是正如提示的那样，直接修改是没有用的。<br>接着我们发现游戏失败时有对话框弹出，我们可以先尝试下搜索字符串。搜索到后查看调用：</p>
+<p><img src="/2019/11/12/cnss_recruit/ida_snake_frame.png"></p>
+<p>发现这个字符串在 <code>sub_4031EB</code> 函数里被调用,我们搜索进入这个函数,发现里面全是一些失败的提示消息:</p>
+<p><img src="/2019/11/12/cnss_recruit/ida_snake_fail.png"></p>
+<p>这里将这个函数名改成fail,以便于我们的理解。<br>fail函数被<code>sub_4027BE</code>函数调用,而这个函数有两个分支,其中一个是fail,那另一个应该就是succeed了吧.找到进去一看,应该就是了,但是整个函数很复杂,可能就是计算出flag的过程.我们查看下那个可疑的 <code>sub_4027BE</code>函数.查看之后,发现一个很熟悉的printf函数:</p>
+<p><img src="/2019/11/12/cnss_recruit/ida_snake_printf.png"></p>
+<p>这个函数告诉我们,得分对应的参数就是显示出来的分数,我们将它命名为score.<br>往上一看,发现这个score的值是dword_40eDC0赋予的,这个也许就是存储得分的真正位置.<br>那就继续看dword_40eDC0这个什么时候被访问,往下看我们发现这样一段代码:</p>
+<p><img src="/2019/11/12/cnss_recruit/ida_snake_key.png"></p>
+<p>这里面调用的函数正是我们之前怀疑的succeed函数,他们原来是在这里py交易的!<br>仔细看这段代码,发现出题人是将真正的得分的低八位和0xE9H相与,判断相与后的值是否大于265.<br>抓住这一点我们就可以拿到Flag了,<br>这时候进行动态调试,这里用的是CE.<br>我们要先找到得分对应的真正位置,将其改成265^0xE9的值就好了.<br>还是先搜索得分,然后找出访问了这个得分的这段代码,发现长这样:</p>
+<p><img src="/2019/11/12/cnss_recruit/ce_snake2.png"></p>
+<p>因为此时我们就在整个函数里面了,所以那个变量应该就在附近,我们看到483这个数字很可疑,因为1对应, —————————-我们找到这个变量的地址,将其修改成483,</p>
+<p><img src="/2019/11/12/cnss_recruit/ce_snake1.png"></p>
+<p>再去游戏里面,就发现通关拿到flag了,flag是: cnss{CE_caN_ju5T_Act_w1lfulLy!!}</p>
+<p><img src="/2019/11/12/cnss_recruit/flag_snake.png"></p>
+<h4 id="本题总结："><a href="#本题总结：" class="headerlink" title="本题总结："></a>本题总结：</h4><p>1、之前没有好好利用IDA去了解整个程序的主体就直接去动态调试，导致整个过程思路不明确，效率极低。<br>2、使用IDA进行调试时，可以用快捷键N修改变量名，函数名，这样有利于整个代码的阅读和理解。</p>
+<h3 id="Confusion"><a href="#Confusion" class="headerlink" title="Confusion"></a>Confusion</h3><p>直接拖入IDA，F5</p>
+<p><img src="/2019/11/12/cnss_recruit/ida_confusion1.png"></p>
+<p>看到这个像scanf一样的函数，心里就有个底了。<br><code>sub_426980</code> 这个应该就是读入的函数.<br>进入下个函数查看,简单分析后,发现应该是判断输入的flag的长度,如果长度是32个字符,才能够进入下个函数.<br>再下面的函数,是用来判断输入的flag的前五位是否是”cnss{“,如果不是的话,程序也会直接跳出.<br>再接下来看到一个比较复杂的函数,里面有很多次循环,应该是一个加密的函数.函数很复杂,直接逆出来的话,难度相当大.这时候要采用动态调试的方法,在函数执行的时候把flag找出来.<br>直接在函数返回之前下好断点,在寄存器里就找到了flag</p>
+<p><img src="/2019/11/12/cnss_recruit/ida_confusion2.png"></p>
+<p><img src="/2019/11/12/cnss_recruit/ida_confusion3.png"></p>
+<h4 id="本题总结"><a href="#本题总结" class="headerlink" title="本题总结"></a>本题总结</h4><p>1.IDA是真的好用<br>2.加密函数很复杂的时候,动态调试很顶</p>
+<h2 id="Surprise"><a href="#Surprise" class="headerlink" title="Surprise"></a>Surprise</h2>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/27/breakpoint/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1293,457 +1799,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/18/jmp/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hughes'Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/10/18/jmp/" itemprop="url">跳转指令</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-10-18T20:44:39+08:00">
-                2019-10-18
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/learning/" itemprop="url" rel="index">
-                    <span itemprop="name">learning</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>为了防止遗忘，以及为了日后查找方便，记录一下跳转指令的条件以及其意义</p>
-<h3 id="跳转指令"><a href="#跳转指令" class="headerlink" title="跳转指令"></a>跳转指令</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">ja 大于时跳转</span><br><span class="line">jae 大于等于</span><br><span class="line">jb 小于</span><br><span class="line">jbe 小于等于</span><br><span class="line">je 相等</span><br><span class="line">jna 不大于</span><br><span class="line">jnae 不大于或者等于</span><br><span class="line">jnb 不小于</span><br><span class="line">jnbe 不小于或等于</span><br><span class="line">jne 不等于</span><br><span class="line">jg 大于(有符号)</span><br><span class="line">jge 大于等于(有符号)</span><br><span class="line">jl 小于(有符号)</span><br><span class="line">jle 小于等于(有符号)</span><br><span class="line">jng 不大于(有符号)</span><br><span class="line">jnge 不大于等于(有符号)</span><br><span class="line">jnl 不小于</span><br><span class="line">jnle 不小于等于</span><br><span class="line">jns 无符号</span><br><span class="line">jnz 非零</span><br><span class="line">js 如果带符号</span><br><span class="line">jz 如果为零</span><br></pre></td></tr></table></figure>
-
-<p>发生跳转时各标志寄存器的值<br><img src="/2019/10/18/jmp/1.png"></p>
-<p>以及对应的指令字母的含义</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">a: above</span><br><span class="line">e: equal</span><br><span class="line">b: below</span><br><span class="line">n: <span class="keyword">not</span></span><br><span class="line">g: greater</span><br><span class="line">l: lower</span><br><span class="line">s: signed</span><br><span class="line">z: zero</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/16/ce_tg2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hughes'Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/10/16/ce_tg2/" itemprop="url">CE Tutorial Games--2</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-10-16T19:00:20+08:00">
-                2019-10-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/learning/" itemprop="url" rel="index">
-                    <span itemprop="name">learning</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>##<br>参照文档：<a target="_blank" rel="noopener" href="https://www.52pojie.cn/thread-915447-1-1.html">https://www.52pojie.cn/thread-915447-1-1.html</a><br>开始CE Tutorial Game 第三关的再次尝试。</p>
-<h3 id="1"><a href="#1" class="headerlink" title="1"></a>1</h3><p>2D游戏就两个坐标，按照52某牛的说法，2D游戏一般是左负右正，上下的正负不一定。</p>
-<p>先利用CE搜索到人物的坐标。首先选到单浮点数和未知初始值，多次移动人物再加上多次搜索后就可以确定一个值了，这个就是我们要找的横坐标。<br><img src="/2019/10/16/ce_tg2/1.png" alt="1"><br>这时候修改这个横坐标的值就可以让人物进行瞬移了.<br>配合上上篇Blog里修改变绿台阶数为12即可过关.<br>现在我们来找一下任务的纵坐标.<br>一般横纵坐标的值应该都放在同一个地方,所以我们可以试下查看横坐标在内存中的相邻区域.<br><img src="/2019/10/16/ce_tg2/2.png" alt="2"><br>然后选择以浮点方式查看内存,接着让人物跳跃、移动,就可以发现两个可疑数据<br><img src="/2019/10/16/ce_tg2/3.png" alt="3"><br>观察数据变化可以发现,横坐标在屏幕内的范围从左到右是(-1,1),纵坐标在屏幕内的变化范围从上到下是(-1,1)</p>
-<h3 id="2"><a href="#2" class="headerlink" title="2"></a>2</h3><p>接下来试下找到游戏里面的重力系统.</p>
-<h4 id="2-1"><a href="#2-1" class="headerlink" title="2-1"></a>2-1</h4><p>重力可以改变纵坐标的值,所以我们查看下是什么改变纵坐标的值.<br><img src="/2019/10/16/ce_tg2/4.png" alt="4"><br>发现有两个指令对其进行修改,其中有一条指令在人物跳起来时不会写入数据.<br>猜测应该是第一条对纵坐标进行了修改.<br>进入内存查看,剔除掉和纵坐标无关的指令,剩下的代码由52大牛整理如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">gtutorial-x86_64.exe+4048D - 48 8B 43 28           - mov rax,[rbx+28]</span><br><span class="line">gtutorial-x86_64.exe+40491 - F3 44 0F10 40 28      - movss xmm8,[rax+28] &#123; 读取 Y 坐标 &#125;</span><br><span class="line">gtutorial-x86_64.exe+40497 - 48 8B 43 28           - mov rax,[rbx+28]</span><br><span class="line">gtutorial-x86_64.exe+4049B - F3 0F5A 48 28         - cvtss2sd xmm1,[rax+28] &#123; 再次读取 Y 坐标 &#125;</span><br><span class="line">gtutorial-x86_64.exe+404A0 - F3 0F5A 53 78         - cvtss2sd xmm2,[rbx+78] &#123; 读取 Y 速度 &#125;</span><br><span class="line">gtutorial-x86_64.exe+404A5 - F2 0F2A C6            - cvtsi2sd xmm0,esi &#123; esi 是毫秒数 &#125;</span><br><span class="line">gtutorial-x86_64.exe+404A9 - F2 0F5E 05 AF382400   - divsd xmm0,[gtutorial-x86_64.exe+283D60] &#123; 除以 1000 &#125;</span><br><span class="line">gtutorial-x86_64.exe+404B1 - F2 0F59 C2            - mulsd xmm0,xmm2 &#123; 速度乘时间 &#125;</span><br><span class="line">gtutorial-x86_64.exe+404B5 - F2 0F5C C8            - subsd xmm1,xmm0 &#123; Y 坐标减去位移 &#125;</span><br><span class="line">gtutorial-x86_64.exe+404B9 - F2 44 0F5A C9         - cvtsd2ss xmm9,xmm1 &#123; double 转 float &#125;</span><br><span class="line"></span><br><span class="line">......</span><br><span class="line"></span><br><span class="line">gtutorial-x86_64.exe+40506 - F3 44 0F11 48 28      - movss [rax+28],xmm9 &#123; 赋值给 [rax+28] &#125;</span><br></pre></td></tr></table></figure>
-
-<p>感觉整个分析过程就是要甄别出真正有效的数据,然后找出他们的内在逻辑.</p>
-<p>纵坐标的地址可以很容易找出: <code>[[[&quot;gtutorial-x86_64.exe&quot;+37DC50]+760]+28]+28</code>(他这里好像写错了)<br>根据分析,速度地址应该是 <code>[[&quot;gtutorial-x86_64.exe&quot;+37DC50]+760]+78</code><br>手动添加地址后我们就可以直接修改速度了,但是这个速度会变化,所以我们可以设置热键,让速度分别变为1和-1,这样就可以比较好地进行控制.<br>根据同样的道理,水平方向的速度我们也可以进行更改.</p>
-<h4 id="2-2"><a href="#2-2" class="headerlink" title="2-2"></a>2-2</h4><p>这次来找重力加速度.<br>重力加速度会直接影响竖直方向上的速度,我们直接查看什么修改了竖直方向上的速度.<br><img src="/2019/10/16/ce_tg2/5.png" alt="5"><br>发现只有第二条指令会一直对速度修改,所以在内存中查看第二条指令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">gtutorial-x86_64.exe+40709 - F3 0F5A 43 78         - cvtss2sd xmm0,[rbx+78] &#123; 读取速度 &#125;</span><br><span class="line">gtutorial-x86_64.exe+4070E - F2 0F5C 05 52362400   - subsd xmm0,[gtutorial-x86_64.exe+283D68] &#123; 减去 0.1 &#125;</span><br><span class="line">gtutorial-x86_64.exe+40716 - F2 0F5A C0            - cvtsd2ss xmm0,xmm0 &#123; double 转 float &#125;</span><br><span class="line">gtutorial-x86_64.exe+4071A - F3 0F11 43 78         - movss [rbx+78],xmm0 &#123; 写入速度 &#125;</span><br></pre></td></tr></table></figure>
-<p>这个机制蛮简单的,每次速度减0.1.</p>
-<h3 id="3"><a href="#3" class="headerlink" title="3"></a>3</h3><p>这次来找敌人的位置.<br>只要找到敌人的横坐标,它们的地址+4就是他们的纵坐标了.和搜索自己的坐标方法类似,很快可以搜索到他们的坐标.<br>直接锁定他们坐标的值,发现可以锁定,但是当12个台阶都亮起时,他们还是会飞去守门.<br>这时候查看什么对它们进行了写入,借用大牛的图:<br><img src="/2019/10/16/ce_tg2/6.png" alt="6"><br>直接将第五条指令nop掉,就可以对他们的坐标进行修改了.</p>
-<h3 id="4"><a href="#4" class="headerlink" title="4"></a>4</h3><p>这次来查找开门的指令.<br>开门和已经变绿的台阶数量有关系,那么我们先查看有什么访问了这个变量.<br>查看后发现只有一条指令堆积访问,于是查看它在内存中的位置,发现有几个有意思的判断:(还是摘自大牛整理的代码)</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">gtutorial-x86_64.exe+4098B - 48 63 93 88000000     - movsxd  rdx,dword ptr [rbx+00000088] &#123; 读取已变绿平台数 &#125;</span><br><span class="line">gtutorial-x86_64.exe+40992 - 48 8B 43 30           - mov rax,[rbx+30]</span><br><span class="line">gtutorial-x86_64.exe+40996 - 48 85 C0              - test rax,rax</span><br><span class="line">gtutorial-x86_64.exe+40999 - 74 08                 - je gtutorial-x86_64.exe+409A3</span><br><span class="line">gtutorial-x86_64.exe+4099B - 48 8B 40 F8           - mov rax,[rax-08] &#123; [rax-08] 为平台数组最大下标 &#125;</span><br><span class="line">gtutorial-x86_64.exe+4099F - 48 83 C0 01           - add rax,01 &#123; 最大下标 + 1 即为总平台数 &#125;</span><br><span class="line">gtutorial-x86_64.exe+409A3 - 48 39 C2              - cmp rdx,rax &#123; 比较已变绿平台数和总平台数 &#125;</span><br><span class="line">gtutorial-x86_64.exe+409A6 - 7C 17                 - jl gtutorial-x86_64.exe+409BF</span><br><span class="line">gtutorial-x86_64.exe+409A8 - 48 8B 43 60           - mov rax,[rbx+60] &#123; 二级指针 &#125;</span><br><span class="line">gtutorial-x86_64.exe+409AC - C6 40 18 00           - mov byte ptr [rax+18],00 &#123; 开门 &#125;</span><br><span class="line">gtutorial-x86_64.exe+409B0 - C6 43 7D 01           - mov byte ptr [rbx+7D],01 &#123; 堵门 &#125;</span><br><span class="line">gtutorial-x86_64.exe+409B4 - 48 8B 43 68           - mov rax,[rbx+68]</span><br><span class="line">gtutorial-x86_64.exe+409B8 - 48 89 83 80000000     - mov [rbx+00000080],rax</span><br><span class="line">gtutorial-x86_64.exe+409BF - 48 83 7B 28 00        - cmp qword ptr [rbx+28],00 &#123; 0 &#125;</span><br></pre></td></tr></table></figure>
-
-<p>这里可以看到总台阶数并没有存在哪个变量里,而是由数组下标+1来表示.<br>我们可以推导出开门地址<code> [[[&quot;gtutorial-x86_64.exe&quot;+37DC50]+760]+60]+18</code><br>以及<code>[[&quot;gtutorial-x86_64.exe&quot;+37DC50]+760]+7D</code><br>这样直接修改开门地址为0,堵门地址也为0就可以过关了.</p>
-<h4 id="内容太多了-下一篇Blog再来写破解碰撞检测的方法"><a href="#内容太多了-下一篇Blog再来写破解碰撞检测的方法" class="headerlink" title="内容太多了,下一篇Blog再来写破解碰撞检测的方法."></a>内容太多了,下一篇Blog再来写破解碰撞检测的方法.</h4>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/14/ce/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hughes'Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/10/14/ce/" itemprop="url">初学CheatEngine的使用(内含CE Tutorial Games--1）</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-10-14T15:00:20+08:00">
-                2019-10-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/learning/" itemprop="url" rel="index">
-                    <span itemprop="name">learning</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="CheatEngine"><a href="#CheatEngine" class="headerlink" title="CheatEngine"></a>CheatEngine</h2><p>很早就接触过了CE修改器，当时是玩一些幼稚小游戏，然后用ce修改器修改金币和经验。不过也仅仅是接触，从来没有深入过，这次CNSS招新有道贪食蛇的题目(wtcl,还没写出来)，可以用CE调试,我就准备学下CE调试,然后刚刚好它有几个教程,这篇blog就来写下写CE教程题目的经历.<br>总共分为两部分,一个是Cheat Engine Tutorial,另一个是Cheat Engine Tutorial Games.</p>
-<h2 id="Cheat-Engine-Tutorial"><a href="#Cheat-Engine-Tutorial" class="headerlink" title="Cheat Engine Tutorial"></a>Cheat Engine Tutorial</h2><p>这部分非常基础,然后基本上就是CE的基本用法.<br>第一关到第八关有手就行,然后第九关有一个点我没接触过,这里记录下来.<br>第九关是个小游戏,敌我双方各两个人,但是敌人伤害高血还厚,我们打不过,而过关的条件就是把敌人乃一组特.(如图)<br><img src="/2019/10/14/ce/1p.png" alt="第九关"><br>首先肯定是搜索血量,很容易搜到四个人的血量的地址.然后F6,查看是什么改写这个地址.查看之后发现改写的时候调用的是同一个函数(如图).</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/10/14/ce/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1794,7 +1849,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-count">38</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>

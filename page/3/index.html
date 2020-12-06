@@ -250,6 +250,457 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/18/jmp/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hughes'Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/10/18/jmp/" itemprop="url">跳转指令</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-10-18T20:44:39+08:00">
+                2019-10-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/learning/" itemprop="url" rel="index">
+                    <span itemprop="name">learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>为了防止遗忘，以及为了日后查找方便，记录一下跳转指令的条件以及其意义</p>
+<h3 id="跳转指令"><a href="#跳转指令" class="headerlink" title="跳转指令"></a>跳转指令</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">ja 大于时跳转</span><br><span class="line">jae 大于等于</span><br><span class="line">jb 小于</span><br><span class="line">jbe 小于等于</span><br><span class="line">je 相等</span><br><span class="line">jna 不大于</span><br><span class="line">jnae 不大于或者等于</span><br><span class="line">jnb 不小于</span><br><span class="line">jnbe 不小于或等于</span><br><span class="line">jne 不等于</span><br><span class="line">jg 大于(有符号)</span><br><span class="line">jge 大于等于(有符号)</span><br><span class="line">jl 小于(有符号)</span><br><span class="line">jle 小于等于(有符号)</span><br><span class="line">jng 不大于(有符号)</span><br><span class="line">jnge 不大于等于(有符号)</span><br><span class="line">jnl 不小于</span><br><span class="line">jnle 不小于等于</span><br><span class="line">jns 无符号</span><br><span class="line">jnz 非零</span><br><span class="line">js 如果带符号</span><br><span class="line">jz 如果为零</span><br></pre></td></tr></table></figure>
+
+<p>发生跳转时各标志寄存器的值<br><img src="/2019/10/18/jmp/1.png"></p>
+<p>以及对应的指令字母的含义</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">a: above</span><br><span class="line">e: equal</span><br><span class="line">b: below</span><br><span class="line">n: <span class="keyword">not</span></span><br><span class="line">g: greater</span><br><span class="line">l: lower</span><br><span class="line">s: signed</span><br><span class="line">z: zero</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/16/ce_tg2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hughes'Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/10/16/ce_tg2/" itemprop="url">CE Tutorial Games--2</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-10-16T19:00:20+08:00">
+                2019-10-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/learning/" itemprop="url" rel="index">
+                    <span itemprop="name">learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>##<br>参照文档：<a target="_blank" rel="noopener" href="https://www.52pojie.cn/thread-915447-1-1.html">https://www.52pojie.cn/thread-915447-1-1.html</a><br>开始CE Tutorial Game 第三关的再次尝试。</p>
+<h3 id="1"><a href="#1" class="headerlink" title="1"></a>1</h3><p>2D游戏就两个坐标，按照52某牛的说法，2D游戏一般是左负右正，上下的正负不一定。</p>
+<p>先利用CE搜索到人物的坐标。首先选到单浮点数和未知初始值，多次移动人物再加上多次搜索后就可以确定一个值了，这个就是我们要找的横坐标。<br><img src="/2019/10/16/ce_tg2/1.png" alt="1"><br>这时候修改这个横坐标的值就可以让人物进行瞬移了.<br>配合上上篇Blog里修改变绿台阶数为12即可过关.<br>现在我们来找一下任务的纵坐标.<br>一般横纵坐标的值应该都放在同一个地方,所以我们可以试下查看横坐标在内存中的相邻区域.<br><img src="/2019/10/16/ce_tg2/2.png" alt="2"><br>然后选择以浮点方式查看内存,接着让人物跳跃、移动,就可以发现两个可疑数据<br><img src="/2019/10/16/ce_tg2/3.png" alt="3"><br>观察数据变化可以发现,横坐标在屏幕内的范围从左到右是(-1,1),纵坐标在屏幕内的变化范围从上到下是(-1,1)</p>
+<h3 id="2"><a href="#2" class="headerlink" title="2"></a>2</h3><p>接下来试下找到游戏里面的重力系统.</p>
+<h4 id="2-1"><a href="#2-1" class="headerlink" title="2-1"></a>2-1</h4><p>重力可以改变纵坐标的值,所以我们查看下是什么改变纵坐标的值.<br><img src="/2019/10/16/ce_tg2/4.png" alt="4"><br>发现有两个指令对其进行修改,其中有一条指令在人物跳起来时不会写入数据.<br>猜测应该是第一条对纵坐标进行了修改.<br>进入内存查看,剔除掉和纵坐标无关的指令,剩下的代码由52大牛整理如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">gtutorial-x86_64.exe+4048D - 48 8B 43 28           - mov rax,[rbx+28]</span><br><span class="line">gtutorial-x86_64.exe+40491 - F3 44 0F10 40 28      - movss xmm8,[rax+28] &#123; 读取 Y 坐标 &#125;</span><br><span class="line">gtutorial-x86_64.exe+40497 - 48 8B 43 28           - mov rax,[rbx+28]</span><br><span class="line">gtutorial-x86_64.exe+4049B - F3 0F5A 48 28         - cvtss2sd xmm1,[rax+28] &#123; 再次读取 Y 坐标 &#125;</span><br><span class="line">gtutorial-x86_64.exe+404A0 - F3 0F5A 53 78         - cvtss2sd xmm2,[rbx+78] &#123; 读取 Y 速度 &#125;</span><br><span class="line">gtutorial-x86_64.exe+404A5 - F2 0F2A C6            - cvtsi2sd xmm0,esi &#123; esi 是毫秒数 &#125;</span><br><span class="line">gtutorial-x86_64.exe+404A9 - F2 0F5E 05 AF382400   - divsd xmm0,[gtutorial-x86_64.exe+283D60] &#123; 除以 1000 &#125;</span><br><span class="line">gtutorial-x86_64.exe+404B1 - F2 0F59 C2            - mulsd xmm0,xmm2 &#123; 速度乘时间 &#125;</span><br><span class="line">gtutorial-x86_64.exe+404B5 - F2 0F5C C8            - subsd xmm1,xmm0 &#123; Y 坐标减去位移 &#125;</span><br><span class="line">gtutorial-x86_64.exe+404B9 - F2 44 0F5A C9         - cvtsd2ss xmm9,xmm1 &#123; double 转 float &#125;</span><br><span class="line"></span><br><span class="line">......</span><br><span class="line"></span><br><span class="line">gtutorial-x86_64.exe+40506 - F3 44 0F11 48 28      - movss [rax+28],xmm9 &#123; 赋值给 [rax+28] &#125;</span><br></pre></td></tr></table></figure>
+
+<p>感觉整个分析过程就是要甄别出真正有效的数据,然后找出他们的内在逻辑.</p>
+<p>纵坐标的地址可以很容易找出: <code>[[[&quot;gtutorial-x86_64.exe&quot;+37DC50]+760]+28]+28</code>(他这里好像写错了)<br>根据分析,速度地址应该是 <code>[[&quot;gtutorial-x86_64.exe&quot;+37DC50]+760]+78</code><br>手动添加地址后我们就可以直接修改速度了,但是这个速度会变化,所以我们可以设置热键,让速度分别变为1和-1,这样就可以比较好地进行控制.<br>根据同样的道理,水平方向的速度我们也可以进行更改.</p>
+<h4 id="2-2"><a href="#2-2" class="headerlink" title="2-2"></a>2-2</h4><p>这次来找重力加速度.<br>重力加速度会直接影响竖直方向上的速度,我们直接查看什么修改了竖直方向上的速度.<br><img src="/2019/10/16/ce_tg2/5.png" alt="5"><br>发现只有第二条指令会一直对速度修改,所以在内存中查看第二条指令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">gtutorial-x86_64.exe+40709 - F3 0F5A 43 78         - cvtss2sd xmm0,[rbx+78] &#123; 读取速度 &#125;</span><br><span class="line">gtutorial-x86_64.exe+4070E - F2 0F5C 05 52362400   - subsd xmm0,[gtutorial-x86_64.exe+283D68] &#123; 减去 0.1 &#125;</span><br><span class="line">gtutorial-x86_64.exe+40716 - F2 0F5A C0            - cvtsd2ss xmm0,xmm0 &#123; double 转 float &#125;</span><br><span class="line">gtutorial-x86_64.exe+4071A - F3 0F11 43 78         - movss [rbx+78],xmm0 &#123; 写入速度 &#125;</span><br></pre></td></tr></table></figure>
+<p>这个机制蛮简单的,每次速度减0.1.</p>
+<h3 id="3"><a href="#3" class="headerlink" title="3"></a>3</h3><p>这次来找敌人的位置.<br>只要找到敌人的横坐标,它们的地址+4就是他们的纵坐标了.和搜索自己的坐标方法类似,很快可以搜索到他们的坐标.<br>直接锁定他们坐标的值,发现可以锁定,但是当12个台阶都亮起时,他们还是会飞去守门.<br>这时候查看什么对它们进行了写入,借用大牛的图:<br><img src="/2019/10/16/ce_tg2/6.png" alt="6"><br>直接将第五条指令nop掉,就可以对他们的坐标进行修改了.</p>
+<h3 id="4"><a href="#4" class="headerlink" title="4"></a>4</h3><p>这次来查找开门的指令.<br>开门和已经变绿的台阶数量有关系,那么我们先查看有什么访问了这个变量.<br>查看后发现只有一条指令堆积访问,于是查看它在内存中的位置,发现有几个有意思的判断:(还是摘自大牛整理的代码)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">gtutorial-x86_64.exe+4098B - 48 63 93 88000000     - movsxd  rdx,dword ptr [rbx+00000088] &#123; 读取已变绿平台数 &#125;</span><br><span class="line">gtutorial-x86_64.exe+40992 - 48 8B 43 30           - mov rax,[rbx+30]</span><br><span class="line">gtutorial-x86_64.exe+40996 - 48 85 C0              - test rax,rax</span><br><span class="line">gtutorial-x86_64.exe+40999 - 74 08                 - je gtutorial-x86_64.exe+409A3</span><br><span class="line">gtutorial-x86_64.exe+4099B - 48 8B 40 F8           - mov rax,[rax-08] &#123; [rax-08] 为平台数组最大下标 &#125;</span><br><span class="line">gtutorial-x86_64.exe+4099F - 48 83 C0 01           - add rax,01 &#123; 最大下标 + 1 即为总平台数 &#125;</span><br><span class="line">gtutorial-x86_64.exe+409A3 - 48 39 C2              - cmp rdx,rax &#123; 比较已变绿平台数和总平台数 &#125;</span><br><span class="line">gtutorial-x86_64.exe+409A6 - 7C 17                 - jl gtutorial-x86_64.exe+409BF</span><br><span class="line">gtutorial-x86_64.exe+409A8 - 48 8B 43 60           - mov rax,[rbx+60] &#123; 二级指针 &#125;</span><br><span class="line">gtutorial-x86_64.exe+409AC - C6 40 18 00           - mov byte ptr [rax+18],00 &#123; 开门 &#125;</span><br><span class="line">gtutorial-x86_64.exe+409B0 - C6 43 7D 01           - mov byte ptr [rbx+7D],01 &#123; 堵门 &#125;</span><br><span class="line">gtutorial-x86_64.exe+409B4 - 48 8B 43 68           - mov rax,[rbx+68]</span><br><span class="line">gtutorial-x86_64.exe+409B8 - 48 89 83 80000000     - mov [rbx+00000080],rax</span><br><span class="line">gtutorial-x86_64.exe+409BF - 48 83 7B 28 00        - cmp qword ptr [rbx+28],00 &#123; 0 &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里可以看到总台阶数并没有存在哪个变量里,而是由数组下标+1来表示.<br>我们可以推导出开门地址<code> [[[&quot;gtutorial-x86_64.exe&quot;+37DC50]+760]+60]+18</code><br>以及<code>[[&quot;gtutorial-x86_64.exe&quot;+37DC50]+760]+7D</code><br>这样直接修改开门地址为0,堵门地址也为0就可以过关了.</p>
+<h4 id="内容太多了-下一篇Blog再来写破解碰撞检测的方法"><a href="#内容太多了-下一篇Blog再来写破解碰撞检测的方法" class="headerlink" title="内容太多了,下一篇Blog再来写破解碰撞检测的方法."></a>内容太多了,下一篇Blog再来写破解碰撞检测的方法.</h4>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/14/ce/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hughes'Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/10/14/ce/" itemprop="url">初学CheatEngine的使用(内含CE Tutorial Games--1）</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-10-14T15:00:20+08:00">
+                2019-10-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/learning/" itemprop="url" rel="index">
+                    <span itemprop="name">learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="CheatEngine"><a href="#CheatEngine" class="headerlink" title="CheatEngine"></a>CheatEngine</h2><p>很早就接触过了CE修改器，当时是玩一些幼稚小游戏，然后用ce修改器修改金币和经验。不过也仅仅是接触，从来没有深入过，这次CNSS招新有道贪食蛇的题目(wtcl,还没写出来)，可以用CE调试,我就准备学下CE调试,然后刚刚好它有几个教程,这篇blog就来写下写CE教程题目的经历.<br>总共分为两部分,一个是Cheat Engine Tutorial,另一个是Cheat Engine Tutorial Games.</p>
+<h2 id="Cheat-Engine-Tutorial"><a href="#Cheat-Engine-Tutorial" class="headerlink" title="Cheat Engine Tutorial"></a>Cheat Engine Tutorial</h2><p>这部分非常基础,然后基本上就是CE的基本用法.<br>第一关到第八关有手就行,然后第九关有一个点我没接触过,这里记录下来.<br>第九关是个小游戏,敌我双方各两个人,但是敌人伤害高血还厚,我们打不过,而过关的条件就是把敌人乃一组特.(如图)<br><img src="/2019/10/14/ce/1p.png" alt="第九关"><br>首先肯定是搜索血量,很容易搜到四个人的血量的地址.然后F6,查看是什么改写这个地址.查看之后发现改写的时候调用的是同一个函数(如图).</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/10/14/ce/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/14/diff_call/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1257,445 +1708,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/21/layer3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hughes'Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/09/21/layer3/" itemprop="url">Transport Layer</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-09-21T10:29:18+08:00">
-                2019-09-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/learning/" itemprop="url" rel="index">
-                    <span itemprop="name">learning</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="传输层的功能"><a href="#传输层的功能" class="headerlink" title="传输层的功能"></a>传输层的功能</h3><p>&emsp;&emsp;”传输层”的功能，就是建立”端口到端口”的通信。相比之下，”网络层”的功能是建立”主机到主机”的通信。只要确定主机和端口，我们就能实现程序之间的交流。因此，Unix系统就把主机+端口，叫做”套接字”（socket）。有了它，就可以进行网络应用程序开发了。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/09/21/layer3/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/21/layer2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hughes'Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/09/21/layer2/" itemprop="url">Network Layer</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-09-21T09:24:18+08:00">
-                2019-09-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/learning/" itemprop="url" rel="index">
-                    <span itemprop="name">learning</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="网络层作用"><a href="#网络层作用" class="headerlink" title="网络层作用"></a>网络层作用</h3><p>&emsp;&emsp;网络层的作用是引进一套新的地址，使得我们能够区分不同的计算机是否属于同一个子网络。这套地址就叫做”网络地址”，简称”网址”。<br>&emsp;&emsp;如果是同一个子网络，就采用”广播”方式发送，否则就采用”路由”方式发送。（”路由”的意思，就是指如何向不同的子网络分发数据包）</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/09/21/layer2/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/20/layer1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hughes'Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/09/20/layer1/" itemprop="url">Physical Layer/Data Link Layer</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-09-20T23:24:18+08:00">
-                2019-09-20
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/learning/" itemprop="url" rel="index">
-                    <span itemprop="name">learning</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="Physical-Layer-物理层-实体层"><a href="#Physical-Layer-物理层-实体层" class="headerlink" title="Physical Layer(物理层/实体层)"></a>Physical Layer(物理层/实体层)</h2><p>&emsp;&emsp;实体层就是把电脑连接起来的物理手段，它主要规定了网络的一些电气特性，作用是负责传送0和1的电信号。</p>
-<h2 id="Data-Link-Layer-数据链路层"><a href="#Data-Link-Layer-数据链路层" class="headerlink" title="Data Link Layer(数据链路层)"></a>Data Link Layer(数据链路层)</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>&emsp;&emsp;链路层，它在”实体层”的上方，确定了0和1的分组方式。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/09/20/layer1/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1746,7 +1758,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-count">38</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>

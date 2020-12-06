@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="PE文件结构详见上一篇博客： 概要总共可以分为八个步骤： 1.将PE文件用ReadFile读取数据 2.根据PE结构获取镜像大小，在自己的程序中申请可读可写可执行的内存 3.将申请的空间全部填为0 4.将用ReadFile读取的数据映射到内存中 5.修复重定位 6.根据PE结构的导入表，加载所需要的dll，并获取导入函数的地址并写入导入表中。 7.修改PE文件的加载基址 8.跳转到PE的入口点处执">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PE加载过程">
+<meta property="og:url" content="http://yoursite.com/2020/05/12/pe_load/index.html">
+<meta property="og:site_name" content="Hughes&#39;Blog">
+<meta property="og:description" content="PE文件结构详见上一篇博客： 概要总共可以分为八个步骤： 1.将PE文件用ReadFile读取数据 2.根据PE结构获取镜像大小，在自己的程序中申请可读可写可执行的内存 3.将申请的空间全部填为0 4.将用ReadFile读取的数据映射到内存中 5.修复重定位 6.根据PE结构的导入表，加载所需要的dll，并获取导入函数的地址并写入导入表中。 7.修改PE文件的加载基址 8.跳转到PE的入口点处执">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/2020/05/12/pe_load/1.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/12/pe_load/aon.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/12/pe_load/aono.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/12/pe_load/4.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/12/pe_load/5.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/12/pe_load/6.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/12/pe_load/7.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/12/pe_load/8.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/12/pe_load/9.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/12/pe_load/10.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/12/pe_load/11.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/12/pe_load/12.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/12/pe_load/13.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/12/pe_load/14.png">
+<meta property="article:published_time" content="2020-05-12T03:00:20.000Z">
+<meta property="article:modified_time" content="2020-12-06T05:23:09.463Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2020/05/12/pe_load/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/05/12/pe_load/"/>
+
+
+
+
+
+  <title>PE加载过程 | Hughes'Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hughes'Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/12/pe_load/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hughes'Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">PE加载过程</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-05-12T11:00:20+08:00">
+                2020-05-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/learning/" itemprop="url" rel="index">
+                    <span itemprop="name">learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>PE文件结构详见上一篇博客：</p>
+<h3 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h3><p>总共可以分为八个步骤：</p>
+<p>1.将PE文件用ReadFile读取数据</p>
+<p>2.根据PE结构获取镜像大小，在自己的程序中申请可读可写可执行的内存</p>
+<p>3.将申请的空间全部填为0</p>
+<p>4.将用ReadFile读取的数据映射到内存中</p>
+<p>5.修复重定位</p>
+<p>6.根据PE结构的导入表，加载所需要的dll，并获取导入函数的地址并写入导入表中。</p>
+<p>7.修改PE文件的加载基址</p>
+<p>8.跳转到PE的入口点处执行</p>
+<h3 id="数据目录"><a href="#数据目录" class="headerlink" title="数据目录"></a>数据目录</h3><h5 id="用途："><a href="#用途：" class="headerlink" title="用途："></a>用途：</h5><p>用来找到编译器加到PE文件中的信息，这些信息包含了如：</p>
+<ul>
+<li>PE程序的图标信息</li>
+<li>用了哪些系统提供的函数（导入的函数）</li>
+<li>为其他程序提供了哪些函数（导出的函数）</li>
+</ul>
+<h5 id="定位："><a href="#定位：" class="headerlink" title="定位："></a>定位：</h5><p>可选PE头的最后一个成员，就是数据目录，一共16个：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">IMAGE_DATA_DIRECTORY</span> &#123;</span></span><br><span class="line">	DWORD   VirtualAddress;</span><br><span class="line">	DWORD   Size;</span><br><span class="line">&#125; IMAGE_DATA_DIRECTORY, * PIMAGE_DATA_DIRECTORY;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> IMAGE_NUMBEROF_DIRECTORY_ENTRIES    16</span></span><br></pre></td></tr></table></figure>
+
+<p>分别是：导出表、导入表、资源表、异常信息表、安全证书表、重定位表、调试信息表、版权所以表、全局指针表、TLS表、加载配置表、绑定导入表、IAT表、延迟导入表、COM信息表 最后一个保留未使用。</p>
+<h5 id="和程序执行有关的："><a href="#和程序执行有关的：" class="headerlink" title="和程序执行有关的："></a>和程序执行有关的：</h5><p>和程序运行时息息相关的表有：</p>
+<p>导出表</p>
+<p>导入表</p>
+<p>重定位表</p>
+<p>IAT表</p>
+<a id="more"></a>
+
+<h3 id="导出表"><a href="#导出表" class="headerlink" title="导出表"></a>导出表</h3><h4 id="定位导出表"><a href="#定位导出表" class="headerlink" title="定位导出表"></a>定位导出表</h4><p>数据目录项里的第一个结构就是导出表。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">IMAGE_DATA_DIRECTORY</span> &#123;</span></span><br><span class="line">	DWORD   VirtualAddress;</span><br><span class="line">	DWORD   Size;</span><br><span class="line">&#125; IMAGE_DATA_DIRECTORY, * PIMAGE_DATA_DIRECTORY;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>VirtualAddress  导出表的RVA</p>
+<p>Size 导出表大小</p>
+<h4 id="导出表结构"><a href="#导出表结构" class="headerlink" title="导出表结构"></a>导出表结构</h4><p>数据目录里的只是导出表在哪里的信息，并不包含导出表真正的信息</p>
+<p>如何在FileBuffer中找到这个结构呢？在VirtualAddress中存储的是RVA，想在FileBuffer中定位，则需要先转换成FOA</p>
+<p>真正的导出表结构：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">IMAGE_EXPORT_DIRECTORY</span> &#123;</span></span><br><span class="line">	DWORD   Characteristics;        <span class="comment">//未使用</span></span><br><span class="line">	DWORD   TimeDateStamp;			<span class="comment">//时间戳</span></span><br><span class="line">	WORD    MajorVersion;			<span class="comment">//未使用</span></span><br><span class="line">	WORD    MinorVersion; 			<span class="comment">//未使用</span></span><br><span class="line">	DWORD   Name;					<span class="comment">//指向该导出表文件名字符串</span></span><br><span class="line">	DWORD   Base;					<span class="comment">//导出函数起始序号</span></span><br><span class="line">	DWORD   NumberOfFunctions;		<span class="comment">//所有导出函数的个数</span></span><br><span class="line">	DWORD   NumberOfNames;			<span class="comment">//以函数名字导出的函数个数</span></span><br><span class="line">	DWORD   AddressOfFunctions;     <span class="comment">// 导出函数地址表RVA</span></span><br><span class="line">	DWORD   AddressOfNames;         <span class="comment">// 导出函数名称表RVA</span></span><br><span class="line">	DWORD   AddressOfNameOrdinals;  <span class="comment">// 导出函数序号表RVA</span></span><br><span class="line">&#125; IMAGE_EXPORT_DIRECTORY, * PIMAGE_EXPORT_DIRECTORY;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/05/12/pe_load/1.png"></p>
+<h5 id="AddressOfFunctions说明："><a href="#AddressOfFunctions说明：" class="headerlink" title="AddressOfFunctions说明："></a>AddressOfFunctions说明：</h5><p>该表中元素宽度为4个字节</p>
+<p>该表中存储所有导出函数的地址</p>
+<p>该表中个数由NumberOfFunctions决定</p>
+<p>该表项中的值是RVA, 加上ImageBase才是函数真正的地址</p>
+<p>定位：</p>
+<p>IMAGE_EXPORT_DIRECTORY-&gt;AddressOfFunctions 中存储的是该表的RVA 需要先转换成FOA</p>
+<h5 id="AddressOfNames说明："><a href="#AddressOfNames说明：" class="headerlink" title="AddressOfNames说明："></a>AddressOfNames说明：</h5><p>该表中元素宽度为4个字节</p>
+<p>该表中存储所有以名字导出函数的名字的RVA</p>
+<p>该表项中的值是RVA, 指向函数真正的名称</p>
+<p><img src="/2020/05/12/pe_load/aon.png"></p>
+<h5 id="AddressOfNameOrdinals"><a href="#AddressOfNameOrdinals" class="headerlink" title="AddressOfNameOrdinals"></a>AddressOfNameOrdinals</h5><p><img src="/2020/05/12/pe_load/aono.png"></p>
+<h5 id="导出表总结："><a href="#导出表总结：" class="headerlink" title="导出表总结："></a>导出表总结：</h5><p>为什么要分成3张表？</p>
+<p>1、函数导出的个数与函数名的个数未必一样.所以要将函数地址表和函数名称表分开.</p>
+<p>2、函数地址表是不是一定大于函数名称表？</p>
+<p>未必，一个相同的函数地址，可能有多个不同的名字.</p>
+<p>3、如何根据函数的名字获取一个函数的地址？</p>
+<p><img src="/2020/05/12/pe_load/4.png"></p>
+<p>4、如何根据函数的导出序号获取一个函数的地址？</p>
+<p><img src="/2020/05/12/pe_load/5.png"></p>
+<h3 id="程序加载的过程"><a href="#程序加载的过程" class="headerlink" title="程序加载的过程"></a>程序加载的过程</h3><p><img src="/2020/05/12/pe_load/6.png"></p>
+<p>1、一般情况下，EXE都是可以按照ImageBase的地址进行加载的。因为EXE拥有自己独立的4GB虚拟内存空间，但是DLL不是，有EXE使用它时，DLL才加载到相关EXE的进程空间</p>
+<p>2、为了提高搜索的速度，模块间地址也是要对齐的，模块地址对齐为10000H，也就是64K</p>
+<h4 id="引出重定位表："><a href="#引出重定位表：" class="headerlink" title="引出重定位表："></a>引出重定位表：</h4><p><img src="/2020/05/12/pe_load/7.png"></p>
+<p>1、也就是说，如果程序能够按照预定的ImageBase来加载的话，那么就不需要重定位表<br>这也是为什么exe很少有重定位表，而DLL大多都有重定位表的原因。<strong>一旦位置冲突，由于编译过程中编译器把值已经写死了（写的不是偏移地址，写的是偏移加基址（编译器默认认为不会发生位置冲突）），很有可能导致程序出错</strong></p>
+<p>2、一旦某个模块没有按照ImageBase进行加载，那么所有类似上面中的地址就都需要修正，否则，引用的地址就是无效的.</p>
+<p>3、一个EXE中，需要修正的地方会很多，那我们如何来记录都有哪些地方需要修正呢？</p>
+<p>   答案就是重定位表</p>
+<h3 id="重定位表"><a href="#重定位表" class="headerlink" title="重定位表"></a>重定位表</h3><h4 id="定位：-1"><a href="#定位：-1" class="headerlink" title="定位："></a>定位：</h4><p>数据目录项的第6个结构，就是重定位表</p>
+<p><img src="/2020/05/12/pe_load/8.png"></p>
+<p><img src="/2020/05/12/pe_load/9.png"></p>
+<p>在内存中的形式类似这样，按块划分</p>
+<h4 id="说明："><a href="#说明：" class="headerlink" title="说明："></a>说明：</h4><p>1、通过IMAGE_DATA_DIRECTORY结构的VirtualAddress<br>属性 找到第一个IMAGE_BASE_RELOCATION        </p>
+<p>2、判断一共有几块数据：        </p>
+<p>最后一个结构的标记是VirtualAddress与SizeOfBlock都为0        </p>
+<p>3、具体项 宽度：2字节        </p>
+<p> 也就是这个数据        </p>
+<p> 内存中的页大小是1000H 也就是说2的12次方 就可以表示<br> 一个页内所有的偏移地址 具体项的宽度是16字节 高四位<br> 代表类型：值为3 代表的是需要修改的数据 值为0代表的是<br> 用于数据对齐的数据，可以不用修改.也就是说 我们只关注<br> 高4位的值为3的就可以了.<br>4、VirtualAddress 宽度：4字节        </p>
+<p>当前这一个块的数据，每一个低12位的值+VirtualAddress 才是<br>真正需要修复的数据的RVA        </p>
+<p>真正的RVA = VirtualAddress + 具体项的低12位        </p>
+<p>5、SizeOfBlock 宽度：4字节        </p>
+<p>当前块的总大小        </p>
+<p>只有知道块的总大小才能索引到下一个块，因为没有其他数据来记录下一个块的地址<br>具体项的数量 = (SizeOfBlock - 8)/2         </p>
+<p>6、分块的目的是为了节省空间开销，如果每次都存完整的地址，那么32bit的系统每个地址都需要4B，则远远不够用，所以对高位相同的地址进行这样的简化处理。</p>
+<p><strong>分块是以地址块为单位(一整块的地址用一块重定位表来表示)</strong></p>
+<p><img src="/2020/05/12/pe_load/10.png"></p>
+<h4 id="回过头来看重定位表的作用："><a href="#回过头来看重定位表的作用：" class="headerlink" title="回过头来看重定位表的作用："></a>回过头来看重定位表的作用：</h4><p>重定位表只是为了让自己这个DLL程序里的地址在运行时是正确的</p>
+<p>所以PE文件中的重定位表是为了自身程序（EXE、DLL）在被其他程序加载时，没有被正常加载到预期位置，但为了让主程序正常调用，而给系统的一种指导（就是告诉系统，如果我被加载到的位置和我预计的位置不一样，那么就要按照我给出的重定位表进行修改）</p>
+<p>注：如果一个程序不会被别的程序加载，那么这个程序的重定位表是用不上的，因为除了内核重载的情况，主程序的2G虚拟内存空间不会被占用。</p>
+<h3 id="导入表"><a href="#导入表" class="headerlink" title="导入表"></a>导入表</h3><h4 id="定位：-2"><a href="#定位：-2" class="headerlink" title="定位："></a>定位：</h4><p>数据目录项的第2个结构存储了导入表的信息</p>
+<h4 id="导入表的结构："><a href="#导入表的结构：" class="headerlink" title="导入表的结构："></a>导入表的结构：</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">IMAGE_IMPORT_DESCRIPTOR</span> &#123;</span>									</span><br><span class="line">    <span class="class"><span class="keyword">union</span> &#123;</span>									</span><br><span class="line">        DWORD   Characteristics;           									</span><br><span class="line">        DWORD   OriginalFirstThunk;         						<span class="comment">//RVA 指向IMAGE_THUNK_DATA结构数组			</span></span><br><span class="line">    &#125;;									</span><br><span class="line">    DWORD   TimeDateStamp;               						<span class="comment">//时间戳			</span></span><br><span class="line">    DWORD   ForwarderChain;              									</span><br><span class="line">    DWORD   Name;						<span class="comment">//RVA,指向dll名字，该名字已0结尾			</span></span><br><span class="line">    DWORD   FirstThunk;                 						<span class="comment">//RVA,指向IMAGE_THUNK_DATA结构数组			</span></span><br><span class="line">&#125; IMAGE_IMPORT_DESCRIPTOR;									</span><br><span class="line"><span class="keyword">typedef</span> IMAGE_IMPORT_DESCRIPTOR UNALIGNED *PIMAGE_IMPORT_DESCRIPTOR;									</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>PE文件加载前(这张图也可以更形象的认识导入表的结构)：</p>
+<p><img src="/2020/05/12/pe_load/11.png"></p>
+<p>PE文件加载后：</p>
+<h4 id="相关的两个数据结构："><a href="#相关的两个数据结构：" class="headerlink" title="相关的两个数据结构："></a><img src="/2020/05/12/pe_load/12.png">相关的两个数据结构：</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">IMAGE_THUNK_DATA32</span> &#123;</span>												</span><br><span class="line">    <span class="class"><span class="keyword">union</span> &#123;</span>												</span><br><span class="line">        PBYTE  ForwarderString;												</span><br><span class="line">        PDWORD Function;												</span><br><span class="line">        DWORD Ordinal;						<span class="comment">//序号						</span></span><br><span class="line">        PIMAGE_IMPORT_BY_NAME  AddressOfData;						<span class="comment">//指向IMAGE_IMPORT_BY_NAME						</span></span><br><span class="line">    &#125; u1;												</span><br><span class="line">&#125; IMAGE_THUNK_DATA32;												</span><br><span class="line"><span class="keyword">typedef</span> IMAGE_THUNK_DATA32 * PIMAGE_THUNK_DATA32;												</span><br><span class="line">												</span><br><span class="line">												</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">IMAGE_IMPORT_BY_NAME</span> &#123;</span>												</span><br><span class="line">    WORD    Hint;						<span class="comment">//可能为空，编译器决定 如果不为空 是函数在导出表中的索引						</span></span><br><span class="line">    BYTE    Name[<span class="number">1</span>];						<span class="comment">//函数名称，以0结尾						</span></span><br><span class="line">&#125; IMAGE_IMPORT_BY_NAME, *PIMAGE_IMPORT_BY_NAME;												</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h4 id="输出导入表的过程："><a href="#输出导入表的过程：" class="headerlink" title="输出导入表的过程："></a>输出导入表的过程：</h4><h5 id="1、定位导入表："><a href="#1、定位导入表：" class="headerlink" title="1、定位导入表："></a>1、定位导入表：</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">目录项目的第<span class="number">2</span>个结构就是导入表									</span><br><span class="line">									</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">IMAGE_DATA_DIRECTORY</span> &#123;</span>									</span><br><span class="line">    DWORD   VirtualAddress;					<span class="comment">//RVA 指向导入表结构				</span></span><br><span class="line">    DWORD   Size;									</span><br><span class="line">&#125; IMAGE_DATA_DIRECTORY, *PIMAGE_DATA_DIRECTORY;									</span><br></pre></td></tr></table></figure>
+
+
+<p>导入表结构中有若干个导入表，依靠最后的全0结构来判断结束    </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">	将RVA转换成FOA								</span><br><span class="line">									</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">IMAGE_IMPORT_DESCRIPTOR</span> &#123;</span>									</span><br><span class="line">    <span class="class"><span class="keyword">union</span> &#123;</span>									</span><br><span class="line">        DWORD   Characteristics;           									</span><br><span class="line">        DWORD   OriginalFirstThunk;         									</span><br><span class="line">    &#125;;									</span><br><span class="line">    DWORD   TimeDateStamp;               									</span><br><span class="line">    DWORD   ForwarderChain;              									</span><br><span class="line">    DWORD   Name;									</span><br><span class="line">    DWORD   FirstThunk;                 									</span><br><span class="line">&#125; IMAGE_IMPORT_DESCRIPTOR;									</span><br><span class="line"><span class="keyword">typedef</span> IMAGE_IMPORT_DESCRIPTOR UNALIGNED *PIMAGE_IMPORT_DESCRIPTOR;									</span><br><span class="line">									</span><br><span class="line">......									</span><br><span class="line">									</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">IMAGE_IMPORT_DESCRIPTOR</span> &#123;</span>									</span><br><span class="line">    <span class="class"><span class="keyword">union</span> &#123;</span>									</span><br><span class="line">        DWORD   Characteristics;           									</span><br><span class="line">        DWORD   OriginalFirstThunk;         									</span><br><span class="line">    &#125;;									</span><br><span class="line">    DWORD   TimeDateStamp;               									</span><br><span class="line">    DWORD   ForwarderChain;              									</span><br><span class="line">    DWORD   Name;									</span><br><span class="line">    DWORD   FirstThunk;                 									</span><br><span class="line">&#125; IMAGE_IMPORT_DESCRIPTOR;									</span><br><span class="line"><span class="keyword">typedef</span> IMAGE_IMPORT_DESCRIPTOR UNALIGNED *PIMAGE_IMPORT_DESCRIPTOR;									</span><br></pre></td></tr></table></figure>
+
+
+<p>​                                        </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sizeOf(IMAGE_IMPORT_DESCRIPTOR) 个 <span class="number">0</span>  代表导入表结束							</span><br></pre></td></tr></table></figure>
+
+<p>​                                        </p>
+<h5 id="2、输出DLL名字"><a href="#2、输出DLL名字" class="headerlink" title="2、输出DLL名字"></a>2、输出DLL名字</h5><p>每个结构代表一个DLL</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">IMAGE_IMPORT_DESCRIPTOR</span> &#123;</span>									</span><br><span class="line">    <span class="class"><span class="keyword">union</span> &#123;</span>									</span><br><span class="line">        DWORD   Characteristics;           									</span><br><span class="line">        DWORD   OriginalFirstThunk;         									</span><br><span class="line">    &#125;;									</span><br><span class="line">    DWORD   TimeDateStamp;               									</span><br><span class="line">    DWORD   ForwarderChain;              									</span><br><span class="line">    DWORD   Name;				 RVA 指向一个以<span class="number">0</span>结尾的字符串  是DLL的名字					</span><br><span class="line">    DWORD   FirstThunk;                 									</span><br><span class="line">&#125; IMAGE_IMPORT_DESCRIPTOR;									</span><br><span class="line"><span class="keyword">typedef</span> IMAGE_IMPORT_DESCRIPTOR UNALIGNED *PIMAGE_IMPORT_DESCRIPTOR;									</span><br></pre></td></tr></table></figure>
+
+<p>​                                        </p>
+<h5 id="3、遍历OriginalFirstThunk（INT）"><a href="#3、遍历OriginalFirstThunk（INT）" class="headerlink" title="3、遍历OriginalFirstThunk（INT）"></a>3、遍历OriginalFirstThunk（INT）</h5><p><img src="/2020/05/12/pe_load/13.png"></p>
+<h5 id="4、遍历FirstThunk（IAT）"><a href="#4、遍历FirstThunk（IAT）" class="headerlink" title="4、遍历FirstThunk（IAT）"></a>4、遍历FirstThunk（IAT）</h5><p><img src="/2020/05/12/pe_load/14.png"></p>
+<p>在没加载时，3和4中的数据是一样的</p>
+<p>GetProcAddr（）实际上就是根据DLL加载的地址去读取相应的导出表，通过序号或名字查找到真正的函数地址</p>
+<h5 id="注意："><a href="#注意：" class="headerlink" title="注意："></a>注意：</h5><p>在加载前，IAT表和INT表存储的数据完全一样，都指向同一个IMAGE_IMPORT_BY_NAME表。</p>
+<p>编译的时候，每加载一个DLL，就会生成一个对应的导入表，所以导入表的数量不确定，并不是唯一的。</p>
+<p>结尾标志都是全0的同结构</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/10/chaitin_pwn/" rel="next" title="长亭pwn公开课笔记">
+                <i class="fa fa-chevron-left"></i> 长亭pwn公开课笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/05/12/pe_edit_segment/" rel="prev" title="PE节修改">
+                PE节修改 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">38</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/hughlhz" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:hughes_lhz@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://sup3rgate.xyz/" title="Supergate" target="_blank">Supergate</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://47.95.203.90/" title="Weihongtao" target="_blank">Weihongtao</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://hujiekang.top/" title="Hujiekang" target="_blank">Hujiekang</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://106.54.80.67/" title="Centrix" target="_blank">Centrix</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://47.100.137.92/" title="CjDuan" target="_blank">CjDuan</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://blog.pushrbp.com" title="Cool" target="_blank">Cool</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A6%82%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">概要</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%9B%AE%E5%BD%95"><span class="nav-number">2.</span> <span class="nav-text">数据目录</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%94%A8%E9%80%94%EF%BC%9A"><span class="nav-number">2.0.1.</span> <span class="nav-text">用途：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AE%9A%E4%BD%8D%EF%BC%9A"><span class="nav-number">2.0.2.</span> <span class="nav-text">定位：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%92%8C%E7%A8%8B%E5%BA%8F%E6%89%A7%E8%A1%8C%E6%9C%89%E5%85%B3%E7%9A%84%EF%BC%9A"><span class="nav-number">2.0.3.</span> <span class="nav-text">和程序执行有关的：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%BC%E5%87%BA%E8%A1%A8"><span class="nav-number">3.</span> <span class="nav-text">导出表</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9A%E4%BD%8D%E5%AF%BC%E5%87%BA%E8%A1%A8"><span class="nav-number">3.1.</span> <span class="nav-text">定位导出表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%BC%E5%87%BA%E8%A1%A8%E7%BB%93%E6%9E%84"><span class="nav-number">3.2.</span> <span class="nav-text">导出表结构</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#AddressOfFunctions%E8%AF%B4%E6%98%8E%EF%BC%9A"><span class="nav-number">3.2.1.</span> <span class="nav-text">AddressOfFunctions说明：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#AddressOfNames%E8%AF%B4%E6%98%8E%EF%BC%9A"><span class="nav-number">3.2.2.</span> <span class="nav-text">AddressOfNames说明：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#AddressOfNameOrdinals"><span class="nav-number">3.2.3.</span> <span class="nav-text">AddressOfNameOrdinals</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AF%BC%E5%87%BA%E8%A1%A8%E6%80%BB%E7%BB%93%EF%BC%9A"><span class="nav-number">3.2.4.</span> <span class="nav-text">导出表总结：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A8%8B%E5%BA%8F%E5%8A%A0%E8%BD%BD%E7%9A%84%E8%BF%87%E7%A8%8B"><span class="nav-number">4.</span> <span class="nav-text">程序加载的过程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%95%E5%87%BA%E9%87%8D%E5%AE%9A%E4%BD%8D%E8%A1%A8%EF%BC%9A"><span class="nav-number">4.1.</span> <span class="nav-text">引出重定位表：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8D%E5%AE%9A%E4%BD%8D%E8%A1%A8"><span class="nav-number">5.</span> <span class="nav-text">重定位表</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9A%E4%BD%8D%EF%BC%9A-1"><span class="nav-number">5.1.</span> <span class="nav-text">定位：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%B4%E6%98%8E%EF%BC%9A"><span class="nav-number">5.2.</span> <span class="nav-text">说明：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9B%9E%E8%BF%87%E5%A4%B4%E6%9D%A5%E7%9C%8B%E9%87%8D%E5%AE%9A%E4%BD%8D%E8%A1%A8%E7%9A%84%E4%BD%9C%E7%94%A8%EF%BC%9A"><span class="nav-number">5.3.</span> <span class="nav-text">回过头来看重定位表的作用：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%BC%E5%85%A5%E8%A1%A8"><span class="nav-number">6.</span> <span class="nav-text">导入表</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9A%E4%BD%8D%EF%BC%9A-2"><span class="nav-number">6.1.</span> <span class="nav-text">定位：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%BC%E5%85%A5%E8%A1%A8%E7%9A%84%E7%BB%93%E6%9E%84%EF%BC%9A"><span class="nav-number">6.2.</span> <span class="nav-text">导入表的结构：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E7%9A%84%E4%B8%A4%E4%B8%AA%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%9A"><span class="nav-number">6.3.</span> <span class="nav-text">相关的两个数据结构：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E5%AF%BC%E5%85%A5%E8%A1%A8%E7%9A%84%E8%BF%87%E7%A8%8B%EF%BC%9A"><span class="nav-number">6.4.</span> <span class="nav-text">输出导入表的过程：</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1%E3%80%81%E5%AE%9A%E4%BD%8D%E5%AF%BC%E5%85%A5%E8%A1%A8%EF%BC%9A"><span class="nav-number">6.4.1.</span> <span class="nav-text">1、定位导入表：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2%E3%80%81%E8%BE%93%E5%87%BADLL%E5%90%8D%E5%AD%97"><span class="nav-number">6.4.2.</span> <span class="nav-text">2、输出DLL名字</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3%E3%80%81%E9%81%8D%E5%8E%86OriginalFirstThunk%EF%BC%88INT%EF%BC%89"><span class="nav-number">6.4.3.</span> <span class="nav-text">3、遍历OriginalFirstThunk（INT）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4%E3%80%81%E9%81%8D%E5%8E%86FirstThunk%EF%BC%88IAT%EF%BC%89"><span class="nav-number">6.4.4.</span> <span class="nav-text">4、遍历FirstThunk（IAT）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%EF%BC%9A"><span class="nav-number">6.4.5.</span> <span class="nav-text">注意：</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-snowflake-o"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder"></span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
