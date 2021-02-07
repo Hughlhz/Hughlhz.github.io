@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Linux NamespaceLinux Namespace提供了一种内核级别隔离系统资源的方法，通过将系统的全局资源放在不同的Namespace中，来实现资源隔离的目的。不同Namespace的程序，可以享有一份独立的系统资源。目前Linux中提供了六类系统资源的隔离机制，分别是：  Mount: 隔离文件系统挂载点 UTS: 隔离主机名和域名信息 IPC: 隔离进程间通信 PID: 隔离进程的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ipsec_vpn&amp;docker">
+<meta property="og:url" content="http://yoursite.com/2020/12/29/namespace/index.html">
+<meta property="og:site_name" content="Hughes&#39;Blog">
+<meta property="og:description" content="Linux NamespaceLinux Namespace提供了一种内核级别隔离系统资源的方法，通过将系统的全局资源放在不同的Namespace中，来实现资源隔离的目的。不同Namespace的程序，可以享有一份独立的系统资源。目前Linux中提供了六类系统资源的隔离机制，分别是：  Mount: 隔离文件系统挂载点 UTS: 隔离主机名和域名信息 IPC: 隔离进程间通信 PID: 隔离进程的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/2020/12/29/namespace/namespace%5CNamespace.png">
+<meta property="og:image" content="http://yoursite.com/2020/12/29/namespace/namespace%5C1.png">
+<meta property="og:image" content="http://yoursite.com/2020/12/29/namespace/namespace%5C2.png">
+<meta property="article:published_time" content="2020-12-29T12:00:20.000Z">
+<meta property="article:modified_time" content="2020-12-27T03:25:18.309Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2020/12/29/namespace/namespace%5CNamespace.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/12/29/namespace/"/>
+
+
+
+
+
+  <title>ipsec_vpn&docker | Hughes'Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hughes'Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/12/29/namespace/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hughes'Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ipsec_vpn&docker</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-12-29T20:00:20+08:00">
+                2020-12-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/learning/" itemprop="url" rel="index">
+                    <span itemprop="name">learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="Linux-Namespace"><a href="#Linux-Namespace" class="headerlink" title="Linux Namespace"></a>Linux Namespace</h3><p>Linux <code>Namespace</code>提供了一种内核级别隔离系统资源的方法，通过将系统的全局资源放在不同的<code>Namespace</code>中，来实现资源隔离的目的。不同<code>Namespace</code>的程序，可以享有一份独立的系统资源。目前Linux中提供了六类系统资源的隔离机制，分别是：</p>
+<ul>
+<li><code>Mount</code>: 隔离文件系统挂载点</li>
+<li><code>UTS</code>: 隔离主机名和域名信息</li>
+<li><code>IPC</code>: 隔离进程间通信</li>
+<li><code>PID</code>: 隔离进程的ID</li>
+<li><code>Network</code>: 隔离网络资源</li>
+<li><code>User</code>: 隔离用户和用户组的ID</li>
+<li><code>Cgroup</code>:  隔离进程组 (process groups) 所使用的物力资源 (如 cpu memory i/o 等等) </li>
+</ul>
+<p><img src="/2020/12/29/namespace/namespace%5CNamespace.png"></p>
+<p>表中前六种Namespace正是实现容器所必须的隔离技术。</p>
+<h4 id="Network-Namespace-转"><a href="#Network-Namespace-转" class="headerlink" title="Network Namespace(转)"></a>Network Namespace(转)</h4><p>linux 中与<code>Network Namespace</code>相关的操作的子命令是 <code>ip netns</code></p>
+<h5 id="ip-netns-add-xx-创建一个-Namespace"><a href="#ip-netns-add-xx-创建一个-Namespace" class="headerlink" title="ip netns add xx 创建一个 Namespace"></a>ip netns add xx 创建一个 Namespace</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> ip netns add net1</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip netns ls</span></span><br><span class="line">net1</span><br></pre></td></tr></table></figure>
+
+<h5 id="ip-netns-exec-xx-yy-在新-namespace-xx-中执行-yy-命令"><a href="#ip-netns-exec-xx-yy-在新-namespace-xx-中执行-yy-命令" class="headerlink" title="ip netns exec xx yy 在新 namespace xx 中执行 yy 命令"></a>ip netns exec xx yy 在新 namespace xx 中执行 yy 命令</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> ip netns <span class="built_in">exec</span> net1 ip addr</span> </span><br><span class="line">1: lo: &lt;LOOPBACK&gt; mtu 65536 qdisc noop state DOWN group default qlen 1</span><br><span class="line">    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span><br><span class="line"><span class="meta">#</span><span class="bash"> ip netns <span class="built_in">exec</span> net1 bash // 在 net1 中打开一个shell终端</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip addr // 在net1中的shell终端</span></span><br><span class="line">1: lo: &lt;LOOPBACK&gt; mtu 65536 qdisc noop state DOWN group default qlen 1</span><br><span class="line">    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span><br><span class="line"><span class="meta">#</span><span class="bash"> <span class="built_in">exit</span> // 退出net1</span></span><br></pre></td></tr></table></figure>
+
+<p>上面 bash 不好区分是当前是在哪个 shell，可以采用下面的方法解决：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> ip netns <span class="built_in">exec</span> net1 /bin/bash --rcfile &lt;(<span class="built_in">echo</span> <span class="string">&quot;PS1=\&quot;namespace net1&gt; \&quot;&quot;</span>)</span></span><br><span class="line">namespace net1&gt; ping www.baidu.com</span><br></pre></td></tr></table></figure>
+
+<p>每个 Namespace 在创建的时候会自动创建一个回环接口 <code>lo</code> ，默认不启用，可以通过 <code>ip link set lo up</code> 启用。</p>
+<h5 id="Network-Namespace-之间的通信"><a href="#Network-Namespace-之间的通信" class="headerlink" title="Network Namespace 之间的通信"></a>Network Namespace 之间的通信</h5><p>新创建的 Namespace 默认不能和主机网络，以及其他 Namespace 通信。</p>
+<p>可以使用 Linux 提供的 <code>veth pair</code> 来完成通信。下面显示两个 Namespace 之间通信的网络拓扑：</p>
+<p><img src="/2020/12/29/namespace/namespace%5C1.png"></p>
+<h6 id="ip-link-add-type-veth-创建-veth-pair"><a href="#ip-link-add-type-veth-创建-veth-pair" class="headerlink" title="ip link add type veth 创建 veth pair"></a>ip link add type veth 创建 veth pair</h6><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> ip link add <span class="built_in">type</span> veth</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip link</span></span><br><span class="line">3: veth0@veth1: &lt;BROADCAST,MULTICAST,M-DOWN&gt; mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000</span><br><span class="line">    link/ether 1a:53:39:5a:26:12 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">4: veth1@veth0: &lt;BROADCAST,MULTICAST,M-DOWN&gt; mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000</span><br><span class="line">    link/ether 46:df:46:1f:bf:d6 brd ff:ff:ff:ff:ff:ff</span><br></pre></td></tr></table></figure>
+
+<p>使用命令 <code>ip link add xxx type veth peer name yyy</code> 指定 veth pair 的名字。</p>
+<h6 id="ip-link-set-xx-netns-yy-将-veth-xx-加入到-namespace-yy-中"><a href="#ip-link-set-xx-netns-yy-将-veth-xx-加入到-namespace-yy-中" class="headerlink" title="ip link set xx netns yy 将 veth xx 加入到 namespace yy 中"></a>ip link set xx netns yy 将 veth xx 加入到 namespace yy 中</h6><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> ip link <span class="built_in">set</span> veth0 netns net0</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip link <span class="built_in">set</span> veth1 netns net1</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="bash"><span class="comment"># ip netns exec net0 ip addr</span></span></span><br><span class="line">1: lo: &lt;LOOPBACK&gt; mtu 65536 qdisc noop state DOWN group default qlen 1</span><br><span class="line">    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span><br><span class="line">10: veth0@if11: &lt;BROADCAST,MULTICAST&gt; mtu 1500 qdisc noop state DOWN group default qlen 1000</span><br><span class="line">    link/ether 1a:53:39:5a:26:12 brd ff:ff:ff:ff:ff:ff link-netnsid 1</span><br></pre></td></tr></table></figure>
+
+<h6 id="给-veth-pair-配上-ip-地址"><a href="#给-veth-pair-配上-ip-地址" class="headerlink" title="给 veth pair 配上 ip 地址"></a>给 veth pair 配上 ip 地址</h6><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> ip netns <span class="built_in">exec</span> net0 ip link <span class="built_in">set</span> veth0 up</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip netns <span class="built_in">exec</span> net0 ip addr</span></span><br><span class="line">1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1</span><br><span class="line">    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span><br><span class="line">    inet 127.0.0.1/8 scope host lo</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">    inet6 ::1/128 scope host</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">10: veth0@if11: &lt;NO-CARRIER,BROADCAST,MULTICAST,UP&gt; mtu 1500 qdisc noqueue state LOWERLAYERDOWN group default qlen 1000</span><br><span class="line">    link/ether 1a:53:39:5a:26:12 brd ff:ff:ff:ff:ff:ff link-netnsid 1</span><br><span class="line"><span class="meta">#</span><span class="bash"> ip netns <span class="built_in">exec</span> net0 ip addr add 10.1.1.1/24 dev veth0</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip netns <span class="built_in">exec</span> net0 ip route</span></span><br><span class="line">10.1.1.0/24 dev veth0  proto kernel  scope link  src 10.1.1.1 linkdown</span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="bash"><span class="comment"># ip netns exec net1 ip link set veth1 up</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip netns <span class="built_in">exec</span> net1 ip addr add 10.1.1.2/24 dev veth1</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到，在配完 ip 之后，还自动生成了对应的路由表信息。</p>
+<h6 id="ping-测试两个-namespace-的连通性"><a href="#ping-测试两个-namespace-的连通性" class="headerlink" title="ping 测试两个 namespace 的连通性"></a>ping 测试两个 namespace 的连通性</h6><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> ip netns <span class="built_in">exec</span> net0 ping 10.1.1.2</span></span><br><span class="line">PING 10.1.1.2 (10.1.1.2) 56(84) bytes of data.</span><br><span class="line">64 bytes from 10.1.1.2: icmp_seq=1 ttl=64 time=0.069 ms</span><br><span class="line">64 bytes from 10.1.1.2: icmp_seq=2 ttl=64 time=0.054 ms</span><br><span class="line">64 bytes from 10.1.1.2: icmp_seq=3 ttl=64 time=0.053 ms</span><br><span class="line">64 bytes from 10.1.1.2: icmp_seq=4 ttl=64 time=0.053 ms</span><br></pre></td></tr></table></figure>
+
+<h5 id="多个不同-namespace-之间的通信"><a href="#多个不同-namespace-之间的通信" class="headerlink" title="多个不同 namespace 之间的通信"></a>多个不同 namespace 之间的通信</h5><p>2 个 namespace 之间通信可以借助 <code>veth pair</code> ，多个 namespace 之间的通信则可以使用 bridge 来转接，不然每两个 namespace 都去配 <code>veth pair</code> 将会是一件麻烦的事。下面就看看如何使用 bridge 来转接。</p>
+<p>拓扑图如下：</p>
+<p><img src="/2020/12/29/namespace/namespace%5C2.png"></p>
+<h6 id="使用-ip-link-和-brctl-创建-bridge"><a href="#使用-ip-link-和-brctl-创建-bridge" class="headerlink" title="使用 ip link 和 brctl 创建 bridge#"></a>使用 ip link 和 brctl 创建 bridge<a target="_blank" rel="noopener" href="https://www.cnblogs.com/bakari/p/10443484.html#521495136">#</a></h6><p>通常 Linux 中和 bridge 有关的操作是使用命令 <code>brctl</code> (<code>yum install -y bridge-utils</code> ) 。但为了前后照应，这里都用 ip 相关的命令来操作。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Copy// 建立一个 bridge</span><br><span class="line"><span class="meta">#</span><span class="bash"> ip link add br0 <span class="built_in">type</span> bridge</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip link <span class="built_in">set</span> dev br0 up</span></span><br><span class="line">9: br0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000</span><br><span class="line">    link/ether 42:55:ed:eb:a0:07 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet6 fe80::4055:edff:feeb:a007/64 scope link</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br></pre></td></tr></table></figure>
+
+<h6 id="创建-veth-pair"><a href="#创建-veth-pair" class="headerlink" title="创建 veth pair"></a>创建 veth pair</h6><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Copy//（1）创建 3 个 veth pair</span><br><span class="line"><span class="meta">#</span><span class="bash"> ip link add <span class="built_in">type</span> veth</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip link add <span class="built_in">type</span> veth</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip link add <span class="built_in">type</span> veth</span></span><br></pre></td></tr></table></figure>
+
+<h6 id="将-veth-pair-的一头挂到-namespace-中，一头挂到-bridge-上，并设-IP-地址"><a href="#将-veth-pair-的一头挂到-namespace-中，一头挂到-bridge-上，并设-IP-地址" class="headerlink" title="将 veth pair 的一头挂到 namespace 中，一头挂到 bridge 上，并设 IP 地址"></a>将 veth pair 的一头挂到 namespace 中，一头挂到 bridge 上，并设 IP 地址</h6><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">Copy// （1）配置第 1 个 net0</span><br><span class="line"><span class="meta">#</span><span class="bash"> ip link <span class="built_in">set</span> dev veth1 netns net0</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip netns <span class="built_in">exec</span> net0 ip link <span class="built_in">set</span> dev veth1 name eth0</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip netns <span class="built_in">exec</span> net0 ip addr add 10.0.1.1/24 dev eth0</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip netns <span class="built_in">exec</span> net0 ip link <span class="built_in">set</span> dev eth0 up</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="bash"><span class="comment"># ip link set dev veth0 master br0</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip link <span class="built_in">set</span> dev veth0 up</span></span><br><span class="line"></span><br><span class="line">// （2）配置第 2 个 net1</span><br><span class="line"><span class="meta">#</span><span class="bash"> ip link <span class="built_in">set</span> dev veth3 netns net1</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip netns <span class="built_in">exec</span> net1 ip link <span class="built_in">set</span> dev veth3 name eth0</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip netns <span class="built_in">exec</span> net1 ip addr add 10.0.1.2/24 dev eth0</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip netns <span class="built_in">exec</span> net1 ip link <span class="built_in">set</span> dev eth0 up</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="bash"><span class="comment"># ip link set dev veth2 master br0</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip link <span class="built_in">set</span> dev veth2 up</span></span><br><span class="line"></span><br><span class="line">// （3）配置第 3 个 net2</span><br><span class="line"><span class="meta">#</span><span class="bash"> ip link <span class="built_in">set</span> dev veth5 netns net2</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip netns <span class="built_in">exec</span> net2 ip link <span class="built_in">set</span> dev veth5 name eth0</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip netns <span class="built_in">exec</span> net2 ip addr add 10.0.1.3/24 dev eth0</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip netns <span class="built_in">exec</span> net2 ip link <span class="built_in">set</span> dev eth0 up</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip link <span class="built_in">set</span> dev veth4 master br0</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip link <span class="built_in">set</span> dev veth4 up</span></span><br></pre></td></tr></table></figure>
+
+<p>这样之后，竟然通不了，经查阅 <a target="_blank" rel="noopener" href="https://segmentfault.com/q/1010000010011053/a-1020000010025650">参见</a> ，是因为</p>
+<blockquote>
+<p>原因是因为系统为bridge开启了iptables功能，导致所有经过br0的数据包都要受iptables里面规则的限制，而docker为了安全性（我的系统安装了 docker），将iptables里面filter表的FORWARD链的默认策略设置成了drop，于是所有不符合docker规则的数据包都不会被forward，导致你这种情况ping不通。</p>
+<p>解决办法有两个，二选一：</p>
+<ol>
+<li>关闭系统bridge的iptables功能，这样数据包转发就不受iptables影响了：echo 0 &gt; /proc/sys/net/bridge/bridge-nf-call-iptables</li>
+<li>为br0添加一条iptables规则，让经过br0的包能被forward：iptables -A FORWARD -i br0 -j ACCEPT</li>
+</ol>
+<p>第一种方法不确定会不会影响docker，建议用第二种方法。</p>
+</blockquote>
+<p>我采用以下方法解决：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Copyiptables -A FORWARD -i br0 -j ACCEPT</span><br></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">Copy#</span><span class="bash"> ip netns <span class="built_in">exec</span> net0 ping -c 2 10.0.1.2</span></span><br><span class="line">PING 10.0.1.2 (10.0.1.2) 56(84) bytes of data.</span><br><span class="line">64 bytes from 10.0.1.2: icmp_seq=1 ttl=64 time=0.071 ms</span><br><span class="line">64 bytes from 10.0.1.2: icmp_seq=2 ttl=64 time=0.072 ms</span><br><span class="line"></span><br><span class="line">--- 10.0.1.2 ping statistics ---</span><br><span class="line">2 packets transmitted, 2 received, 0% packet loss, time 999ms</span><br><span class="line">rtt min/avg/max/mdev = 0.071/0.071/0.072/0.008 ms</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip netns <span class="built_in">exec</span> net0 ping -c 2 10.0.1.3</span></span><br><span class="line">PING 10.0.1.3 (10.0.1.3) 56(84) bytes of data.</span><br><span class="line">64 bytes from 10.0.1.3: icmp_seq=1 ttl=64 time=0.071 ms</span><br><span class="line">64 bytes from 10.0.1.3: icmp_seq=2 ttl=64 time=0.087 ms</span><br><span class="line"></span><br><span class="line">--- 10.0.1.3 ping statistics ---</span><br><span class="line">2 packets transmitted, 2 received, 0% packet loss, time</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>转载： <a target="_blank" rel="noopener" href="https://www.cnblogs.com/bakari/p/10443484.html">https://www.cnblogs.com/bakari/p/10443484.html</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/12/28/docker_vpn/" rel="next" title="ipsec_vpn&docker">
+                <i class="fa fa-chevron-left"></i> ipsec_vpn&docker
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/02/07/namespace/%E7%BB%9F%E8%AE%A1&%E5%88%86%E6%9E%90/" rel="prev" title="">
+                 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">47</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/hughlhz" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:hughes_lhz@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://sup3rgate.xyz/" title="Supergate" target="_blank">Supergate</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://47.95.203.90/" title="Weihongtao" target="_blank">Weihongtao</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://hujiekang.top/" title="Hujiekang" target="_blank">Hujiekang</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://106.54.80.67/" title="Centrix" target="_blank">Centrix</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://47.100.137.92/" title="CjDuan" target="_blank">CjDuan</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://blog.pushrbp.com" title="Cool" target="_blank">Cool</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Linux-Namespace"><span class="nav-number">1.</span> <span class="nav-text">Linux Namespace</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Network-Namespace-%E8%BD%AC"><span class="nav-number">1.1.</span> <span class="nav-text">Network Namespace(转)</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#ip-netns-add-xx-%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA-Namespace"><span class="nav-number">1.1.1.</span> <span class="nav-text">ip netns add xx 创建一个 Namespace</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ip-netns-exec-xx-yy-%E5%9C%A8%E6%96%B0-namespace-xx-%E4%B8%AD%E6%89%A7%E8%A1%8C-yy-%E5%91%BD%E4%BB%A4"><span class="nav-number">1.1.2.</span> <span class="nav-text">ip netns exec xx yy 在新 namespace xx 中执行 yy 命令</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Network-Namespace-%E4%B9%8B%E9%97%B4%E7%9A%84%E9%80%9A%E4%BF%A1"><span class="nav-number">1.1.3.</span> <span class="nav-text">Network Namespace 之间的通信</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#ip-link-add-type-veth-%E5%88%9B%E5%BB%BA-veth-pair"><span class="nav-number">1.1.3.1.</span> <span class="nav-text">ip link add type veth 创建 veth pair</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#ip-link-set-xx-netns-yy-%E5%B0%86-veth-xx-%E5%8A%A0%E5%85%A5%E5%88%B0-namespace-yy-%E4%B8%AD"><span class="nav-number">1.1.3.2.</span> <span class="nav-text">ip link set xx netns yy 将 veth xx 加入到 namespace yy 中</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E7%BB%99-veth-pair-%E9%85%8D%E4%B8%8A-ip-%E5%9C%B0%E5%9D%80"><span class="nav-number">1.1.3.3.</span> <span class="nav-text">给 veth pair 配上 ip 地址</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#ping-%E6%B5%8B%E8%AF%95%E4%B8%A4%E4%B8%AA-namespace-%E7%9A%84%E8%BF%9E%E9%80%9A%E6%80%A7"><span class="nav-number">1.1.3.4.</span> <span class="nav-text">ping 测试两个 namespace 的连通性</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%A4%9A%E4%B8%AA%E4%B8%8D%E5%90%8C-namespace-%E4%B9%8B%E9%97%B4%E7%9A%84%E9%80%9A%E4%BF%A1"><span class="nav-number">1.1.4.</span> <span class="nav-text">多个不同 namespace 之间的通信</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-ip-link-%E5%92%8C-brctl-%E5%88%9B%E5%BB%BA-bridge"><span class="nav-number">1.1.4.1.</span> <span class="nav-text">使用 ip link 和 brctl 创建 bridge</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA-veth-pair"><span class="nav-number">1.1.4.2.</span> <span class="nav-text">创建 veth pair</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%B0%86-veth-pair-%E7%9A%84%E4%B8%80%E5%A4%B4%E6%8C%82%E5%88%B0-namespace-%E4%B8%AD%EF%BC%8C%E4%B8%80%E5%A4%B4%E6%8C%82%E5%88%B0-bridge-%E4%B8%8A%EF%BC%8C%E5%B9%B6%E8%AE%BE-IP-%E5%9C%B0%E5%9D%80"><span class="nav-number">1.1.4.3.</span> <span class="nav-text">将 veth pair 的一头挂到 namespace 中，一头挂到 bridge 上，并设 IP 地址</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-snowflake-o"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder"></span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Docker环境下IPsec配置实验选用Docker的原因实验要求一台主机和四台虚拟机，硬件条件不允许，只好选用docker来代替。 Docker第一次接触Docker，之前只知道Docker是一种容器化技术 Docker 和虚拟机的区别同为虚拟技术，区别如下：  容器和宿主机共享kernel，即宿主机的kernel就是容器的kernel 虚拟机有独立的文件、进程、内存系统，而容器只是做了隔离，D">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ipsec_vpn&amp;docker">
+<meta property="og:url" content="http://yoursite.com/2020/12/28/docker_vpn/index.html">
+<meta property="og:site_name" content="Hughes&#39;Blog">
+<meta property="og:description" content="Docker环境下IPsec配置实验选用Docker的原因实验要求一台主机和四台虚拟机，硬件条件不允许，只好选用docker来代替。 Docker第一次接触Docker，之前只知道Docker是一种容器化技术 Docker 和虚拟机的区别同为虚拟技术，区别如下：  容器和宿主机共享kernel，即宿主机的kernel就是容器的kernel 虚拟机有独立的文件、进程、内存系统，而容器只是做了隔离，D">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/2020/12/28/docker_vpn/docker_vpn%5Cdocker_vm.png">
+<meta property="og:image" content="http://yoursite.com/2020/12/28/docker_vpn/docker_vpn%5Ci_c_r.png">
+<meta property="og:image" content="http://yoursite.com/2020/12/28/docker_vpn/host.webp">
+<meta property="og:image" content="http://yoursite.com/2020/12/28/docker_vpn/container.webp">
+<meta property="og:image" content="http://yoursite.com/2020/12/28/docker_vpn/none.webp">
+<meta property="og:image" content="http://yoursite.com/2020/12/28/docker_vpn/bridge.webp">
+<meta property="og:image" content="http://yoursite.com/2020/12/28/docker_vpn/ikev1.png">
+<meta property="og:image" content="http://yoursite.com/2020/12/28/docker_vpn/ikev2.png">
+<meta property="article:published_time" content="2020-12-28T07:00:20.000Z">
+<meta property="article:modified_time" content="2020-12-27T03:06:26.059Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2020/12/28/docker_vpn/docker_vpn%5Cdocker_vm.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/12/28/docker_vpn/"/>
+
+
+
+
+
+  <title>ipsec_vpn&docker | Hughes'Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hughes'Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/12/28/docker_vpn/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hughes'Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ipsec_vpn&docker</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-12-28T15:00:20+08:00">
+                2020-12-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/learning/" itemprop="url" rel="index">
+                    <span itemprop="name">learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="Docker环境下IPsec配置实验"><a href="#Docker环境下IPsec配置实验" class="headerlink" title="Docker环境下IPsec配置实验"></a>Docker环境下IPsec配置实验</h3><h3 id="选用Docker的原因"><a href="#选用Docker的原因" class="headerlink" title="选用Docker的原因"></a>选用Docker的原因</h3><p>实验要求一台主机和四台虚拟机，硬件条件不允许，只好选用docker来代替。</p>
+<h3 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h3><p>第一次接触Docker，之前只知道Docker是一种容器化技术</p>
+<h4 id="Docker-和虚拟机的区别"><a href="#Docker-和虚拟机的区别" class="headerlink" title="Docker 和虚拟机的区别"></a>Docker 和虚拟机的区别</h4><p>同为虚拟技术，区别如下：</p>
+<ul>
+<li>容器和宿主机共享kernel，即宿主机的kernel就是容器的kernel</li>
+<li>虚拟机有独立的文件、进程、内存系统，而容器只是做了隔离，Docker是进程之间的隔离，而虚拟机可以实现系统级别的隔离</li>
+<li>容器管理和虚拟机管理在速度上有很明显的差距，虚拟机可以做到10台/min，而Docker容器的创建是秒级别的</li>
+</ul>
+<p><img src="/2020/12/28/docker_vpn/docker_vpn%5Cdocker_vm.png" alt="docker_vm"></p>
+<h4 id="Docker-Engine"><a href="#Docker-Engine" class="headerlink" title="Docker Engine"></a>Docker Engine</h4><p>Docker Engine属于Docker的运行层。这是一套轻量化运行时及工具组合，负责管理容器、镜像、构建 等等。它以原生方式运行在Linux系统之上，并由以下元素构成：</p>
+<ul>
+<li>Docker Daemon，运行在主机之上的程序</li>
+<li>Docker Client，负责与Docker Daemon通信以执行命令，Docker采用的是CS模式</li>
+<li>REST API，用于同Dockers Daemon远程交互</li>
+</ul>
+<h4 id="Docker-核心概念"><a href="#Docker-核心概念" class="headerlink" title="Docker 核心概念"></a>Docker 核心概念</h4><h5 id="Image-镜像"><a href="#Image-镜像" class="headerlink" title="Image 镜像"></a>Image 镜像</h5><p>image 就类似虚拟机的镜像文件，可以用于创建容器</p>
+<h5 id="Container-容器"><a href="#Container-容器" class="headerlink" title="Container 容器"></a>Container 容器</h5><p>容器就是运行的单位，从镜像启动。Docker 会在镜像的最上一层创建一个可写层，镜像本身是只读的，保持不变</p>
+<h5 id="Repository-仓库"><a href="#Repository-仓库" class="headerlink" title="Repository 仓库"></a>Repository 仓库</h5><p>仓库是用来存放一类镜像的地方</p>
+<p><img src="/2020/12/28/docker_vpn/docker_vpn%5Ci_c_r.png" alt="docker_vm"></p>
+<h4 id="Docker-四种网络模式（部分转载）"><a href="#Docker-四种网络模式（部分转载）" class="headerlink" title="Docker 四种网络模式（部分转载）"></a>Docker 四种网络模式（部分转载）</h4><h5 id="实现原理："><a href="#实现原理：" class="headerlink" title="实现原理："></a>实现原理：</h5><p>Docker使用Linux桥接，在宿主机虚拟一个Docker容器网桥(docker0，对应连接网卡是eth0），Docker启动一个容器时会根据Docker网桥的网段分配给容器一个IP地址，称为Container-IP，同时<strong>Docker网桥是每个容器的默认网关</strong>。因为在同一宿主机内的容器都接入同一个网桥，这样容器之间就能够通过容器的Container-IP直接通信（<strong>可以理解为一个公共网段，每个容器的eth0网卡都在网段上</strong>）。</p>
+<p>Docker网桥是宿主机虚拟出来的，并不是真实存在的网络设备，外部网络是无法寻址到的，这也意味着外部网络无法通过直接Container-IP访问到容器。如果容器希望外部访问能够访问到，可以通过映射容器端口到宿主主机（端口映射），即docker run创建容器时候通过 -p 或 -P 参数来启用，访问容器的时候就通过[宿主机IP]:[容器端口]访问容器。</p>
+<h5 id="四类网络模式"><a href="#四类网络模式" class="headerlink" title="四类网络模式"></a>四类网络模式</h5><table>
+<thead>
+<tr>
+<th>Docker网络模式</th>
+<th>配置</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>host模式</td>
+<td>–net=host</td>
+<td>容器和宿主机共享Network namespace。</td>
+</tr>
+<tr>
+<td>container模式</td>
+<td>–net=container:NAME_or_ID</td>
+<td>容器和另外一个容器共享Network namespace。 kubernetes中的pod就是多个容器共享一个Network namespace。</td>
+</tr>
+<tr>
+<td>none模式</td>
+<td>–net=none</td>
+<td>容器有独立的Network namespace，但并没有对其进行任何网络设置，如分配veth pair 和网桥连接，配置IP等。</td>
+</tr>
+<tr>
+<td>bridge模式</td>
+<td>–net=bridge</td>
+<td>（默认为该模式）</td>
+</tr>
+</tbody></table>
+<h6 id="host"><a href="#host" class="headerlink" title="host"></a>host</h6><p>如果启动容器的时候使用host模式，那么这个容器将不会获得一个独立的Network Namespace，而是<strong>和宿主机共用一个Network Namespace</strong>。容器将不会虚拟出自己的网卡，配置自己的IP等，而是<strong>使用宿主机的IP和端口</strong>。但是，容器的其他方面，如文件系统、进程列表等还是和宿主机隔离的。</p>
+<p>使用host模式的容器可以直接使用宿主机的IP地址与外界通信，容器内部的服务端口也可以使用宿主机的端口，不需要进行NAT，host最大的优势就是网络性能比较好，但是docker host上已经使用的端口就不能再用了，网络的隔离性不好。</p>
+<p><img src="/2020/12/28/docker_vpn/host.webp"></p>
+<h6 id="container"><a href="#container" class="headerlink" title="container"></a>container</h6><p>这个模式指定新创建的容器和已经存在的一个容器<strong>共享一个 Network Namespace</strong>，而不是和宿主机共享。新创建的容器不会创建自己的网卡，配置自己的 IP，而是<strong>和一个指定的容器共享 IP、端口范围等</strong>。同样，两个容器除了网络方面，其他的如文件系统、进程列表等还是隔离的。两个容器的进程可以通过 lo 网卡设备通信。</p>
+<p><img src="/2020/12/28/docker_vpn/container.webp"></p>
+<h6 id="none"><a href="#none" class="headerlink" title="none"></a>none</h6><p>使用none模式，Docker容器拥有自己的Network Namespace，但是，并不为Docker容器进行任何网络配置。也就是说，这个Docker容器没有网卡、IP、路由等信息。需要我们自己为Docker容器添加网卡、配置IP等。</p>
+<p>这种网络模式下容器<strong>只有lo回环网络，没有其他网卡</strong>。none模式可以在容器创建时通过–network=none来指定。这种类型的网络没有办法联网，封闭的网络能很好的保证容器的安全性。</p>
+<p><img src="/2020/12/28/docker_vpn/none.webp"></p>
+<h6 id="bridge"><a href="#bridge" class="headerlink" title="bridge"></a>bridge</h6><p>当Docker进程启动时，会在主机上创建一个名为docker0的虚拟网桥，此主机上启动的Docker容器会连接到这个虚拟网桥上。<strong>虚拟网桥的工作方式和物理交换机类似</strong>，这样主机上的所有容器就通过交换机连在了一个二层网络中。</p>
+<p>从docker0子网中分配一个IP给容器使用，并设置docker0的IP地址为容器的默认网关。在主机上创建一对虚拟网卡veth pair设备，Docker将veth pair设备的一端放在新创建的容器中，并命名为eth0（容器的网卡），另一端放在主机中，以vethxxx这样类似的名字命名，并将这个网络设备加入到docker0网桥中。可以通过brctl show命令查看。</p>
+<p>bridge模式是docker的默认网络模式，不写–net参数，就是bridge模式。使用docker run -p时，docker实际是在iptables做了DNAT规则，实现端口转发功能。可以使用iptables -t nat -vnL查看。</p>
+<p><img src="/2020/12/28/docker_vpn/bridge.webp"></p>
+<h4 id="Dockerfile"><a href="#Dockerfile" class="headerlink" title="Dockerfile"></a>Dockerfile</h4><p>一个用来构建镜像的文本文件，一般分为四部分：基础镜像信息、维护者信息、镜像操作指令、容器启动时执行指令，前三部分对应三个指令：FROM ；MAINTAINER； RUN。</p>
+<p><strong>注意</strong>：Dockerfile 的指令每执行一次都会在 docker 上新建一层。所以过多无意义的层，会造成镜像膨胀过大。例如：</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> centos</span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> yum install wget</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> wget -O redis.tar.gz <span class="string">&quot;http://download.redis.io/releases/redis-5.0.3.tar.gz&quot;</span></span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> tar -xvf redis.tar.gz</span></span><br></pre></td></tr></table></figure>
+
+<p>以上执行会创建 3 层镜像。可简化为以下格式：</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> centos</span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> yum install wget \</span></span><br><span class="line"><span class="bash">    &amp;&amp; wget -O redis.tar.gz <span class="string">&quot;http://download.redis.io/releases/redis-5.0.3.tar.gz&quot;</span> \</span></span><br><span class="line"><span class="bash">    &amp;&amp; tar -xvf redis.tar.gz</span></span><br></pre></td></tr></table></figure>
+
+<p>如上，以 <strong>&amp;&amp;</strong> 符号连接命令，这样执行后，只会创建 1 层镜像。</p>
+<p>构建好后，由新构建的镜像启动容器即可。</p>
+<h4 id="容器抓包"><a href="#容器抓包" class="headerlink" title="容器抓包"></a>容器抓包</h4><p>基本的ipsec配置过程不再赘述，搭建好网络拓扑，配置好网关，按照 <a target="_blank" rel="noopener" href="https://www.strongswan.org/testing/testresults/ikev2/net2net-psk/index.html">这上面</a> 的配置文件（修改下right和left的IP、掩码）就🆗，然后是抓包分析协议。</p>
+<p>抓包时遇到了一个问题，在容器内部，用<code>tcpdump</code>抓包时，遇到了这样的问题：</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Couldn&#39;t change ownership of savefile</span><br></pre></td></tr></table></figure>
+
+<p>应该是容器内部访问文件的问题，网上有关于apache中使用<code>tcpdump</code>出现同样问题的情况，采取同样措施（关闭宿主机的<code>SELinux</code>）仍然无法解决时，采取了第二种方案：在宿主机抓包。</p>
+<p>因为Docker技术主要是依赖<code>Linux Namespace</code> 技术来实现，可以在宿主机中切换到对应容器的网络命名空间来抓包。</p>
+<h5 id="步骤："><a href="#步骤：" class="headerlink" title="步骤："></a>步骤：</h5><ul>
+<li>首先由容器ID获取容器进程pid：</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker ps | grep xxx</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>使用nsenter切换网络命名空间</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nsenter -n -t container_id/name</span><br></pre></td></tr></table></figure>
+
+<p>直接抓包即可，最后确实抓取到了ipsec的流量：</p>
+<p>IKEv1：</p>
+<p><img src="/2020/12/28/docker_vpn/ikev1.png" alt="ikev1"></p>
+<p>IKEv2：</p>
+<p><img src="/2020/12/28/docker_vpn/ikev2.png" alt="ikev2"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/12/code_reuse_in_C/" rel="next" title="代码复用">
+                <i class="fa fa-chevron-left"></i> 代码复用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/12/29/namespace/" rel="prev" title="ipsec_vpn&docker">
+                ipsec_vpn&docker <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">47</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/hughlhz" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:hughes_lhz@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://sup3rgate.xyz/" title="Supergate" target="_blank">Supergate</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://47.95.203.90/" title="Weihongtao" target="_blank">Weihongtao</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://hujiekang.top/" title="Hujiekang" target="_blank">Hujiekang</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://106.54.80.67/" title="Centrix" target="_blank">Centrix</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://47.100.137.92/" title="CjDuan" target="_blank">CjDuan</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://blog.pushrbp.com" title="Cool" target="_blank">Cool</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker%E7%8E%AF%E5%A2%83%E4%B8%8BIPsec%E9%85%8D%E7%BD%AE%E5%AE%9E%E9%AA%8C"><span class="nav-number">1.</span> <span class="nav-text">Docker环境下IPsec配置实验</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%89%E7%94%A8Docker%E7%9A%84%E5%8E%9F%E5%9B%A0"><span class="nav-number">2.</span> <span class="nav-text">选用Docker的原因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker"><span class="nav-number">3.</span> <span class="nav-text">Docker</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Docker-%E5%92%8C%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">3.1.</span> <span class="nav-text">Docker 和虚拟机的区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Docker-Engine"><span class="nav-number">3.2.</span> <span class="nav-text">Docker Engine</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Docker-%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5"><span class="nav-number">3.3.</span> <span class="nav-text">Docker 核心概念</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Image-%E9%95%9C%E5%83%8F"><span class="nav-number">3.3.1.</span> <span class="nav-text">Image 镜像</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Container-%E5%AE%B9%E5%99%A8"><span class="nav-number">3.3.2.</span> <span class="nav-text">Container 容器</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Repository-%E4%BB%93%E5%BA%93"><span class="nav-number">3.3.3.</span> <span class="nav-text">Repository 仓库</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Docker-%E5%9B%9B%E7%A7%8D%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%BC%8F%EF%BC%88%E9%83%A8%E5%88%86%E8%BD%AC%E8%BD%BD%EF%BC%89"><span class="nav-number">3.4.</span> <span class="nav-text">Docker 四种网络模式（部分转载）</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%EF%BC%9A"><span class="nav-number">3.4.1.</span> <span class="nav-text">实现原理：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9B%9B%E7%B1%BB%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%BC%8F"><span class="nav-number">3.4.2.</span> <span class="nav-text">四类网络模式</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#host"><span class="nav-number">3.4.2.1.</span> <span class="nav-text">host</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#container"><span class="nav-number">3.4.2.2.</span> <span class="nav-text">container</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#none"><span class="nav-number">3.4.2.3.</span> <span class="nav-text">none</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#bridge"><span class="nav-number">3.4.2.4.</span> <span class="nav-text">bridge</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Dockerfile"><span class="nav-number">3.5.</span> <span class="nav-text">Dockerfile</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%B9%E5%99%A8%E6%8A%93%E5%8C%85"><span class="nav-number">3.6.</span> <span class="nav-text">容器抓包</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4%EF%BC%9A"><span class="nav-number">3.6.1.</span> <span class="nav-text">步骤：</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-snowflake-o"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder"></span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
