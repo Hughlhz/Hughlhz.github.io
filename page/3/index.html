@@ -250,6 +250,167 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/19/reverse_data2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hughes'Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/10/19/reverse_data2/" itemprop="url">（转载）数据逆向分析(2)</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-10-19T15:00:20+08:00">
+                2019-10-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/learning/" itemprop="url" rel="index">
+                    <span itemprop="name">learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h3><p>在C语言中，字符串是由字符组成，单字符不是字符串，至少有两个字符组成，且结尾字符是’/0’。</p>
+<p>例如：”ABCD” 内存中实际储存结构是 41H 42H 43H 44H 00H</p>
+<p>字符串的寻址，依靠首字节进行寄存器相对寻址方式：</p>
+<p>例如：访问”ABCD”中的第二字节，byte ptr [ebx+1]</p>
+<p>正是因为字符串的首字节索引的寻址方式，因此字符串往往要与指针配合。在C语言中常见的，</p>
+<p>例如：char *str=“ABCD”；//mov [xxxx],offset string “ABCD”</p>
+<p>另一种常见的方式，是将字符串放在数组里，需要首字节地址时，在数组名前加”&amp;”伪装成指针。当然，存在数组里的字符串，自然可以按照数组的访问方式，比如 直接寻址。</p>
+<h3 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h3><p>数组其实和普通变量没什么区别，每一个成员都是分别通过直接寻址方式访问。</p>
+<p>但只有一种情况例外，并且十分常见，即当索引号为变量时，使用相对寻址方式。</p>
+<p>例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">char a[4]&#x3D;&#123;&#39;A&#39;,&#39;A&#39;,&#39;A&#39;,&#39;&#x2F;0&#39;&#125;;</span><br><span class="line">for(int i&#x3D;0;i&lt;3;i++)</span><br><span class="line">a[i]+&#x3D;1;</span><br></pre></td></tr></table></figure>
+<p>对应反汇编：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">char a[4]&#x3D;&#123;&#39;A&#39;,&#39;A&#39;,&#39;A&#39;,&#39;&#x2F;0&#39;&#125;;</span><br><span class="line">0041139E  mov         byte ptr [a],41h</span><br><span class="line">004113A2  mov         byte ptr [ebp-7],41h</span><br><span class="line">004113A6  mov         byte ptr [ebp-6],41h</span><br><span class="line">004113AA  mov         byte ptr [ebp-5],0</span><br><span class="line"></span><br><span class="line">for(int i&#x3D;0;i&lt;3;i++)</span><br><span class="line">004113AE  mov         dword ptr [i],0</span><br><span class="line">004113B5  jmp         wmain+40h (4113C0h)</span><br><span class="line">004113B7  mov         eax,dword ptr [i]</span><br><span class="line">004113BA  add         eax,1</span><br><span class="line">004113BD  mov         dword ptr [i],eax</span><br><span class="line">004113C0  cmp         dword ptr [i],3</span><br><span class="line">004113C4  jge         wmain+5Ah (4113DAh)</span><br><span class="line"></span><br><span class="line">a[i]+&#x3D;1;</span><br><span class="line">004113C6  mov         eax,dword ptr [i]</span><br><span class="line">004113C9  movsx       ecx,byte ptr a[eax]</span><br><span class="line">004113CE  add         ecx,1</span><br><span class="line">004113D1  mov         edx,dword ptr [i]</span><br><span class="line">004113D4  mov         byte ptr [a+edx],cl ;反汇编器上常写为mov byte ptr a[edx],cl</span><br><span class="line">004113D8  jmp         wmain+37h (4113B7h)</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="数组的尴尬"><a href="#数组的尴尬" class="headerlink" title="数组的尴尬"></a>数组的尴尬</h3><p>除了源码调试，由于数组不标记边界，提通过数据初始化不能判断数组的始末位置<br>比如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">int i&#x3D;0;</span><br><span class="line">int a[3]&#x3D;&#123;1,2,3&#125;;</span><br><span class="line"></span><br><span class="line">OD反汇编结果：</span><br><span class="line"></span><br><span class="line">00412FFE   MOV DWORD PTR SS:[EBP-8],   0</span><br><span class="line">00413005   MOV DWORD PTR SS:[EBP-1C], 1</span><br><span class="line">0041300C   MOV DWORD PTR SS:[EBP-18], 2</span><br><span class="line">00413013   MOV DWORD PTR SS:[EBP-14], 3</span><br></pre></td></tr></table></figure>
+
+<p>显然，只看初始化我们很容易错误还原为 int a[4]={0,1,2,3};</p>
+<p>因此数组的边界判断，需要后续代码流程的辅助，因为数组通常都是同一类操作的集合。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/19/reverse_data1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1566,158 +1727,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/21/register/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hughes'Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/09/21/register/" itemprop="url">Register</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-09-21T14:10:18+08:00">
-                2019-09-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/learning/" itemprop="url" rel="index">
-                    <span itemprop="name">learning</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="各类寄存器名字"><a href="#各类寄存器名字" class="headerlink" title="各类寄存器名字"></a>各类寄存器名字</h3><h4 id="通用寄存器（都可以用作数据寄存器）"><a href="#通用寄存器（都可以用作数据寄存器）" class="headerlink" title="通用寄存器（都可以用作数据寄存器）"></a>通用寄存器（都可以用作数据寄存器）</h4><p>AH&amp;AL＝AX(accumulator)：累加寄存器 <br>BH&amp;BL＝BX(base)：基址寄存器 <br>CH&amp;CL＝CX(count)：计数寄存器 <br>DH&amp;DL＝DX(data)：数据寄存器 <br>SP（Stack Pointer）：堆栈指针寄存器 <br>BP（Base Pointer）：基址指针寄存器 <br>SI（Source Index）：源变址寄存器 <br>DI（Destination Index）：目的变址寄存器 </p>
-<h4 id="段寄存器"><a href="#段寄存器" class="headerlink" title="段寄存器"></a>段寄存器</h4>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/09/21/register/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/">&lt;</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/4/">&gt;</a>
+    <a class="extend prev" rel="prev" href="/page/2/">&lt;</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/4/">&gt;</a>
   </nav>
 
 
@@ -1763,7 +1777,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-count">41</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
