@@ -524,7 +524,7 @@
 <p>修改好后，启动frpc服务，用 <code>-c</code> 指定配置文件：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./frpc -c frpc.ini</span><br></pre></td></tr></table></figure>
 
-<p>此时，在我们的个人PC上，使用proxifier走socks5://admin:<a href="mailto:&#x31;&#x31;&#50;&#x32;&#x33;&#51;&#97;&#x64;&#x6d;&#105;&#x6e;&#64;&#x33;&#x39;&#x2e;&#x78;&#120;&#x78;&#x2e;&#x78;&#x78;&#120;&#46;&#120;&#120;&#120;">&#x31;&#x31;&#50;&#x32;&#x33;&#51;&#97;&#x64;&#x6d;&#105;&#x6e;&#64;&#x33;&#x39;&#x2e;&#x78;&#120;&#x78;&#x2e;&#x78;&#x78;&#120;&#46;&#120;&#120;&#120;</a>:46075的代理，即可访问到windows所在的内网环境。</p>
+<p>此时，在我们的个人PC上，使用proxifier走socks5://admin:<a href="mailto:&#49;&#49;&#x32;&#50;&#51;&#51;&#x61;&#x64;&#x6d;&#x69;&#x6e;&#x40;&#x33;&#x39;&#46;&#x78;&#x78;&#120;&#x2e;&#x78;&#x78;&#120;&#x2e;&#120;&#x78;&#x78;">&#49;&#49;&#x32;&#50;&#51;&#51;&#x61;&#x64;&#x6d;&#x69;&#x6e;&#x40;&#x33;&#x39;&#46;&#x78;&#x78;&#120;&#x2e;&#x78;&#x78;&#120;&#x2e;&#120;&#x78;&#x78;</a>:46075的代理，即可访问到windows所在的内网环境。</p>
 <p>注意要避免自己PC上其他应用的流量也走代理进入内网，从而留下可能被溯源的痕迹。</p>
 
           
@@ -1156,7 +1156,7 @@
 <li><code>User</code>: 隔离用户和用户组的ID</li>
 <li><code>Cgroup</code>:  隔离进程组 (process groups) 所使用的物力资源 (如 cpu memory i/o 等等) </li>
 </ul>
-<p><img src="/2020/12/29/namespace/namespace%5CNamespace.png"></p>
+<p><img src="/2020/12/29/namespace/Namespace.png"></p>
 <p>表中前六种Namespace正是实现容器所必须的隔离技术。</p>
 <h4 id="Network-Namespace-转"><a href="#Network-Namespace-转" class="headerlink" title="Network Namespace(转)"></a>Network Namespace(转)</h4><p>linux 中与<code>Network Namespace</code>相关的操作的子命令是 <code>ip netns</code></p>
 <h5 id="ip-netns-add-xx-创建一个-Namespace"><a href="#ip-netns-add-xx-创建一个-Namespace" class="headerlink" title="ip netns add xx 创建一个 Namespace"></a>ip netns add xx 创建一个 Namespace</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> ip netns add net1</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip netns ls</span></span><br><span class="line">net1</span><br></pre></td></tr></table></figure>
@@ -1169,7 +1169,7 @@
 <p>每个 Namespace 在创建的时候会自动创建一个回环接口 <code>lo</code> ，默认不启用，可以通过 <code>ip link set lo up</code> 启用。</p>
 <h5 id="Network-Namespace-之间的通信"><a href="#Network-Namespace-之间的通信" class="headerlink" title="Network Namespace 之间的通信"></a>Network Namespace 之间的通信</h5><p>新创建的 Namespace 默认不能和主机网络，以及其他 Namespace 通信。</p>
 <p>可以使用 Linux 提供的 <code>veth pair</code> 来完成通信。下面显示两个 Namespace 之间通信的网络拓扑：</p>
-<p><img src="/2020/12/29/namespace/namespace%5C1.png"></p>
+<p><img src="/2020/12/29/namespace/1.png"></p>
 <h6 id="ip-link-add-type-veth-创建-veth-pair"><a href="#ip-link-add-type-veth-创建-veth-pair" class="headerlink" title="ip link add type veth 创建 veth pair"></a>ip link add type veth 创建 veth pair</h6><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> ip link add <span class="built_in">type</span> veth</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip link</span></span><br><span class="line">3: veth0@veth1: &lt;BROADCAST,MULTICAST,M-DOWN&gt; mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000</span><br><span class="line">    link/ether 1a:53:39:5a:26:12 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">4: veth1@veth0: &lt;BROADCAST,MULTICAST,M-DOWN&gt; mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000</span><br><span class="line">    link/ether 46:df:46:1f:bf:d6 brd ff:ff:ff:ff:ff:ff</span><br></pre></td></tr></table></figure>
 
 <p>使用命令 <code>ip link add xxx type veth peer name yyy</code> 指定 veth pair 的名字。</p>
@@ -1182,7 +1182,7 @@
 
 <h5 id="多个不同-namespace-之间的通信"><a href="#多个不同-namespace-之间的通信" class="headerlink" title="多个不同 namespace 之间的通信"></a>多个不同 namespace 之间的通信</h5><p>2 个 namespace 之间通信可以借助 <code>veth pair</code> ，多个 namespace 之间的通信则可以使用 bridge 来转接，不然每两个 namespace 都去配 <code>veth pair</code> 将会是一件麻烦的事。下面就看看如何使用 bridge 来转接。</p>
 <p>拓扑图如下：</p>
-<p><img src="/2020/12/29/namespace/namespace%5C2.png"></p>
+<p><img src="/2020/12/29/namespace/2.png"></p>
 <h6 id="使用-ip-link-和-brctl-创建-bridge"><a href="#使用-ip-link-和-brctl-创建-bridge" class="headerlink" title="使用 ip link 和 brctl 创建 bridge#"></a>使用 ip link 和 brctl 创建 bridge<a target="_blank" rel="noopener" href="https://www.cnblogs.com/bakari/p/10443484.html#521495136">#</a></h6><p>通常 Linux 中和 bridge 有关的操作是使用命令 <code>brctl</code> (<code>yum install -y bridge-utils</code> ) 。但为了前后照应，这里都用 ip 相关的命令来操作。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Copy// 建立一个 bridge</span><br><span class="line"><span class="meta">#</span><span class="bash"> ip link add br0 <span class="built_in">type</span> bridge</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip link <span class="built_in">set</span> dev br0 up</span></span><br><span class="line">9: br0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000</span><br><span class="line">    link/ether 42:55:ed:eb:a0:07 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet6 fe80::4055:edff:feeb:a007/64 scope link</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br></pre></td></tr></table></figure>
 
@@ -1360,7 +1360,7 @@
 <li>虚拟机有独立的文件、进程、内存系统，而容器只是做了隔离，Docker是进程之间的隔离，而虚拟机可以实现系统级别的隔离</li>
 <li>容器管理和虚拟机管理在速度上有很明显的差距，虚拟机可以做到10台/min，而Docker容器的创建是秒级别的</li>
 </ul>
-<p><img src="/2020/12/28/docker_vpn/docker_vpn%5Cdocker_vm.png" alt="docker_vm"></p>
+<p><img src="/2020/12/28/docker_vpn/docker_vm.png" alt="docker_vm"></p>
 <h4 id="Docker-Engine"><a href="#Docker-Engine" class="headerlink" title="Docker Engine"></a>Docker Engine</h4><p>Docker Engine属于Docker的运行层。这是一套轻量化运行时及工具组合，负责管理容器、镜像、构建 等等。它以原生方式运行在Linux系统之上，并由以下元素构成：</p>
 <ul>
 <li>Docker Daemon，运行在主机之上的程序</li>
@@ -1370,7 +1370,7 @@
 <h4 id="Docker-核心概念"><a href="#Docker-核心概念" class="headerlink" title="Docker 核心概念"></a>Docker 核心概念</h4><h5 id="Image-镜像"><a href="#Image-镜像" class="headerlink" title="Image 镜像"></a>Image 镜像</h5><p>image 就类似虚拟机的镜像文件，可以用于创建容器</p>
 <h5 id="Container-容器"><a href="#Container-容器" class="headerlink" title="Container 容器"></a>Container 容器</h5><p>容器就是运行的单位，从镜像启动。Docker 会在镜像的最上一层创建一个可写层，镜像本身是只读的，保持不变</p>
 <h5 id="Repository-仓库"><a href="#Repository-仓库" class="headerlink" title="Repository 仓库"></a>Repository 仓库</h5><p>仓库是用来存放一类镜像的地方</p>
-<p><img src="/2020/12/28/docker_vpn/docker_vpn%5Ci_c_r.png" alt="docker_vm"></p>
+<p><img src="/2020/12/28/docker_vpn/i_c_r.png" alt="docker_vm"></p>
 <h4 id="Docker-四种网络模式（部分转载）"><a href="#Docker-四种网络模式（部分转载）" class="headerlink" title="Docker 四种网络模式（部分转载）"></a>Docker 四种网络模式（部分转载）</h4><h5 id="实现原理："><a href="#实现原理：" class="headerlink" title="实现原理："></a>实现原理：</h5><p>Docker使用Linux桥接，在宿主机虚拟一个Docker容器网桥(docker0，对应连接网卡是eth0），Docker启动一个容器时会根据Docker网桥的网段分配给容器一个IP地址，称为Container-IP，同时<strong>Docker网桥是每个容器的默认网关</strong>。因为在同一宿主机内的容器都接入同一个网桥，这样容器之间就能够通过容器的Container-IP直接通信（<strong>可以理解为一个公共网段，每个容器的eth0网卡都在网段上</strong>）。</p>
 <p>Docker网桥是宿主机虚拟出来的，并不是真实存在的网络设备，外部网络是无法寻址到的，这也意味着外部网络无法通过直接Container-IP访问到容器。如果容器希望外部访问能够访问到，可以通过映射容器端口到宿主主机（端口映射），即docker run创建容器时候通过 -p 或 -P 参数来启用，访问容器的时候就通过[宿主机IP]:[容器端口]访问容器。</p>
 <h5 id="四类网络模式"><a href="#四类网络模式" class="headerlink" title="四类网络模式"></a>四类网络模式</h5><table>

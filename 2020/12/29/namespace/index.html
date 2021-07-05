@@ -86,13 +86,13 @@
 <meta property="og:site_name" content="Hughes&#39;Blog">
 <meta property="og:description" content="Linux NamespaceLinux Namespace提供了一种内核级别隔离系统资源的方法，通过将系统的全局资源放在不同的Namespace中，来实现资源隔离的目的。不同Namespace的程序，可以享有一份独立的系统资源。目前Linux中提供了六类系统资源的隔离机制，分别是：  Mount: 隔离文件系统挂载点 UTS: 隔离主机名和域名信息 IPC: 隔离进程间通信 PID: 隔离进程的">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://yoursite.com/2020/12/29/namespace/namespace%5CNamespace.png">
-<meta property="og:image" content="http://yoursite.com/2020/12/29/namespace/namespace%5C1.png">
-<meta property="og:image" content="http://yoursite.com/2020/12/29/namespace/namespace%5C2.png">
+<meta property="og:image" content="http://yoursite.com/2020/12/29/namespace/Namespace.png">
+<meta property="og:image" content="http://yoursite.com/2020/12/29/namespace/1.png">
+<meta property="og:image" content="http://yoursite.com/2020/12/29/namespace/2.png">
 <meta property="article:published_time" content="2020-12-29T12:00:20.000Z">
-<meta property="article:modified_time" content="2021-07-05T08:32:09.285Z">
+<meta property="article:modified_time" content="2021-07-05T08:34:33.297Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/2020/12/29/namespace/namespace%5CNamespace.png">
+<meta name="twitter:image" content="http://yoursite.com/2020/12/29/namespace/Namespace.png">
 
 
 
@@ -354,7 +354,7 @@
 <li><code>User</code>: 隔离用户和用户组的ID</li>
 <li><code>Cgroup</code>:  隔离进程组 (process groups) 所使用的物力资源 (如 cpu memory i/o 等等) </li>
 </ul>
-<p><img src="/2020/12/29/namespace/namespace%5CNamespace.png"></p>
+<p><img src="/2020/12/29/namespace/Namespace.png"></p>
 <p>表中前六种Namespace正是实现容器所必须的隔离技术。</p>
 <h4 id="Network-Namespace-转"><a href="#Network-Namespace-转" class="headerlink" title="Network Namespace(转)"></a>Network Namespace(转)</h4><p>linux 中与<code>Network Namespace</code>相关的操作的子命令是 <code>ip netns</code></p>
 <h5 id="ip-netns-add-xx-创建一个-Namespace"><a href="#ip-netns-add-xx-创建一个-Namespace" class="headerlink" title="ip netns add xx 创建一个 Namespace"></a>ip netns add xx 创建一个 Namespace</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> ip netns add net1</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip netns ls</span></span><br><span class="line">net1</span><br></pre></td></tr></table></figure>
@@ -367,7 +367,7 @@
 <p>每个 Namespace 在创建的时候会自动创建一个回环接口 <code>lo</code> ，默认不启用，可以通过 <code>ip link set lo up</code> 启用。</p>
 <h5 id="Network-Namespace-之间的通信"><a href="#Network-Namespace-之间的通信" class="headerlink" title="Network Namespace 之间的通信"></a>Network Namespace 之间的通信</h5><p>新创建的 Namespace 默认不能和主机网络，以及其他 Namespace 通信。</p>
 <p>可以使用 Linux 提供的 <code>veth pair</code> 来完成通信。下面显示两个 Namespace 之间通信的网络拓扑：</p>
-<p><img src="/2020/12/29/namespace/namespace%5C1.png"></p>
+<p><img src="/2020/12/29/namespace/1.png"></p>
 <h6 id="ip-link-add-type-veth-创建-veth-pair"><a href="#ip-link-add-type-veth-创建-veth-pair" class="headerlink" title="ip link add type veth 创建 veth pair"></a>ip link add type veth 创建 veth pair</h6><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> ip link add <span class="built_in">type</span> veth</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip link</span></span><br><span class="line">3: veth0@veth1: &lt;BROADCAST,MULTICAST,M-DOWN&gt; mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000</span><br><span class="line">    link/ether 1a:53:39:5a:26:12 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">4: veth1@veth0: &lt;BROADCAST,MULTICAST,M-DOWN&gt; mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000</span><br><span class="line">    link/ether 46:df:46:1f:bf:d6 brd ff:ff:ff:ff:ff:ff</span><br></pre></td></tr></table></figure>
 
 <p>使用命令 <code>ip link add xxx type veth peer name yyy</code> 指定 veth pair 的名字。</p>
@@ -380,7 +380,7 @@
 
 <h5 id="多个不同-namespace-之间的通信"><a href="#多个不同-namespace-之间的通信" class="headerlink" title="多个不同 namespace 之间的通信"></a>多个不同 namespace 之间的通信</h5><p>2 个 namespace 之间通信可以借助 <code>veth pair</code> ，多个 namespace 之间的通信则可以使用 bridge 来转接，不然每两个 namespace 都去配 <code>veth pair</code> 将会是一件麻烦的事。下面就看看如何使用 bridge 来转接。</p>
 <p>拓扑图如下：</p>
-<p><img src="/2020/12/29/namespace/namespace%5C2.png"></p>
+<p><img src="/2020/12/29/namespace/2.png"></p>
 <h6 id="使用-ip-link-和-brctl-创建-bridge"><a href="#使用-ip-link-和-brctl-创建-bridge" class="headerlink" title="使用 ip link 和 brctl 创建 bridge#"></a>使用 ip link 和 brctl 创建 bridge<a target="_blank" rel="noopener" href="https://www.cnblogs.com/bakari/p/10443484.html#521495136">#</a></h6><p>通常 Linux 中和 bridge 有关的操作是使用命令 <code>brctl</code> (<code>yum install -y bridge-utils</code> ) 。但为了前后照应，这里都用 ip 相关的命令来操作。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Copy// 建立一个 bridge</span><br><span class="line"><span class="meta">#</span><span class="bash"> ip link add br0 <span class="built_in">type</span> bridge</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip link <span class="built_in">set</span> dev br0 up</span></span><br><span class="line">9: br0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000</span><br><span class="line">    link/ether 42:55:ed:eb:a0:07 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet6 fe80::4055:edff:feeb:a007/64 scope link</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br></pre></td></tr></table></figure>
 

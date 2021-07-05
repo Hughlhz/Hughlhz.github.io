@@ -86,8 +86,8 @@
 <meta property="og:site_name" content="Hughes&#39;Blog">
 <meta property="og:description" content="Docker环境下IPsec配置实验选用Docker的原因实验要求一台主机和四台虚拟机，硬件条件不允许，只好选用docker来代替。 Docker第一次接触Docker，之前只知道Docker是一种容器化技术 Docker 和虚拟机的区别同为虚拟技术，区别如下：  容器和宿主机共享kernel，即宿主机的kernel就是容器的kernel 虚拟机有独立的文件、进程、内存系统，而容器只是做了隔离，D">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://yoursite.com/2020/12/28/docker_vpn/docker_vpn%5Cdocker_vm.png">
-<meta property="og:image" content="http://yoursite.com/2020/12/28/docker_vpn/docker_vpn%5Ci_c_r.png">
+<meta property="og:image" content="http://yoursite.com/2020/12/28/docker_vpn/docker_vm.png">
+<meta property="og:image" content="http://yoursite.com/2020/12/28/docker_vpn/i_c_r.png">
 <meta property="og:image" content="http://yoursite.com/2020/12/28/docker_vpn/host.webp">
 <meta property="og:image" content="http://yoursite.com/2020/12/28/docker_vpn/container.webp">
 <meta property="og:image" content="http://yoursite.com/2020/12/28/docker_vpn/none.webp">
@@ -95,9 +95,9 @@
 <meta property="og:image" content="http://yoursite.com/2020/12/28/docker_vpn/ikev1.png">
 <meta property="og:image" content="http://yoursite.com/2020/12/28/docker_vpn/ikev2.png">
 <meta property="article:published_time" content="2020-12-28T07:00:20.000Z">
-<meta property="article:modified_time" content="2020-12-27T03:06:26.059Z">
+<meta property="article:modified_time" content="2021-07-05T08:35:15.203Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/2020/12/28/docker_vpn/docker_vpn%5Cdocker_vm.png">
+<meta name="twitter:image" content="http://yoursite.com/2020/12/28/docker_vpn/docker_vm.png">
 
 
 
@@ -357,7 +357,7 @@
 <li>虚拟机有独立的文件、进程、内存系统，而容器只是做了隔离，Docker是进程之间的隔离，而虚拟机可以实现系统级别的隔离</li>
 <li>容器管理和虚拟机管理在速度上有很明显的差距，虚拟机可以做到10台/min，而Docker容器的创建是秒级别的</li>
 </ul>
-<p><img src="/2020/12/28/docker_vpn/docker_vpn%5Cdocker_vm.png" alt="docker_vm"></p>
+<p><img src="/2020/12/28/docker_vpn/docker_vm.png" alt="docker_vm"></p>
 <h4 id="Docker-Engine"><a href="#Docker-Engine" class="headerlink" title="Docker Engine"></a>Docker Engine</h4><p>Docker Engine属于Docker的运行层。这是一套轻量化运行时及工具组合，负责管理容器、镜像、构建 等等。它以原生方式运行在Linux系统之上，并由以下元素构成：</p>
 <ul>
 <li>Docker Daemon，运行在主机之上的程序</li>
@@ -367,7 +367,7 @@
 <h4 id="Docker-核心概念"><a href="#Docker-核心概念" class="headerlink" title="Docker 核心概念"></a>Docker 核心概念</h4><h5 id="Image-镜像"><a href="#Image-镜像" class="headerlink" title="Image 镜像"></a>Image 镜像</h5><p>image 就类似虚拟机的镜像文件，可以用于创建容器</p>
 <h5 id="Container-容器"><a href="#Container-容器" class="headerlink" title="Container 容器"></a>Container 容器</h5><p>容器就是运行的单位，从镜像启动。Docker 会在镜像的最上一层创建一个可写层，镜像本身是只读的，保持不变</p>
 <h5 id="Repository-仓库"><a href="#Repository-仓库" class="headerlink" title="Repository 仓库"></a>Repository 仓库</h5><p>仓库是用来存放一类镜像的地方</p>
-<p><img src="/2020/12/28/docker_vpn/docker_vpn%5Ci_c_r.png" alt="docker_vm"></p>
+<p><img src="/2020/12/28/docker_vpn/i_c_r.png" alt="docker_vm"></p>
 <h4 id="Docker-四种网络模式（部分转载）"><a href="#Docker-四种网络模式（部分转载）" class="headerlink" title="Docker 四种网络模式（部分转载）"></a>Docker 四种网络模式（部分转载）</h4><h5 id="实现原理："><a href="#实现原理：" class="headerlink" title="实现原理："></a>实现原理：</h5><p>Docker使用Linux桥接，在宿主机虚拟一个Docker容器网桥(docker0，对应连接网卡是eth0），Docker启动一个容器时会根据Docker网桥的网段分配给容器一个IP地址，称为Container-IP，同时<strong>Docker网桥是每个容器的默认网关</strong>。因为在同一宿主机内的容器都接入同一个网桥，这样容器之间就能够通过容器的Container-IP直接通信（<strong>可以理解为一个公共网段，每个容器的eth0网卡都在网段上</strong>）。</p>
 <p>Docker网桥是宿主机虚拟出来的，并不是真实存在的网络设备，外部网络是无法寻址到的，这也意味着外部网络无法通过直接Container-IP访问到容器。如果容器希望外部访问能够访问到，可以通过映射容器端口到宿主主机（端口映射），即docker run创建容器时候通过 -p 或 -P 参数来启用，访问容器的时候就通过[宿主机IP]:[容器端口]访问容器。</p>
 <h5 id="四类网络模式"><a href="#四类网络模式" class="headerlink" title="四类网络模式"></a>四类网络模式</h5><table>
