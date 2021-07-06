@@ -89,9 +89,12 @@
 <meta property="og:image" content="http://yoursite.com/2021/07/05/mssql_elevation/mssql_pass.png">
 <meta property="og:image" content="http://yoursite.com/2021/07/05/mssql_elevation/mssql_whoami.png">
 <meta property="og:image" content="http://yoursite.com/2021/07/05/mssql_elevation/tomcatusers.png">
+<meta property="og:image" content="http://yoursite.com/2021/07/05/mssql_elevation/tomcatmanager.png">
+<meta property="og:image" content="http://yoursite.com/2021/07/05/mssql_elevation/tomcatdeploy.png">
+<meta property="og:image" content="http://yoursite.com/2021/07/05/mssql_elevation/tomcatapp.png">
 <meta property="og:image" content="http://yoursite.com/2021/07/05/mssql_elevation/war.png">
 <meta property="article:published_time" content="2021-07-05T15:59:59.000Z">
-<meta property="article:modified_time" content="2021-07-05T16:03:38.951Z">
+<meta property="article:modified_time" content="2021-07-06T01:33:23.466Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://yoursite.com/2021/07/05/mssql_elevation/mssql_pass.png">
 
@@ -355,12 +358,18 @@
 <p>访问tomcat页面，选取一个web文件，依据其文件名在硬盘中进行搜索，最后搜索到其根目录。</p>
 <p>然后在根目录下查找tomcat的tomcat-users.xml配置文件，因为账户密码一般是在这个文件中进行配置。</p>
 <p><img src="/2021/07/05/mssql_elevation/tomcatusers.png" alt="tomcatusers"></p>
-<h4 id="上传含有webshell的war包"><a href="#上传含有webshell的war包" class="headerlink" title="上传含有webshell的war包"></a>上传含有webshell的war包</h4><p>获取到tomcat账户后，登录tomcat后台，发现可以直接通过war包部署项目，于是尝试构造war包。</p>
+<h4 id="上传含有webshell的war包"><a href="#上传含有webshell的war包" class="headerlink" title="上传含有webshell的war包"></a>上传含有webshell的war包</h4><p>获取到tomcat账户后，登录tomcat后台：</p>
+<p><img src="/2021/07/05/mssql_elevation/tomcatmanager.png" alt="war"></p>
+<p>发现可以直接通过war包部署项目，于是尝试构造war包。</p>
 <p>按照网上的教程，直接将webshell文件打包，发现部署后，无法访问，然后从昊总那里白嫖了一个免杀webshell-war包，部署后能够成功访问，拿到webshell权限。</p>
+<p>从下图这里选择war包并部署：</p>
+<p><img src="/2021/07/05/mssql_elevation/tomcatdeploy.png" alt="war"></p>
+<p>部署后在app管理界面可以看到新增了一个项目：</p>
+<p><img src="/2021/07/05/mssql_elevation/tomcatapp.png" alt="war"></p>
 <p>于是想搞清楚直接将webshell打包后部署为什么无法访问，尝试将免杀war包解包，发现其中还有一些配置文件：</p>
 <p><img src="/2021/07/05/mssql_elevation/war.png" alt="war"></p>
 <p>猜测可能是因为缺少了配置文件，导致部署后无法访问。（博客教程误导人）</p>
-<h4 id="获取webshell权限后提权"><a href="#获取webshell权限后提权" class="headerlink" title="获取webshell权限后提权"></a>获取webshell权限后提权</h4><p>这次运气非常好，tomcat的执行权限是管理员权限，也就无需再次提权。</p>
+<h4 id="获取webshell权限后提权"><a href="#获取webshell权限后提权" class="headerlink" title="获取webshell权限后提权"></a>获取webshell权限后提权</h4><p>我直接上传了一个大马，这次运气非常好，tomcat的执行权限是管理员权限，也就无需再次提权。</p>
 <p>如果不是管理员权限，则需要尝试使用内核提权漏洞进行提权。由于互联网边界的windows型号和这台windows相同，而且所打补丁也相同，适用于互联网边界windows的内核提权漏洞ms15-051，经过测试，在这台机器上也适用。</p>
 <p>提升至管理员权限后，使用cmd命令新增一个隐藏管理员账户，然后使用代理将3389端口反向代理出来或者直接使用互联网边界windows进行远程连接，以方便进行进一步攻击。</p>
 
