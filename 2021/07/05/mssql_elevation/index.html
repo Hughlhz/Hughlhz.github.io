@@ -79,12 +79,12 @@
 
 
 
-<meta name="description" content="记一次mssql权限提升前这次权限提升的目标机器是一台内网的windows，互联网边界的windows权限已经拿到，在代理搭建好后，使用扫描器扫描内网，发现这台windows存在Mssql弱口令。  使用数据库工具进行连接后，尝试执行系统命令查看权限：  发现权限非管理员权限，无法进行添加用户等操作。 尝试写入一句话木马，但是落地就被查杀，免杀大马又太大，不太方便写入，只好另寻他法。 在进行信息搜">
+<meta name="description" content="记一次mssql权限提升前这次权限提升的目标机器是一台内网的windows，互联网边界的windows权限已经拿到，在代理搭建好后，使用扫描器扫描内网，发现这台windows存在Mssql弱口令。  使用数据库工具进行连接后，尝试执行系统命令查看权限：  发现权限非管理员权限，无法进行添加用户等操作。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="记一次mssql权限提升">
 <meta property="og:url" content="http://yoursite.com/2021/07/05/mssql_elevation/index.html">
 <meta property="og:site_name" content="Hughes&#39;Blog">
-<meta property="og:description" content="记一次mssql权限提升前这次权限提升的目标机器是一台内网的windows，互联网边界的windows权限已经拿到，在代理搭建好后，使用扫描器扫描内网，发现这台windows存在Mssql弱口令。  使用数据库工具进行连接后，尝试执行系统命令查看权限：  发现权限非管理员权限，无法进行添加用户等操作。 尝试写入一句话木马，但是落地就被查杀，免杀大马又太大，不太方便写入，只好另寻他法。 在进行信息搜">
+<meta property="og:description" content="记一次mssql权限提升前这次权限提升的目标机器是一台内网的windows，互联网边界的windows权限已经拿到，在代理搭建好后，使用扫描器扫描内网，发现这台windows存在Mssql弱口令。  使用数据库工具进行连接后，尝试执行系统命令查看权限：  发现权限非管理员权限，无法进行添加用户等操作。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://yoursite.com/2021/07/05/mssql_elevation/mssql_pass.png">
 <meta property="og:image" content="http://yoursite.com/2021/07/05/mssql_elevation/mssql_whoami.png">
@@ -94,7 +94,7 @@
 <meta property="og:image" content="http://yoursite.com/2021/07/05/mssql_elevation/tomcatapp.png">
 <meta property="og:image" content="http://yoursite.com/2021/07/05/mssql_elevation/war.png">
 <meta property="article:published_time" content="2021-07-05T15:59:59.000Z">
-<meta property="article:modified_time" content="2021-07-07T02:37:23.828Z">
+<meta property="article:modified_time" content="2021-07-07T03:02:10.466Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://yoursite.com/2021/07/05/mssql_elevation/mssql_pass.png">
 
@@ -353,6 +353,8 @@
 <p>使用数据库工具进行连接后，尝试执行系统命令查看权限：</p>
 <p><img src="/2021/07/05/mssql_elevation/mssql_whoami.png" alt="mssqlpass"></p>
 <p>发现权限非管理员权限，无法进行添加用户等操作。</p>
+<a id="more"></a>
+
 <p>尝试写入一句话木马，但是落地就被查杀，免杀大马又太大，不太方便写入，只好另寻他法。</p>
 <p>在进行信息搜集时，发现目标主机为Windows Server2008，开启了tomcat的服务，可以访问其控制台界面。</p>
 <p>此时的思路便是利用数据库权限读取tomcat的配置文件，获取到控制台账号密码后，利用tomcat部署含有webshell文件的war包，从而拿到webshell权限，然后再尝试提升管理员权限。</p>
