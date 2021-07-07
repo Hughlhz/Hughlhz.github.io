@@ -505,7 +505,12 @@
 <p><img src="/2021/07/05/mssql_elevation/tomcatapp.png" alt="war"></p>
 <p>于是想搞清楚直接将webshell打包后部署为什么无法访问，尝试将免杀war包解包，发现其中还有一些配置文件：</p>
 <p><img src="/2021/07/05/mssql_elevation/war.png" alt="war"></p>
-<p>猜测可能是因为缺少了配置文件，导致部署后无法访问。（博客教程误导人）</p>
+<p>猜测可能是因为缺少了配置文件，导致部署后无法访问，当然也可能是由于木马落地被查杀。</p>
+<p>对jsp文件打包的方法有两种，可以直接将想要打包的文件压缩成zip格式，然后将后缀修改为war或者使用以下命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">jar -cvf test.war ./      </span><br><span class="line"><span class="meta">#</span><span class="bash"> 将当前文件夹下所有文件压缩打包成test.war文件</span></span><br></pre></td></tr></table></figure>
+
+
+
 <h4 id="获取webshell权限后提权"><a href="#获取webshell权限后提权" class="headerlink" title="获取webshell权限后提权"></a>获取webshell权限后提权</h4><p>我直接上传了一个大马，这次运气非常好，tomcat的执行权限是管理员权限，也就无需再次提权。</p>
 <p>如果不是管理员权限，则需要尝试使用内核提权漏洞进行提权。由于互联网边界的windows型号和这台windows相同，而且所打补丁也相同，适用于互联网边界windows的内核提权漏洞ms15-051，经过测试，在这台机器上也适用。</p>
 <p>提升至管理员权限后，使用cmd命令新增一个隐藏管理员账户，然后使用代理将3389端口反向代理出来或者直接使用互联网边界windows进行远程连接，以方便进行进一步攻击。</p>
@@ -689,7 +694,7 @@
 <p>修改好后，启动frpc服务，用 <code>-c</code> 指定配置文件：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./frpc -c frpc.ini</span><br></pre></td></tr></table></figure>
 
-<p>此时，在我们的个人PC上，使用proxifier走socks5://admin:<a href="mailto:&#49;&#49;&#x32;&#50;&#51;&#x33;&#x61;&#x64;&#x6d;&#x69;&#110;&#x40;&#x33;&#57;&#46;&#x78;&#120;&#x78;&#46;&#120;&#120;&#120;&#x2e;&#120;&#x78;&#120;">&#49;&#49;&#x32;&#50;&#51;&#x33;&#x61;&#x64;&#x6d;&#x69;&#110;&#x40;&#x33;&#57;&#46;&#x78;&#120;&#x78;&#46;&#120;&#120;&#120;&#x2e;&#120;&#x78;&#120;</a>:46075的代理，即可访问到windows所在的内网环境。</p>
+<p>此时，在我们的个人PC上，使用proxifier走socks5://admin:<a href="mailto:&#x31;&#49;&#x32;&#x32;&#x33;&#51;&#97;&#100;&#109;&#105;&#110;&#x40;&#x33;&#57;&#46;&#x78;&#x78;&#120;&#46;&#120;&#x78;&#120;&#46;&#120;&#x78;&#120;">&#x31;&#49;&#x32;&#x32;&#x33;&#51;&#97;&#100;&#109;&#105;&#110;&#x40;&#x33;&#57;&#46;&#x78;&#x78;&#120;&#46;&#120;&#x78;&#120;&#46;&#120;&#x78;&#120;</a>:46075的代理，即可访问到windows所在的内网环境。</p>
 <p>注意要避免自己PC上其他应用的流量也走代理进入内网，从而留下可能被溯源的痕迹。</p>
 
           
