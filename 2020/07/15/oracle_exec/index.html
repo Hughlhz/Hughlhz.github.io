@@ -92,7 +92,7 @@
 <meta property="og:image" content="http://yoursite.com/2020/07/15/oracle_exec/user_pri.png">
 <meta property="og:image" content="http://yoursite.com/2020/07/15/oracle_exec/whoami.png">
 <meta property="article:published_time" content="2020-07-15T09:00:20.000Z">
-<meta property="article:modified_time" content="2021-07-15T10:06:16.928Z">
+<meta property="article:modified_time" content="2021-07-15T10:09:28.231Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://yoursite.com/2020/07/15/oracle_exec/injectable.png">
 
@@ -358,6 +358,8 @@
 
 <p>当前用户</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">and+(<span class="keyword">select</span>+dbms_xdb_version.makeversioned((<span class="keyword">select</span>+<span class="keyword">user</span>+<span class="keyword">from</span>+dual))+<span class="keyword">from</span>+dual)+<span class="keyword">is</span>+<span class="keyword">not</span>+<span class="literal">null</span>+<span class="comment">--</span></span><br></pre></td></tr></table></figure>
+
+<a id="more"></a>
 
 <h4 id="弱口令登录"><a href="#弱口令登录" class="headerlink" title="弱口令登录"></a>弱口令登录</h4><p>在发现当前用户为ssc3后，尝试远程登陆，发现弱口令登录成功：</p>
 <p><img src="/2020/07/15/oracle_exec/user_pri.png" alt="user_priv"></p>
