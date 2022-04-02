@@ -250,6 +250,147 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/10/chaitin_pwn/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hughes'Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/05/10/chaitin_pwn/" itemprop="url">长亭pwn公开课笔记</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-05-10T22:00:20+08:00">
+                2020-05-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/learning/" itemprop="url" rel="index">
+                    <span itemprop="name">learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/12/code_reuse_in_C/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1677,154 +1818,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/26/crackme001/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hughes'Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/10/26/crackme001/" itemprop="url">CrackMe---001</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-10-26T15:10:20+08:00">
-                2019-10-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/learning/" itemprop="url" rel="index">
-                    <span itemprop="name">learning</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>正式开始写CrackMe160题。<br>下面是CM001的WriteUp。</p>
-<h3 id="1"><a href="#1" class="headerlink" title="1"></a>1</h3><p>首先这个题目要求我们把Nag给干掉。<br>我想那好啊，直接根据API下断，把调用了MessageBoxA的地方直接NOP掉就完事了，结果一试才发现不对劲，这个调用的地方是系统领空，不是程序领空，不能直接NOP。<br>那接着能怎么办，老办法，搜索字符串。<br>搜索到后，回车来到代码部分，也没看见什么东西调用系统API，所以直接让程序执行到返回，然后把整个函数给NOP掉，这样级成功去除Nap了。</p>
-<p>接着打开这个程序，发现它可以通过两种方式进行注册。一种是直接用序列码，另一种则是用ID和由ID生成的序列码注册。</p>
-<h3 id="2"><a href="#2" class="headerlink" title="2"></a>2</h3><p>先从简单的入手，直接输入序列码后提交，弹出对话框<br><img src="/2019/10/26/crackme001/0.png"><br>发现有字符串可查，嘿嘿嘿，第一道题嘛，直接智能搜索字符串，果然搜到，然后找到在程序中的位置后<br><img src="/2019/10/26/crackme001/0_1.png"><br>然后发现”Failed!”这些字符串是从jnz语句跳过去的,那肯定猜测这个跳转指令前面这个函数里有点东西,那么下断、步入这个CALL，进去后发现，其实也没什么东西。。。<br><img src="/2019/10/26/crackme001/1.png"><br>简单得像张纸一样,直接明文对比,相等的话就通过je语句跳转到这个CALL返回的地方,那这个时候爆破也可以,直接查看注册码也可以。<br><img src="/2019/10/26/crackme001/3.png"><br>可以看到,真正的序列码就是”Hello Dude!”.</p>
-<h3 id="3"><a href="#3" class="headerlink" title="3"></a>3</h3><p>接下来搞需要序列号和ID的。<br>同样的方法，利用程序提示错误的字符串进行搜索，发现有两处，我们分别下断，发现两处都有机会断下来.</p>
-<h4 id="2-1"><a href="#2-1" class="headerlink" title="2-1"></a>2-1</h4><p>我猜这个程序应该是有两个判断的机制，可能一个是直接依据ID格式来，另一个才是真正地去匹配。<br>先看在前面的，<br><img src="/2019/10/26/crackme001/5.png"><br>惊喜地发现前面只是对ID的长度与4进行比较,如果大于等于的话就不会直接挂,那说明ID长度肯定是大于4的。</p>
-<h4 id="2-2"><a href="#2-2" class="headerlink" title="2-2"></a>2-2</h4><p>接着继续看后面的，<br><img src="/2019/10/26/crackme001/4.png"><br>貌似这个思路和之前第一部分的思路是一样的,不相等就跳转,那肯定得看看这个跳转语句里面的内容了。同样的下断、步入，一进去就感觉离谱，里面怎么长这样：<br><img src="/2019/10/26/crackme001/1.png"><br>这不我刚刚才写的注释嘛,下断试一下,发现貌似这段被调用了N多次,先不管这么多,先把序列号搞出来再说。<br>继续跟下去,然后查看寄存器里面的值,发现此时的密码就在EAX里面,但是这样子就张得有点离谱<br><img src="/2019/10/26/crackme001/6.png"><br>猜测里面的数字应该是根据我输入的ID所生成的,又试了一次后发现果然是这样。现在要把程序生成密码的算法找出来。抓住密码存在EAX里面，我们可以往回找找。<br><img src="/2019/10/26/crackme001/7.png"><br>可以看到,这个函数是个fast_call,调用的两个参数就存在[local.4],[local.3]这两个变量中,其中前者是我们输入的序列号,后者是程序根据我们输入的ID生成的序列号。<br>再往前看点，我们发现突然出现了密码的前缀和后缀，分别是CW和CRACKED。<br><img src="/2019/10/26/crackme001/8.png"><br>那分别紧跟这这两个字符串的函数能有什么用,那肯定是拼接字符串了啊.既然能拼接字符串了,那么密码中间的部分肯定已经生成了吧,我们再往后看,发现出现了两个”-“,这不是密码中的间隔符号,嘛,那我们更加可以肯定密码是在这里完成拼接的了.那继续往前看,突然想起来我们之前不是发现了一个直接拿ID长度与4进行比较的跳转嘛,我们猜测密码是在跳转之后才生成的,毕竟你采取这样的方式跳转不就是为了提前判断ID是否有效嘛,如果ID都无效了,那还生成密码干什么嘛.<br>那我们先看看这两段之间的代码.<br><img src="/2019/10/26/crackme001/9.png"><br>通过信息窗口,我们发现local.4就是ID的信息<br><img src="/2019/10/26/crackme001/12.png"><br>然后查询内存,发现实际上就是取ID的第一个字节然后×上(00431750)这个地址里面双字长度的数<br><img src="/2019/10/26/crackme001/10.png"><br><img src="/2019/10/26/crackme001/11.png"><br>那么,通过查看之后,我们发现中间的数字就是通过取输入ID的前一个字×(0x29),然后再×2,最后转化为十进制就OK.<br><img src="/2019/10/26/crackme001/13.png">.<br>这个加密的算法就解出来了.经过测试后确实没错.</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1875,7 +1868,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">43</span>
+                  <span class="site-state-item-count">44</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -1897,7 +1890,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-count">31</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
@@ -1984,7 +1977,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-snowflake-o"></i>
   </span>
