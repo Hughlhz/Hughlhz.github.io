@@ -95,7 +95,7 @@
 <meta property="og:image" content="http://yoursite.com/2020/12/28/docker_vpn/ikev1.png">
 <meta property="og:image" content="http://yoursite.com/2020/12/28/docker_vpn/ikev2.png">
 <meta property="article:published_time" content="2020-12-28T07:00:20.000Z">
-<meta property="article:modified_time" content="2022-03-31T10:47:28.000Z">
+<meta property="article:modified_time" content="2022-07-23T04:23:36.062Z">
 <meta property="article:tag" content="docker">
 <meta property="article:tag" content="Internet">
 <meta property="article:tag" content="vpn">
@@ -365,9 +365,10 @@
 <ul>
 <li>Docker Daemon，运行在主机之上的程序</li>
 <li>Docker Client，负责与Docker Daemon通信以执行命令，Docker采用的是CS模式</li>
-<li>REST API，用于同Dockers Daemon远程交互</li>
+<li>REST API，用于同Dockers Daemon远程交互<a id="more"></a>
+<h4 id="Docker-核心概念"><a href="#Docker-核心概念" class="headerlink" title="Docker 核心概念"></a>Docker 核心概念</h4></li>
 </ul>
-<h4 id="Docker-核心概念"><a href="#Docker-核心概念" class="headerlink" title="Docker 核心概念"></a>Docker 核心概念</h4><h5 id="Image-镜像"><a href="#Image-镜像" class="headerlink" title="Image 镜像"></a>Image 镜像</h5><p>image 就类似虚拟机的镜像文件，可以用于创建容器</p>
+<h5 id="Image-镜像"><a href="#Image-镜像" class="headerlink" title="Image 镜像"></a>Image 镜像</h5><p>image 就类似虚拟机的镜像文件，可以用于创建容器</p>
 <h5 id="Container-容器"><a href="#Container-容器" class="headerlink" title="Container 容器"></a>Container 容器</h5><p>容器就是运行的单位，从镜像启动。Docker 会在镜像的最上一层创建一个可写层，镜像本身是只读的，保持不变</p>
 <h5 id="Repository-仓库"><a href="#Repository-仓库" class="headerlink" title="Repository 仓库"></a>Repository 仓库</h5><p>仓库是用来存放一类镜像的地方</p>
 <p><img src="/2020/12/28/docker_vpn/i_c_r.png" alt="docker_vm"></p>

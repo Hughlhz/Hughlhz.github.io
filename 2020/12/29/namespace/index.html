@@ -90,7 +90,7 @@
 <meta property="og:image" content="http://yoursite.com/2020/12/29/namespace/1.png">
 <meta property="og:image" content="http://yoursite.com/2020/12/29/namespace/2.png">
 <meta property="article:published_time" content="2020-12-29T12:00:20.000Z">
-<meta property="article:modified_time" content="2022-03-31T10:47:46.000Z">
+<meta property="article:modified_time" content="2022-07-23T04:21:43.270Z">
 <meta property="article:tag" content="docker">
 <meta property="article:tag" content="Network">
 <meta property="article:tag" content="Linux">
@@ -369,6 +369,7 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> ip netns <span class="built_in">exec</span> net1 /bin/bash --rcfile &lt;(<span class="built_in">echo</span> <span class="string">&quot;PS1=\&quot;namespace net1&gt; \&quot;&quot;</span>)</span></span><br><span class="line">namespace net1&gt; ping www.baidu.com</span><br></pre></td></tr></table></figure>
 
 <p>每个 Namespace 在创建的时候会自动创建一个回环接口 <code>lo</code> ，默认不启用，可以通过 <code>ip link set lo up</code> 启用。</p>
+<a id="more"></a>
 <h5 id="Network-Namespace-之间的通信"><a href="#Network-Namespace-之间的通信" class="headerlink" title="Network Namespace 之间的通信"></a>Network Namespace 之间的通信</h5><p>新创建的 Namespace 默认不能和主机网络，以及其他 Namespace 通信。</p>
 <p>可以使用 Linux 提供的 <code>veth pair</code> 来完成通信。下面显示两个 Namespace 之间通信的网络拓扑：</p>
 <p><img src="/2020/12/29/namespace/1.png"></p>

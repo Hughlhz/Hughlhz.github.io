@@ -269,7 +269,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/05/22/cover/" itemprop="url">Be unremitting!</a></h1>
+                <a class="post-title-link" href="/2019/05/22/cover/" itemprop="url">Be More Confident!</a></h1>
         
 
         <div class="post-meta">
@@ -342,10 +342,14 @@
 
       
         
-          
-            <p><img src="/2019/05/22/cover/timg.jpg" alt="我前任老婆"></p>
-
-          
+          <p><img src="/2019/05/22/cover/timg.jpg" alt="我前任"></p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/05/22/cover/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -493,7 +497,8 @@
 <li>熟悉英语语法</li>
 <li>数据结构和操作系统有一定基础</li>
 </ul>
-<p>我本科是电子科大软件学院，科研竞赛获奖只有中国高校计算机大赛网络技术挑战赛的国二，其他都是些文体比赛，什么“方言朗读者大赛”、“万米接力赛”、校园马拉松等等。<br>大一的成绩还勉强能看，排在全院10%左右，大二大三专业分流后，分到网安的大佬太多了，开启躺平模式，成绩一度下滑到50%，最后保研排名靠着师兄、同学带着拿的国二奖勉强拉回了一点，到25%，但是你电保研率只有20%，而且就我们专业人最多还没人弃保，最后与保研机会失之交臂。但是我觉得也并不可惜，毕竟自己没有在保研这条路上付出太大精力，最后能排到25%我甚至有点惊讶。</p>
+<p>我本科是电子科大软件学院，科研竞赛获奖只有中国高校计算机大赛网络技术挑战赛的国二，其他都是些文体比赛，什么“方言朗读者大赛”、“万米接力赛”、校园马拉松等等。</p>
+<p>大一的成绩还勉强能看，排在全院10%左右，大二大三专业分流后，分到网安的大佬太多了，开启躺平模式，成绩一度下滑到50%，最后保研排名靠着师兄、工作室的同学带着拿的国二奖勉强拉回了一点，到25%，不过你电保研率只有20%，而且就我们专业人最多还没人弃保，最终与保研机会失之交臂。但是我觉得也并不可惜，毕竟自己没有在保研这条路上付出太大精力，最后能排到25%我甚至有点惊讶。</p>
 <p>由于学院对实习的强制要求（二月份到八月份），我只能从八月份之后开始复习，真正复习开始时间是九月初返校后，之前没有复习过任何科目。</p>
 <p>这是我在八月份结束实习后的计划，本来计划8月22号就返校开始复习，但最后还是拖延到了9月4号才返校。</p>
 <img src="/2022/03/31/postgraduate_entrance_exam_experience/schedule1.jpg" alt="schedule1" style="zoom: 20%;">
@@ -1574,8 +1579,7 @@
 
       
         
-          
-            <h3 id="Linux-Namespace"><a href="#Linux-Namespace" class="headerlink" title="Linux Namespace"></a>Linux Namespace</h3><p>Linux <code>Namespace</code>提供了一种内核级别隔离系统资源的方法，通过将系统的全局资源放在不同的<code>Namespace</code>中，来实现资源隔离的目的。不同<code>Namespace</code>的程序，可以享有一份独立的系统资源。目前Linux中提供了六类系统资源的隔离机制，分别是：</p>
+          <h3 id="Linux-Namespace"><a href="#Linux-Namespace" class="headerlink" title="Linux Namespace"></a>Linux Namespace</h3><p>Linux <code>Namespace</code>提供了一种内核级别隔离系统资源的方法，通过将系统的全局资源放在不同的<code>Namespace</code>中，来实现资源隔离的目的。不同<code>Namespace</code>的程序，可以享有一份独立的系统资源。目前Linux中提供了六类系统资源的隔离机制，分别是：</p>
 <ul>
 <li><code>Mount</code>: 隔离文件系统挂载点</li>
 <li><code>UTS</code>: 隔离主机名和域名信息</li>
@@ -1596,52 +1600,13 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> ip netns <span class="built_in">exec</span> net1 /bin/bash --rcfile &lt;(<span class="built_in">echo</span> <span class="string">&quot;PS1=\&quot;namespace net1&gt; \&quot;&quot;</span>)</span></span><br><span class="line">namespace net1&gt; ping www.baidu.com</span><br></pre></td></tr></table></figure>
 
 <p>每个 Namespace 在创建的时候会自动创建一个回环接口 <code>lo</code> ，默认不启用，可以通过 <code>ip link set lo up</code> 启用。</p>
-<h5 id="Network-Namespace-之间的通信"><a href="#Network-Namespace-之间的通信" class="headerlink" title="Network Namespace 之间的通信"></a>Network Namespace 之间的通信</h5><p>新创建的 Namespace 默认不能和主机网络，以及其他 Namespace 通信。</p>
-<p>可以使用 Linux 提供的 <code>veth pair</code> 来完成通信。下面显示两个 Namespace 之间通信的网络拓扑：</p>
-<p><img src="/2020/12/29/namespace/1.png"></p>
-<h6 id="ip-link-add-type-veth-创建-veth-pair"><a href="#ip-link-add-type-veth-创建-veth-pair" class="headerlink" title="ip link add type veth 创建 veth pair"></a>ip link add type veth 创建 veth pair</h6><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> ip link add <span class="built_in">type</span> veth</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip link</span></span><br><span class="line">3: veth0@veth1: &lt;BROADCAST,MULTICAST,M-DOWN&gt; mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000</span><br><span class="line">    link/ether 1a:53:39:5a:26:12 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">4: veth1@veth0: &lt;BROADCAST,MULTICAST,M-DOWN&gt; mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000</span><br><span class="line">    link/ether 46:df:46:1f:bf:d6 brd ff:ff:ff:ff:ff:ff</span><br></pre></td></tr></table></figure>
-
-<p>使用命令 <code>ip link add xxx type veth peer name yyy</code> 指定 veth pair 的名字。</p>
-<h6 id="ip-link-set-xx-netns-yy-将-veth-xx-加入到-namespace-yy-中"><a href="#ip-link-set-xx-netns-yy-将-veth-xx-加入到-namespace-yy-中" class="headerlink" title="ip link set xx netns yy 将 veth xx 加入到 namespace yy 中"></a>ip link set xx netns yy 将 veth xx 加入到 namespace yy 中</h6><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> ip link <span class="built_in">set</span> veth0 netns net0</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip link <span class="built_in">set</span> veth1 netns net1</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="bash"><span class="comment"># ip netns exec net0 ip addr</span></span></span><br><span class="line">1: lo: &lt;LOOPBACK&gt; mtu 65536 qdisc noop state DOWN group default qlen 1</span><br><span class="line">    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span><br><span class="line">10: veth0@if11: &lt;BROADCAST,MULTICAST&gt; mtu 1500 qdisc noop state DOWN group default qlen 1000</span><br><span class="line">    link/ether 1a:53:39:5a:26:12 brd ff:ff:ff:ff:ff:ff link-netnsid 1</span><br></pre></td></tr></table></figure>
-
-<h6 id="给-veth-pair-配上-ip-地址"><a href="#给-veth-pair-配上-ip-地址" class="headerlink" title="给 veth pair 配上 ip 地址"></a>给 veth pair 配上 ip 地址</h6><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> ip netns <span class="built_in">exec</span> net0 ip link <span class="built_in">set</span> veth0 up</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip netns <span class="built_in">exec</span> net0 ip addr</span></span><br><span class="line">1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1</span><br><span class="line">    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span><br><span class="line">    inet 127.0.0.1/8 scope host lo</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">    inet6 ::1/128 scope host</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">10: veth0@if11: &lt;NO-CARRIER,BROADCAST,MULTICAST,UP&gt; mtu 1500 qdisc noqueue state LOWERLAYERDOWN group default qlen 1000</span><br><span class="line">    link/ether 1a:53:39:5a:26:12 brd ff:ff:ff:ff:ff:ff link-netnsid 1</span><br><span class="line"><span class="meta">#</span><span class="bash"> ip netns <span class="built_in">exec</span> net0 ip addr add 10.1.1.1/24 dev veth0</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip netns <span class="built_in">exec</span> net0 ip route</span></span><br><span class="line">10.1.1.0/24 dev veth0  proto kernel  scope link  src 10.1.1.1 linkdown</span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="bash"><span class="comment"># ip netns exec net1 ip link set veth1 up</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip netns <span class="built_in">exec</span> net1 ip addr add 10.1.1.2/24 dev veth1</span></span><br></pre></td></tr></table></figure>
-
-<p>可以看到，在配完 ip 之后，还自动生成了对应的路由表信息。</p>
-<h6 id="ping-测试两个-namespace-的连通性"><a href="#ping-测试两个-namespace-的连通性" class="headerlink" title="ping 测试两个 namespace 的连通性"></a>ping 测试两个 namespace 的连通性</h6><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> ip netns <span class="built_in">exec</span> net0 ping 10.1.1.2</span></span><br><span class="line">PING 10.1.1.2 (10.1.1.2) 56(84) bytes of data.</span><br><span class="line">64 bytes from 10.1.1.2: icmp_seq=1 ttl=64 time=0.069 ms</span><br><span class="line">64 bytes from 10.1.1.2: icmp_seq=2 ttl=64 time=0.054 ms</span><br><span class="line">64 bytes from 10.1.1.2: icmp_seq=3 ttl=64 time=0.053 ms</span><br><span class="line">64 bytes from 10.1.1.2: icmp_seq=4 ttl=64 time=0.053 ms</span><br></pre></td></tr></table></figure>
-
-<h5 id="多个不同-namespace-之间的通信"><a href="#多个不同-namespace-之间的通信" class="headerlink" title="多个不同 namespace 之间的通信"></a>多个不同 namespace 之间的通信</h5><p>2 个 namespace 之间通信可以借助 <code>veth pair</code> ，多个 namespace 之间的通信则可以使用 bridge 来转接，不然每两个 namespace 都去配 <code>veth pair</code> 将会是一件麻烦的事。下面就看看如何使用 bridge 来转接。</p>
-<p>拓扑图如下：</p>
-<p><img src="/2020/12/29/namespace/2.png"></p>
-<h6 id="使用-ip-link-和-brctl-创建-bridge"><a href="#使用-ip-link-和-brctl-创建-bridge" class="headerlink" title="使用 ip link 和 brctl 创建 bridge#"></a>使用 ip link 和 brctl 创建 bridge<a target="_blank" rel="noopener" href="https://www.cnblogs.com/bakari/p/10443484.html#521495136">#</a></h6><p>通常 Linux 中和 bridge 有关的操作是使用命令 <code>brctl</code> (<code>yum install -y bridge-utils</code> ) 。但为了前后照应，这里都用 ip 相关的命令来操作。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Copy// 建立一个 bridge</span><br><span class="line"><span class="meta">#</span><span class="bash"> ip link add br0 <span class="built_in">type</span> bridge</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip link <span class="built_in">set</span> dev br0 up</span></span><br><span class="line">9: br0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000</span><br><span class="line">    link/ether 42:55:ed:eb:a0:07 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet6 fe80::4055:edff:feeb:a007/64 scope link</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br></pre></td></tr></table></figure>
-
-<h6 id="创建-veth-pair"><a href="#创建-veth-pair" class="headerlink" title="创建 veth pair"></a>创建 veth pair</h6><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Copy//（1）创建 3 个 veth pair</span><br><span class="line"><span class="meta">#</span><span class="bash"> ip link add <span class="built_in">type</span> veth</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip link add <span class="built_in">type</span> veth</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip link add <span class="built_in">type</span> veth</span></span><br></pre></td></tr></table></figure>
-
-<h6 id="将-veth-pair-的一头挂到-namespace-中，一头挂到-bridge-上，并设-IP-地址"><a href="#将-veth-pair-的一头挂到-namespace-中，一头挂到-bridge-上，并设-IP-地址" class="headerlink" title="将 veth pair 的一头挂到 namespace 中，一头挂到 bridge 上，并设 IP 地址"></a>将 veth pair 的一头挂到 namespace 中，一头挂到 bridge 上，并设 IP 地址</h6><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">Copy// （1）配置第 1 个 net0</span><br><span class="line"><span class="meta">#</span><span class="bash"> ip link <span class="built_in">set</span> dev veth1 netns net0</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip netns <span class="built_in">exec</span> net0 ip link <span class="built_in">set</span> dev veth1 name eth0</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip netns <span class="built_in">exec</span> net0 ip addr add 10.0.1.1/24 dev eth0</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip netns <span class="built_in">exec</span> net0 ip link <span class="built_in">set</span> dev eth0 up</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="bash"><span class="comment"># ip link set dev veth0 master br0</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip link <span class="built_in">set</span> dev veth0 up</span></span><br><span class="line"></span><br><span class="line">// （2）配置第 2 个 net1</span><br><span class="line"><span class="meta">#</span><span class="bash"> ip link <span class="built_in">set</span> dev veth3 netns net1</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip netns <span class="built_in">exec</span> net1 ip link <span class="built_in">set</span> dev veth3 name eth0</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip netns <span class="built_in">exec</span> net1 ip addr add 10.0.1.2/24 dev eth0</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip netns <span class="built_in">exec</span> net1 ip link <span class="built_in">set</span> dev eth0 up</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="bash"><span class="comment"># ip link set dev veth2 master br0</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip link <span class="built_in">set</span> dev veth2 up</span></span><br><span class="line"></span><br><span class="line">// （3）配置第 3 个 net2</span><br><span class="line"><span class="meta">#</span><span class="bash"> ip link <span class="built_in">set</span> dev veth5 netns net2</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip netns <span class="built_in">exec</span> net2 ip link <span class="built_in">set</span> dev veth5 name eth0</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip netns <span class="built_in">exec</span> net2 ip addr add 10.0.1.3/24 dev eth0</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip netns <span class="built_in">exec</span> net2 ip link <span class="built_in">set</span> dev eth0 up</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip link <span class="built_in">set</span> dev veth4 master br0</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip link <span class="built_in">set</span> dev veth4 up</span></span><br></pre></td></tr></table></figure>
-
-<p>这样之后，竟然通不了，经查阅 <a target="_blank" rel="noopener" href="https://segmentfault.com/q/1010000010011053/a-1020000010025650">参见</a> ，是因为</p>
-<blockquote>
-<p>原因是因为系统为bridge开启了iptables功能，导致所有经过br0的数据包都要受iptables里面规则的限制，而docker为了安全性（我的系统安装了 docker），将iptables里面filter表的FORWARD链的默认策略设置成了drop，于是所有不符合docker规则的数据包都不会被forward，导致你这种情况ping不通。</p>
-<p>解决办法有两个，二选一：</p>
-<ol>
-<li>关闭系统bridge的iptables功能，这样数据包转发就不受iptables影响了：echo 0 &gt; /proc/sys/net/bridge/bridge-nf-call-iptables</li>
-<li>为br0添加一条iptables规则，让经过br0的包能被forward：iptables -A FORWARD -i br0 -j ACCEPT</li>
-</ol>
-<p>第一种方法不确定会不会影响docker，建议用第二种方法。</p>
-</blockquote>
-<p>我采用以下方法解决：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Copyiptables -A FORWARD -i br0 -j ACCEPT</span><br></pre></td></tr></table></figure>
-
-<p>结果：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">Copy#</span><span class="bash"> ip netns <span class="built_in">exec</span> net0 ping -c 2 10.0.1.2</span></span><br><span class="line">PING 10.0.1.2 (10.0.1.2) 56(84) bytes of data.</span><br><span class="line">64 bytes from 10.0.1.2: icmp_seq=1 ttl=64 time=0.071 ms</span><br><span class="line">64 bytes from 10.0.1.2: icmp_seq=2 ttl=64 time=0.072 ms</span><br><span class="line"></span><br><span class="line">--- 10.0.1.2 ping statistics ---</span><br><span class="line">2 packets transmitted, 2 received, 0% packet loss, time 999ms</span><br><span class="line">rtt min/avg/max/mdev = 0.071/0.071/0.072/0.008 ms</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> ip netns <span class="built_in">exec</span> net0 ping -c 2 10.0.1.3</span></span><br><span class="line">PING 10.0.1.3 (10.0.1.3) 56(84) bytes of data.</span><br><span class="line">64 bytes from 10.0.1.3: icmp_seq=1 ttl=64 time=0.071 ms</span><br><span class="line">64 bytes from 10.0.1.3: icmp_seq=2 ttl=64 time=0.087 ms</span><br><span class="line"></span><br><span class="line">--- 10.0.1.3 ping statistics ---</span><br><span class="line">2 packets transmitted, 2 received, 0% packet loss, time</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<p>转载： <a target="_blank" rel="noopener" href="https://www.cnblogs.com/bakari/p/10443484.html">https://www.cnblogs.com/bakari/p/10443484.html</a></p>
-
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/12/29/namespace/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1780,8 +1745,7 @@
 
       
         
-          
-            <h3 id="Docker环境下IPsec配置实验"><a href="#Docker环境下IPsec配置实验" class="headerlink" title="Docker环境下IPsec配置实验"></a>Docker环境下IPsec配置实验</h3><h3 id="选用Docker的原因"><a href="#选用Docker的原因" class="headerlink" title="选用Docker的原因"></a>选用Docker的原因</h3><p>实验要求一台主机和四台虚拟机，硬件条件不允许，只好选用docker来代替。</p>
+          <h3 id="Docker环境下IPsec配置实验"><a href="#Docker环境下IPsec配置实验" class="headerlink" title="Docker环境下IPsec配置实验"></a>Docker环境下IPsec配置实验</h3><h3 id="选用Docker的原因"><a href="#选用Docker的原因" class="headerlink" title="选用Docker的原因"></a>选用Docker的原因</h3><p>实验要求一台主机和四台虚拟机，硬件条件不允许，只好选用docker来代替。</p>
 <h3 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h3><p>第一次接触Docker，之前只知道Docker是一种容器化技术</p>
 <h4 id="Docker-和虚拟机的区别"><a href="#Docker-和虚拟机的区别" class="headerlink" title="Docker 和虚拟机的区别"></a>Docker 和虚拟机的区别</h4><p>同为虚拟技术，区别如下：</p>
 <ul>
@@ -1794,87 +1758,14 @@
 <ul>
 <li>Docker Daemon，运行在主机之上的程序</li>
 <li>Docker Client，负责与Docker Daemon通信以执行命令，Docker采用的是CS模式</li>
-<li>REST API，用于同Dockers Daemon远程交互</li>
-</ul>
-<h4 id="Docker-核心概念"><a href="#Docker-核心概念" class="headerlink" title="Docker 核心概念"></a>Docker 核心概念</h4><h5 id="Image-镜像"><a href="#Image-镜像" class="headerlink" title="Image 镜像"></a>Image 镜像</h5><p>image 就类似虚拟机的镜像文件，可以用于创建容器</p>
-<h5 id="Container-容器"><a href="#Container-容器" class="headerlink" title="Container 容器"></a>Container 容器</h5><p>容器就是运行的单位，从镜像启动。Docker 会在镜像的最上一层创建一个可写层，镜像本身是只读的，保持不变</p>
-<h5 id="Repository-仓库"><a href="#Repository-仓库" class="headerlink" title="Repository 仓库"></a>Repository 仓库</h5><p>仓库是用来存放一类镜像的地方</p>
-<p><img src="/2020/12/28/docker_vpn/i_c_r.png" alt="docker_vm"></p>
-<h4 id="Docker-四种网络模式（部分转载）"><a href="#Docker-四种网络模式（部分转载）" class="headerlink" title="Docker 四种网络模式（部分转载）"></a>Docker 四种网络模式（部分转载）</h4><h5 id="实现原理："><a href="#实现原理：" class="headerlink" title="实现原理："></a>实现原理：</h5><p>Docker使用Linux桥接，在宿主机虚拟一个Docker容器网桥(docker0，对应连接网卡是eth0），Docker启动一个容器时会根据Docker网桥的网段分配给容器一个IP地址，称为Container-IP，同时<strong>Docker网桥是每个容器的默认网关</strong>。因为在同一宿主机内的容器都接入同一个网桥，这样容器之间就能够通过容器的Container-IP直接通信（<strong>可以理解为一个公共网段，每个容器的eth0网卡都在网段上</strong>）。</p>
-<p>Docker网桥是宿主机虚拟出来的，并不是真实存在的网络设备，外部网络是无法寻址到的，这也意味着外部网络无法通过直接Container-IP访问到容器。如果容器希望外部访问能够访问到，可以通过映射容器端口到宿主主机（端口映射），即docker run创建容器时候通过 -p 或 -P 参数来启用，访问容器的时候就通过[宿主机IP]:[容器端口]访问容器。</p>
-<h5 id="四类网络模式"><a href="#四类网络模式" class="headerlink" title="四类网络模式"></a>四类网络模式</h5><table>
-<thead>
-<tr>
-<th>Docker网络模式</th>
-<th>配置</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>host模式</td>
-<td>–net=host</td>
-<td>容器和宿主机共享Network namespace。</td>
-</tr>
-<tr>
-<td>container模式</td>
-<td>–net=container:NAME_or_ID</td>
-<td>容器和另外一个容器共享Network namespace。 kubernetes中的pod就是多个容器共享一个Network namespace。</td>
-</tr>
-<tr>
-<td>none模式</td>
-<td>–net=none</td>
-<td>容器有独立的Network namespace，但并没有对其进行任何网络设置，如分配veth pair 和网桥连接，配置IP等。</td>
-</tr>
-<tr>
-<td>bridge模式</td>
-<td>–net=bridge</td>
-<td>（默认为该模式）</td>
-</tr>
-</tbody></table>
-<h6 id="host"><a href="#host" class="headerlink" title="host"></a>host</h6><p>如果启动容器的时候使用host模式，那么这个容器将不会获得一个独立的Network Namespace，而是<strong>和宿主机共用一个Network Namespace</strong>。容器将不会虚拟出自己的网卡，配置自己的IP等，而是<strong>使用宿主机的IP和端口</strong>。但是，容器的其他方面，如文件系统、进程列表等还是和宿主机隔离的。</p>
-<p>使用host模式的容器可以直接使用宿主机的IP地址与外界通信，容器内部的服务端口也可以使用宿主机的端口，不需要进行NAT，host最大的优势就是网络性能比较好，但是docker host上已经使用的端口就不能再用了，网络的隔离性不好。</p>
-<p><img src="/2020/12/28/docker_vpn/host.webp"></p>
-<h6 id="container"><a href="#container" class="headerlink" title="container"></a>container</h6><p>这个模式指定新创建的容器和已经存在的一个容器<strong>共享一个 Network Namespace</strong>，而不是和宿主机共享。新创建的容器不会创建自己的网卡，配置自己的 IP，而是<strong>和一个指定的容器共享 IP、端口范围等</strong>。同样，两个容器除了网络方面，其他的如文件系统、进程列表等还是隔离的。两个容器的进程可以通过 lo 网卡设备通信。</p>
-<p><img src="/2020/12/28/docker_vpn/container.webp"></p>
-<h6 id="none"><a href="#none" class="headerlink" title="none"></a>none</h6><p>使用none模式，Docker容器拥有自己的Network Namespace，但是，并不为Docker容器进行任何网络配置。也就是说，这个Docker容器没有网卡、IP、路由等信息。需要我们自己为Docker容器添加网卡、配置IP等。</p>
-<p>这种网络模式下容器<strong>只有lo回环网络，没有其他网卡</strong>。none模式可以在容器创建时通过–network=none来指定。这种类型的网络没有办法联网，封闭的网络能很好的保证容器的安全性。</p>
-<p><img src="/2020/12/28/docker_vpn/none.webp"></p>
-<h6 id="bridge"><a href="#bridge" class="headerlink" title="bridge"></a>bridge</h6><p>当Docker进程启动时，会在主机上创建一个名为docker0的虚拟网桥，此主机上启动的Docker容器会连接到这个虚拟网桥上。<strong>虚拟网桥的工作方式和物理交换机类似</strong>，这样主机上的所有容器就通过交换机连在了一个二层网络中。</p>
-<p>从docker0子网中分配一个IP给容器使用，并设置docker0的IP地址为容器的默认网关。在主机上创建一对虚拟网卡veth pair设备，Docker将veth pair设备的一端放在新创建的容器中，并命名为eth0（容器的网卡），另一端放在主机中，以vethxxx这样类似的名字命名，并将这个网络设备加入到docker0网桥中。可以通过brctl show命令查看。</p>
-<p>bridge模式是docker的默认网络模式，不写–net参数，就是bridge模式。使用docker run -p时，docker实际是在iptables做了DNAT规则，实现端口转发功能。可以使用iptables -t nat -vnL查看。</p>
-<p><img src="/2020/12/28/docker_vpn/bridge.webp"></p>
-<h4 id="Dockerfile"><a href="#Dockerfile" class="headerlink" title="Dockerfile"></a>Dockerfile</h4><p>一个用来构建镜像的文本文件，一般分为四部分：基础镜像信息、维护者信息、镜像操作指令、容器启动时执行指令，前三部分对应三个指令：FROM ；MAINTAINER； RUN。</p>
-<p><strong>注意</strong>：Dockerfile 的指令每执行一次都会在 docker 上新建一层。所以过多无意义的层，会造成镜像膨胀过大。例如：</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> centos</span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> yum install wget</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> wget -O redis.tar.gz <span class="string">&quot;http://download.redis.io/releases/redis-5.0.3.tar.gz&quot;</span></span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> tar -xvf redis.tar.gz</span></span><br></pre></td></tr></table></figure>
-
-<p>以上执行会创建 3 层镜像。可简化为以下格式：</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> centos</span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> yum install wget \</span></span><br><span class="line"><span class="bash">    &amp;&amp; wget -O redis.tar.gz <span class="string">&quot;http://download.redis.io/releases/redis-5.0.3.tar.gz&quot;</span> \</span></span><br><span class="line"><span class="bash">    &amp;&amp; tar -xvf redis.tar.gz</span></span><br></pre></td></tr></table></figure>
-
-<p>如上，以 <strong>&amp;&amp;</strong> 符号连接命令，这样执行后，只会创建 1 层镜像。</p>
-<p>构建好后，由新构建的镜像启动容器即可。</p>
-<h4 id="容器抓包"><a href="#容器抓包" class="headerlink" title="容器抓包"></a>容器抓包</h4><p>基本的ipsec配置过程不再赘述，搭建好网络拓扑，配置好网关，按照 <a target="_blank" rel="noopener" href="https://www.strongswan.org/testing/testresults/ikev2/net2net-psk/index.html">这上面</a> 的配置文件（修改下right和left的IP、掩码）就🆗，然后是抓包分析协议。</p>
-<p>抓包时遇到了一个问题，在容器内部，用<code>tcpdump</code>抓包时，遇到了这样的问题：</p>
-<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Couldn&#39;t change ownership of savefile</span><br></pre></td></tr></table></figure>
-
-<p>应该是容器内部访问文件的问题，网上有关于apache中使用<code>tcpdump</code>出现同样问题的情况，采取同样措施（关闭宿主机的<code>SELinux</code>）仍然无法解决时，采取了第二种方案：在宿主机抓包。</p>
-<p>因为Docker技术主要是依赖<code>Linux Namespace</code> 技术来实现，可以在宿主机中切换到对应容器的网络命名空间来抓包。</p>
-<h5 id="步骤："><a href="#步骤：" class="headerlink" title="步骤："></a>步骤：</h5><ul>
-<li>首先由容器ID获取容器进程pid：</li>
-</ul>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker ps | grep xxx</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>使用nsenter切换网络命名空间</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nsenter -n -t container_id/name</span><br></pre></td></tr></table></figure>
-
-<p>直接抓包即可，最后确实抓取到了ipsec的流量：</p>
-<p>IKEv1：</p>
-<p><img src="/2020/12/28/docker_vpn/ikev1.png" alt="ikev1"></p>
-<p>IKEv2：</p>
-<p><img src="/2020/12/28/docker_vpn/ikev2.png" alt="ikev2"></p>
-
-          
+<li>REST API，用于同Dockers Daemon远程交互</li></ul>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/12/28/docker_vpn/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
